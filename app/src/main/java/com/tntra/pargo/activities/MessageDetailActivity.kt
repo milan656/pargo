@@ -74,6 +74,7 @@ class MessageDetailActivity : AppCompatActivity(), View.OnClickListener {
         mSocket?.on("updateChat", onUpdateChat) // To update if someone send a message to chatroom
         mSocket?.on("userLeftChatRoom", onUserLeft)
 
+
         initView()
     }
 

@@ -20,6 +20,7 @@ class MessageDetailActivity : AppCompatActivity(), View.OnClickListener {
     private var tvcount: TextView? = null
     private var mSocket: Socket? = null
     private val URL = "http://18.224.66.250:8081/"
+//    token=xDWL5egSBhFHU3Hx6w7HvrB8DfjhEUwGx8XNGbebPz3q3yBjyjcVv42V6rf5HKXkdt47hvkr4pZ5gyPW&userId=1
     val gson: Gson = Gson()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,6 +30,7 @@ class MessageDetailActivity : AppCompatActivity(), View.OnClickListener {
 
         try {
             mSocket = IO.socket(this.URL)
+
         } catch (URISyntaxException: Exception) {
             Log.d("TAGGsocket", "Failed to connect")
             throw RuntimeException()
@@ -39,9 +41,9 @@ class MessageDetailActivity : AppCompatActivity(), View.OnClickListener {
             Log.e("TAGGsocket", "onCreate: ")
             //After getting a Socket.EVENT_CONNECT which indicate socket has been connected to server,
             //send userName and roomName so that they can join the room.
-            val json=JsonObject()
-            json.addProperty("usename","user1")
-            json.addProperty("room","room1")
+            val json = JsonObject()
+            json.addProperty("usename", "user1")
+            json.addProperty("room", "room1")
             val jsonData = gson.toJson(json) // Gson changes data object to Json type.
             mSocket?.emit("subscribe", jsonData)
 

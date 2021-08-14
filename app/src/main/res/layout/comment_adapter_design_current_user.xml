@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:layout_gravity="end"
+    android:gravity="end">
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginStart="@dimen/five_dp"
+        android:layout_marginLeft="@dimen/five_dp"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <com.tntra.pargo.custom.NormalTextView
+            android:id="@+id/tvCommentTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="24:00"
+            android:gravity="end"
+            android:layout_gravity="end"
+            android:textColor="@color/gray"
+            android:textSize="@dimen/twelve_sp" />
+
+        <com.tntra.pargo.custom.NormalTextView
+            android:id="@+id/tvComment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/layout_bg_corner_grey_comment_right"
+            android:text="hello what are you doing"
+            android:textColor="@color/black"
+            android:padding="@dimen/ten_dp"
+            android:textSize="@dimen/fourteen_sp" />
+    </LinearLayout>
+</LinearLayout>

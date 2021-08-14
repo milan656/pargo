@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragment.HomeFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/fourteeen_dp"
+            android:layout_marginTop="@dimen/twenty_dp"
+            android:layout_marginEnd="@dimen/fourteeen_dp"
+            android:layout_marginBottom="@dimen/fourteeen_dp"
+            android:orientation="vertical">
+
+            <com.tntra.pargo.custom.NormalEditText
+                android:id="@+id/edtsearch"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:background="@drawable/layout_bg_corner"
+                android:hint="Search for creator or generes"
+                android:padding="@dimen/ten_dp"
+                android:textSize="@dimen/fourteen_sp" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:layout_marginTop="@dimen/ten_dp"
+
+            android:layout_marginBottom="@dimen/fourteeen_dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/fourteeen_dp"
+                    android:layout_marginEnd="@dimen/fourteeen_dp"
+                    android:text="Recommanded Creators"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/fourteen_sp"
+                    android:textStyle="bold" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recommandedCreatorsRecycView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/ten_dp" />
+            </LinearLayout>
+
+            <com.tntra.pargo.custom.NormalNoDataTextView
+                android:id="@+id/tvNoCreators"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="There are no any creator found."
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/fourteen_sp"
+                android:gravity="center"
+                android:layout_centerInParent="true"
+                android:visibility="gone"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/fourteeen_dp"
+            android:layout_marginTop="@dimen/ten_dp"
+            android:layout_marginEnd="@dimen/fourteeen_dp"
+            android:layout_marginBottom="@dimen/fourteeen_dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Recommanded Generes"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/fourteen_sp"
+                    android:textStyle="bold" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/exploreGeneresRecycView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/ten_dp" />
+            </LinearLayout>
+
+            <com.tntra.pargo.custom.NormalNoDataTextView
+                android:id="@+id/tvNoGeners"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="There are no any geners found."
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/fourteen_sp"
+                android:gravity="center"
+                android:visibility="gone"
+                android:layout_centerInParent="true"/>
+        </RelativeLayout>
+
+    </LinearLayout>
+    <!--<Button
+        android:id="@+id/btnCreateSession"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/sixteen_dp"
+        android:padding="@dimen/ten_dp"
+        android:text="Create Session"
+        android:textColor="@color/black"
+        android:textSize="@dimen/sixteen_sp" />
+
+    <Button
+        android:id="@+id/btnAcceptRejectRequest"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/sixteen_dp"
+        android:padding="@dimen/ten_dp"
+        android:text="Collab Accept Reject Request"
+        android:textColor="@color/black"
+        android:textSize="@dimen/sixteen_sp" />
+
+    <Button
+        android:id="@+id/btnCreateRequest"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/sixteen_dp"
+        android:padding="@dimen/ten_dp"
+        android:text="Create Collab Request"
+        android:textColor="@color/black"
+        android:textSize="@dimen/sixteen_sp" />
+
+    <Button
+        android:id="@+id/btnLogout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/sixteen_dp"
+        android:padding="@dimen/ten_dp"
+        android:text="Logout"
+        android:textColor="@color/black"
+        android:textSize="@dimen/sixteen_sp" />
+
+    <Button
+        android:id="@+id/btnContentList"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/sixteen_dp"
+        android:padding="@dimen/ten_dp"
+        android:text="Content_List"
+        android:textColor="@color/black"
+        android:textSize="@dimen/sixteen_sp" />
+
+    <Button
+        android:id="@+id/btnContentShow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/sixteen_dp"
+        android:padding="@dimen/ten_dp"
+        android:text="Content show"
+        android:textColor="@color/black"
+        android:textSize="@dimen/sixteen_sp" />
+
+    <Button
+        android:id="@+id/btnLikeUnlike"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/sixteen_dp"
+        android:padding="@dimen/ten_dp"
+        android:text="Like / UnLike"
+        android:textColor="@color/black"
+        android:textSize="@dimen/sixteen_sp" />-->
+
+</ScrollView>

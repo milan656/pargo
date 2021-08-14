@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+    <color name="gray_lightest">#DEDEDE</color>
+    <color name="gray_light">#CCCCCC</color>
+    <color name="gray">#989898</color>
+    <color name="gray_dark">#666666</color>
+    <color name="gray_deep_dark">#333333</color>
+
+    <color name="blue">#007AFF</color>
+    <color name="blue_medium">#44A2FC</color>
+    <color name="blue_light">#0ECFFF</color>
+    <color name="blue_alpha">#9CD9FF</color>
+
+    <color name="dark_black">#CC262626</color>
+    <color name="black_half_transparent">#66000000</color>
+    <color name="black_full_transparent">#22000000</color>
+
+
+    <color name="header_title">#CC2200</color>
+
+    <color name="bg_color">#F2F5FA</color>
+
+    <color name="yellow">#fdbb1f</color>
+    <color name="strockwidth">#FDBB1F</color>
+    <color name="adapter_background">#f6e9cb</color>
+    <color name="new_yellow">#feeabb</color>
+    <color name="light_gray">#D3D3D3</color>
+    <color name="light_gray_1">#e4e4e4</color>
+    <color name="transparent">#00000000</color>
+    <color name="white">#ffffff</color>
+    <color name="blue_color">#5f8aff</color>
+    <color name="selected_card">#fff1d2</color>
+    <color name="translucent_black_55">#a2000000</color>
+    <color name="splash_top">#ffdf42</color>
+    <color name="splash_end">#fdbb1f</color>
+    <color name="progress_color">#F4DF6F</color>
+    <color name="light_gray_text_color">#6e777f</color>
+    <color name="light_gray_btn_color">#E0E2E4</color>
+    <color name="dark_gray_text_color">#495057</color>
+    <color name="dark_gray_text_color_with_opacity">#B3495057</color>
+    <color name="light_view_gray">#e9ecef</color>
+    <color name="strock_color">#1A000000</color>
+    <color name="header_text_color">#4a5157</color>
+    <color name="header_text_color_light">#838c95</color>
+    <color name="light_yellow">#f4dfad</color>
+    <color name="chart_color">#949AF0</color>
+    <color name="bar_color">#d0dde4</color>
+    <color name="bar_dot_color">#4a63d4</color>
+    <color name="light_text_color">#92969a</color>
+    <color name="hintColor">#6E777F</color>
+    <color name="light_hint">#ededed</color>
+    <color name="point_date_color_blue">#545cd8</color>
+    <color name="light_gray_for_button">#e0e2e4</color>
+    <color name="dashboard_end">#8b1e57f8</color>
+    <color name="dashboard_top">#491b9f</color>
+    <color name="fragment_background">#cdf1f4f6</color>
+    <color name="text_color">#495057</color>
+    <color name="text_color1">#424242</color>
+    <color name="text_blue">#545CD8</color>
+    <color name="text_dropdown">#6E777F</color>
+    <color name="text_hint_color">#495057</color>
+    <color name="text_date">#959595</color>
+
+    <color name="bar_1">#949AF6</color>
+    <color name="bar_2">#FDC321</color>
+
+    <color name="background_on_focus">#19fdbb1f</color>
+    <color name="lovendar">#c970ff</color>
+    <color name="light_green">#9ad6d0</color>
+    <color name="light_blue">#30b1ff</color>
+    <color name="green">#9ad851</color>
+    <color name="lcv_color">#9E95E2</color>
+    <color name="scv_color">#FAC2C0</color>
+
+    <color name="dark_backgroud">#6bb5babe</color>
+    <color name="black">#000000</color>
+    <color name="header_title_color">#4a5157</color>
+    <color name="stencil_color">#545cd8</color>
+    <color name="red">#e02020</color>
+
+    <color name="background_bottom">#ebebeb</color>
+    <color name="light_yellow1">#f7e5b7</color>
+    <color name="coloricon">#b5babe</color>
+    <color name="iconcolor">#838c95</color>
+    <color name="red_color">#F44336</color>
+    <color name="ltgray">#1a000000</color>
+    <color name="point_date_color_blue_two">#545CD8</color>
+
+    <color name="picker_background">#3F51B5</color>
+    <color name="picker_button_background_selected">#3F51B5</color>
+    <color name="picker_button_background">@android:color/white</color>
+    <color name="picker_button_background_innactive">#BDBDBD</color>
+    <color name="picker_default_text_color">#999</color>
+    <color name="picker_default_selected_text_color">@android:color/black</color>
+    <color name="picker_default_selector_color">#646464</color>
+    <color name="picker_default_divider_color">@android:color/transparent</color>
+    <dimen name="picker_default_divider_height">1dp</dimen>
+
+    <color name="colortransparent">#616264</color>
+</resources>

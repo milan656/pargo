@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="500dp"
+    android:layout_height="42dp"
+    android:background="@color/bg_color"
+    android:gravity="start|center"
+    android:orientation="horizontal">
+
+    <com.tntra.pargo.custom.BoldTextView
+        android:id="@+id/timestamp"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginEnd="@dimen/three_dp"
+        android:layout_marginRight="@dimen/three_dp"
+        android:background="@color/bg_color"
+        android:gravity="start|center"
+        android:text="timestamp"
+        android:textColor="@color/text_color1"
+        android:textSize="@dimen/fourteen_sp"
+        android:textStyle="bold" />
+
+
+</LinearLayout>

@@ -1,0 +1,145 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/main_background">
+
+    <RelativeLayout
+        android:id="@+id/role_title_layout"
+        android:layout_width="match_parent"
+
+        android:layout_height="@dimen/setting_title_layout_height">
+
+        <TextView
+            android:layout_width="@dimen/back_arrow_size"
+            android:layout_height="@dimen/back_arrow_size"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="@dimen/back_arrow_left"
+            android:layout_marginLeft="@dimen/back_arrow_left"
+            android:layout_marginBottom="@dimen/setting_title_content_margin"
+            android:background="@drawable/btn_back_arrow"
+            android:onClick="onBackArrowPressed" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/role_content_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="center">
+
+        <TextView
+            android:id="@+id/role_choose_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/select_role_title"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/text_size_large" />
+
+        <RelativeLayout
+            android:id="@+id/broadcaster_layout"
+            style="@style/select_role_block"
+            android:layout_below="@id/role_choose_title"
+            >
+
+            <ImageView
+                android:id="@+id/select_role_icon_broadcaster"
+                style="@style/select_role_block_icon"
+                android:src="@drawable/ic_role_broadcaster" />
+
+            <RelativeLayout style="@style/select_role_block_content">
+
+                <TextView
+                    android:id="@+id/select_role_arrow_broadcaster"
+                    style="@style/select_role_block_arrow" />
+
+                <TextView
+                    android:id="@+id/select_role_title_broadcaster"
+                    style="@style/select_role_block_title"
+                    android:layout_toStartOf="@id/select_role_arrow_broadcaster"
+                    android:layout_toLeftOf="@id/select_role_arrow_broadcaster"
+                    android:text="@string/select_role_broadcaster"
+                    android:textSize="@dimen/twelve_sp"/>
+
+                <TextView
+                    android:id="@+id/select_role_hint_broadcaster"
+                    style="@style/select_role_block_hint"
+                    android:layout_width="wrap_content"
+                    android:layout_below="@+id/select_role_title_broadcaster"
+                    android:text="@string/select_role_broadcaster_hint"
+                    android:textSize="@dimen/twelve_sp"/>
+            </RelativeLayout>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/audience_layout"
+            style="@style/select_role_block"
+            android:layout_below="@id/broadcaster_layout"
+            >
+
+            <ImageView
+                android:id="@+id/select_role_icon_audience"
+                style="@style/select_role_block_icon"
+                android:src="@drawable/ic_role_audience" />
+
+            <RelativeLayout style="@style/select_role_block_content">
+
+                <TextView
+                    android:id="@+id/select_role_arrow_audience"
+                    style="@style/select_role_block_arrow" />
+
+                <TextView
+                    android:id="@+id/select_role_title_audience"
+                    style="@style/select_role_block_title"
+                    android:layout_toStartOf="@id/select_role_arrow_audience"
+                    android:layout_toLeftOf="@id/select_role_arrow_audience"
+                    android:text="@string/select_role_audience"
+                    android:textSize="@dimen/twelve_sp"/>
+
+                <TextView
+                    android:id="@+id/select_role_hint_audience"
+                    style="@style/select_role_block_hint"
+                    android:layout_below="@id/select_role_title_audience"
+                    android:text="@string/select_role_audience_hint" />
+            </RelativeLayout>
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/btnCreateSession"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/sixteen_sp"
+            android:textColor="@color/black"
+            android:text="Create Session"
+            android:layout_marginTop="@dimen/sixteen_dp"
+            android:visibility="gone"
+            android:layout_gravity="center"
+            android:padding="@dimen/ten_dp"/>
+        <Button
+            android:id="@+id/btnAcceptRejectRequest"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/sixteen_sp"
+            android:textColor="@color/black"
+            android:text="Collab Accept Reject Request"
+            android:layout_marginTop="@dimen/sixteen_dp"
+            android:visibility="gone"
+            android:layout_gravity="center"
+            android:padding="@dimen/ten_dp"/>
+        <Button
+            android:id="@+id/btnCreateRequest"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/sixteen_sp"
+            android:textColor="@color/black"
+            android:text="Create Collab Request"
+            android:layout_marginTop="@dimen/sixteen_dp"
+            android:visibility="gone"
+            android:layout_gravity="center"
+            android:padding="@dimen/ten_dp"/>
+    </LinearLayout>
+
+
+</LinearLayout>

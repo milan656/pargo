@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/fragment_background"
+    tools:context=".activities.CollabStudioActivity">
+
+    <LinearLayout
+        android:id="@+id/llmainContent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <include layout="@layout/common_toolbar_main" />
+
+        <LinearLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/eighteen_dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Collab Request sent!"
+                android:textColor="@color/black"
+                android:textSize="@dimen/sixteen_sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/twenty_dp"
+                android:text="Hold tight, you have sent a collab request. you will be notified once your collab request is accepted. While you wait here's something for you to explore."
+                android:textColor="@color/dark_gray_text_color"
+                android:textSize="@dimen/sixteen_sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/twenty_four_dp"
+                android:orientation="horizontal">
+
+                <com.tntra.pargo.custom.BoldTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_gravity="end"
+                    android:layout_marginTop="@dimen/twenty_dp"
+                    android:layout_marginEnd="@dimen/ten_dp"
+                    android:layout_marginRight="@dimen/ten_dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/layout_bg_corner"
+                    android:gravity="center"
+                    android:paddingStart="@dimen/twenty_dp"
+                    android:paddingEnd="@dimen/twenty_dp"
+                    android:text="Explore More"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/fourteen_sp"
+                    android:textStyle="bold" />
+
+                <com.tntra.pargo.custom.BoldTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_gravity="end"
+                    android:layout_marginStart="@dimen/ten_dp"
+                    android:layout_marginLeft="@dimen/ten_dp"
+                    android:layout_marginTop="@dimen/twenty_dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/layout_bg_corner"
+                    android:gravity="center"
+                    android:paddingStart="@dimen/twenty_dp"
+                    android:paddingEnd="@dimen/twenty_dp"
+                    android:text="Join Collab"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/fourteen_sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+</RelativeLayout>

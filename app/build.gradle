@@ -1,0 +1,182 @@
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
+    id 'com.google.gms.google-services'
+
+
+}
+
+android {
+    compileSdkVersion 29
+
+    defaultConfig {
+        applicationId "com.tntra.pargo"
+        minSdkVersion 16 // JELLY_BEAN
+        targetSdkVersion 29
+        versionCode 10
+        versionName "3.0.0"
+        multiDexEnabled true
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+
+        ndk {
+            abiFilters "armeabi-v7a", "arm64-v8a", "x86", "x86_64"
+        }
+    }
+
+    buildTypes {
+        release {
+
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['src/main/jniLibs']
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.recyclerview:recyclerview:1.0.0'
+    implementation 'androidx.core:core-ktx:1.3.2'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
+    implementation 'androidx.cardview:cardview:1.0.0'
+    implementation 'io.agora.rtc:full-sdk:3.5.0.2'
+
+    implementation 'androidx.media2:media2-exoplayer:1.0.3'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.0'
+
+    testImplementation 'junit:junit:4.12'
+    implementation 'androidx.multidex:multidex:2.0.0'
+    androidTestImplementation 'com.jayway.android.robotium:robotium-solo:5.6.3'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
+    // Lifecycle components
+//    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$rootProject.lifecycleVersion"
+    implementation "androidx.lifecycle:lifecycle-common-java8:$rootProject.lifecycleVersion"
+
+    // Kotlin components
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
+    /*// Testing
+    testImplementation "junit:junit:$rootProject.junitVersion"
+    androidTestImplementation "androidx.arch.core:core-testing:$rootProject.coreTestingVersion"
+    androidTestImplementation ("androidx.test.espresso:espresso-core:$rootProject.espressoVersion", {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    androidTestImplementation "androidx.test.ext:junit:$rootProject.androidxJunitVersion"*/
+
+    implementation 'com.google.code.gson:gson:2.8.5'
+
+
+//    retrofit
+    implementation 'com.squareup.retrofit2:retrofit:2.0.2'
+    implementation 'com.squareup.retrofit2:converter-gson:2.0.2'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.9.1'
+    annotationProcessor 'android.arch.lifecycle:compiler:1.1.1'
+    implementation 'com.squareup.okhttp3:okhttp:3.12.1'
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'com.google.android.material:material:1.3.0'
+
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+//    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    implementation 'junit:junit:4.13.2'
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.3.0'
+
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'android.arch.lifecycle:viewmodel:1.1.1'
+    implementation 'android.arch.lifecycle:extensions:1.1.1'
+
+    implementation 'de.hdodenhof:circleimageview:3.0.0'
+
+
+//    implementation 'co.lujun:androidtagview:1.1.7'
+
+    implementation 'com.google.android.play:core:1.10.0'
+    implementation 'com.github.bumptech.glide:glide:4.12.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
+
+    implementation 'com.caverock:androidsvg-aar:1.3'
+    api 'com.theartofdev.edmodo:android-image-cropper:2.8.+'
+    implementation 'com.github.bumptech.glide:okhttp3-integration:4.5.0'
+
+//    FireBase Library
+    implementation 'com.google.firebase:firebase-messaging:21.0.0'
+    implementation 'com.google.firebase:firebase-core:18.0.0'
+    implementation 'com.google.firebase:firebase-iid:21.0.0'
+    implementation 'com.google.firebase:firebase-crash:16.2.1'
+    implementation 'com.google.firebase:firebase-auth:20.0.0'
+    implementation 'com.google.firebase:firebase-firestore:22.0.0'
+
+    //    implementation 'com.google.firebase:firebase-crashlytics:17.2.2'
+
+    // Recommended: Add the Google Analytics SDK.
+    implementation "androidx.fragment:fragment-ktx:1.2.5"
+    implementation 'com.google.firebase:firebase-analytics-ktx:18.0.0'
+    implementation 'com.google.android.gms:play-services-auth:18.1.0'
+//    implementation 'com.facebook.android:facebook-android-sdk:[5,6)'
+    implementation 'com.facebook.android:facebook-android-sdk:5.15.3'
+    implementation 'com.mikhaellopez:circularimageview:4.2.0'
+
+
+//    implementation 'com.brucetoo.pickview:library:1.2.3'
+//    implementation 'com.trading212:diverse-recycler-adapter:0.9.11'
+    implementation 'ca.barrenechea.header-decor:header-decor:0.2.6'
+    implementation 'id.zelory:compressor:3.0.1'
+
+    // dependancy for exoplayer
+    implementation "com.google.android.exoplayer:exoplayer:2.14.2"
+    implementation 'com.google.android.exoplayer:exoplayer-ui:2.14.2'
+    implementation 'com.google.android.exoplayer:exoplayer:2.13.3'
+    implementation 'com.google.android.exoplayer:exoplayer:r2.4.0'
+
+    /*implementation "com.google.android.exoplayer:exoplayer:r2.4.0"
+// for core support in exoplayer.
+    implementation "com.google.android.exoplayer:exoplayer-core:r2.4.0"
+// for adding dash support in our exoplayer.
+    implementation "com.google.android.exoplayer:exoplayer-dash:r2.4.0"
+// for adding hls support in exoplayer.
+    implementation "com.google.android.exoplayer:exoplayer-hls:r2.4.0"
+// for smooth streaming of video in our exoplayer.
+    implementation "com.google.android.exoplayer:exoplayer-smoothstreaming:r2.4.0"
+// for generating default ui of exoplayer
+    implementation "com.google.android.exoplayer:exoplayer-ui:r2.4.0"*/
+
+    implementation 'kr.co.prnd:readmore-textview:1.0.0'
+
+    implementation 'com.amazonaws:aws-android-sdk-core:2.19.3'
+    implementation 'com.amazonaws:aws-android-sdk-cognito:2.2.22'
+    implementation 'com.amazonaws:aws-android-sdk-s3:2.19.3'
+    implementation 'com.amazonaws:aws-android-sdk-ddb:2.2.22'
+//    implementation ('com.amazonaws:aws-android-sdk-mobile-client:2.19.3@aar') { transitive = true }
+
+    implementation 'com.tbuonomo.andrui:viewpagerdotsindicator:4.1.2'
+
+    implementation "org.jetbrains.anko:anko:0.10.8"
+    //Socket.io
+    implementation('io.socket:socket.io-client:1.0.0') {
+        exclude group: 'org.json', module: 'json'
+    }
+
+}
+
+
+
+repositories {
+    mavenCentral()
+}

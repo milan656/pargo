@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".fragment.PagerFragment">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/twelve_dp"
+        android:layout_marginTop="@dimen/ten_dp"
+        android:layout_marginEnd="@dimen/twelve_dp"
+        android:background="@color/transparent"
+        app:cardCornerRadius="@dimen/five_dp"
+        app:cardElevation="@dimen/two_dp"
+        app:cardUseCompatPadding="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvCreatorName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/eighteen_dp"
+                android:layout_marginLeft="@dimen/eighteen_dp"
+                android:layout_marginTop="@dimen/twenty_dp"
+                android:text="sonu \nnigam"
+                android:textAllCaps="true"
+                android:textColor="@color/black"
+                android:textSize="@dimen/thirty_six_sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/eighteen_dp"
+                android:layout_marginTop="@dimen/ten_dp"
+                android:layout_marginEnd="@dimen/eighteen_dp"
+                android:layout_marginBottom="@dimen/twelve_dp"
+                android:text="Musician Singer" />
+
+
+            <com.google.android.exoplayer2.ui.PlayerView
+                android:id="@+id/idExoPlayerVIew"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginStart="@dimen/eighteen_dp"
+                android:layout_marginEnd="@dimen/eighteen_dp"
+                android:layout_marginBottom="@dimen/ten_dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/eighteen_dp"
+                android:layout_marginEnd="@dimen/eighteen_dp"
+                android:layout_marginBottom="@dimen/thirty_dp"
+                android:text="The meaning of Kandisa: First look"
+                android:textColor="@color/black"
+                android:textSize="@dimen/sixteen_sp" />
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+</FrameLayout>

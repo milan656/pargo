@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/gray"
+    tools:context=".activities.GoLiveScreenActivity">
+
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/memberRecycView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@color/transparent"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/eighteen_dp"
+        android:paddingEnd="@dimen/eighteen_dp">
+
+        <ImageView
+            android:id="@+id/ivBack"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:padding="@dimen/five_dp"
+            android:src="@drawable/btn_back_arrow"
+            app:tint="@color/black" />
+
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="start|center"
+            android:text="pargo"
+            android:textAllCaps="true"
+            android:textColor="@color/black"
+            android:textSize="@dimen/eighteen_sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="@dimen/twenty_dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <com.tntra.pargo.custom.BoldTextView
+            android:layout_width="120dp"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="@dimen/ten_dp"
+            android:layout_marginRight="@dimen/ten_dp"
+            android:background="@drawable/layout_bg_corner"
+            android:gravity="center"
+            android:text="Go Live"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/fourteen_sp"
+            android:textStyle="bold" />
+
+        <com.tntra.pargo.custom.BoldTextView
+            android:layout_width="120dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="@dimen/ten_dp"
+            android:layout_marginLeft="@dimen/ten_dp"
+            android:background="@drawable/layout_bg_corner"
+            android:gravity="center"
+            android:text="Upload"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/fourteen_sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+</RelativeLayout>

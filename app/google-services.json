@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "749548846198",
+    "project_id": "my-project-pargo",
+    "storage_bucket": "my-project-pargo.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:749548846198:android:25941f76a5197e587d3357",
+        "android_client_info": {
+          "package_name": "com.tntra.pargo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "749548846198-s67sklgsi7128o8df5o27nngus184f9d.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tntra.pargo",
+            "certificate_hash": "ac413c4085fc44fb95c289f4f4ee0dbc05187fff"
+          }
+        },
+        {
+          "client_id": "749548846198-5gtnsspidec0u5ktr82ffjjvluis3ovo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCTz7OYDRPSeYPqKb6Deej97eNOiD0X9kw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "749548846198-5gtnsspidec0u5ktr82ffjjvluis3ovo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

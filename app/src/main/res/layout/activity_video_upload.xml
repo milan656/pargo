@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".activities.VideoUploadActivity"
+    android:keepScreenOn="true">
+
+    <include layout="@layout/common_toolbar_main" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/sixteen_dp"
+                android:orientation="vertical">
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/videoView"
+                    android:layout_width="match_parent"
+                    android:layout_height="230dp"
+                    android:layout_marginTop="@dimen/five_dp"
+                    android:innerRadius="0dp"
+                    android:shape="ring"
+                    android:thicknessRatio="1.9"
+                    app:cardCornerRadius="10dp">
+
+                    <ImageView
+                        android:id="@+id/ivVidoFile"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:adjustViewBounds="true"
+                        android:scaleType="fitXY"
+                        android:src="@mipmap/ic_no_video"
+                        android:visibility="visible" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start|bottom"
+                        android:layout_margin="@dimen/fourteeen_dp"
+                        android:gravity="start"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:id="@+id/ivVidoIcon"
+                            android:layout_width="45dp"
+                            android:layout_height="45dp"
+
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/video_icon"
+                            android:visibility="gone" />
+
+                        <com.tntra.pargo.custom.BoldTextView
+                            android:id="@+id/tvFileTime"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="@dimen/four_dp"
+                            android:gravity="center"
+                            android:text="0:30"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/eighteen_sp"
+                            android:visibility="gone" />
+                    </LinearLayout>
+
+                    <com.tntra.pargo.custom.NormalTextView
+                        android:id="@+id/tvSelectfile"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="Select Video / audio File"
+                        android:textColor="@color/text_color"
+                        android:textSize="@dimen/fourteen_sp"
+                        android:visibility="gone" />
+                </androidx.cardview.widget.CardView>
+
+                <com.tntra.pargo.custom.BoldTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/eighteen_dp"
+                    android:text="Title"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/fourteen_sp"
+                    android:textStyle="bold" />
+
+                <com.tntra.pargo.custom.NormalEditText
+                    android:id="@+id/edtTitleVideo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="@dimen/five_dp"
+                    android:background="@drawable/layout_bg_corner_grey"
+                    android:gravity="start|center"
+                    android:hint="Enter Title"
+                    android:inputType="textCapSentences|textMultiLine"
+                    android:maxLines="2"
+                    android:padding="@dimen/ten_dp"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/fourteen_sp" />
+
+                <com.tntra.pargo.custom.BoldTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/eighteen_dp"
+                    android:text="Description"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/fourteen_sp"
+                    android:textStyle="bold" />
+
+                <com.tntra.pargo.custom.NormalEditText
+                    android:id="@+id/edtDesc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="@dimen/five_dp"
+                    android:background="@drawable/layout_bg_corner_grey"
+                    android:gravity="top|start"
+                    android:hint="Enter Description"
+                    android:inputType="textCapSentences|textMultiLine"
+                    android:maxLines="2"
+                    android:minLines="10"
+                    android:padding="@dimen/ten_dp"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/fourteen_sp" />
+
+                <com.tntra.pargo.custom.BoldTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/eighteen_dp"
+                    android:text="Tags"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/fourteen_sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginTop="5dp"
+
+                    android:background="@drawable/layout_bg"
+                    android:orientation="horizontal">
+
+                    <Spinner
+                        android:id="@+id/spinnerTags"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp" />
+                </LinearLayout>
+
+                <com.tntra.pargo.custom.BoldTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/eighteen_dp"
+                    android:text="Cover Photo"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/fourteen_sp"
+                    android:textStyle="bold" />
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="190dp"
+                    android:layout_marginTop="@dimen/five_dp"
+                    android:innerRadius="0dp"
+                    android:shape="ring"
+                    android:thicknessRatio="1.9"
+                    app:cardCornerRadius="10dp">
+
+                    <ImageView
+                        android:id="@+id/ivCover"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="fitCenter"
+                        android:src="@mipmap/ic_no_image" />
+                </androidx.cardview.widget.CardView>
+
+                <com.tntra.pargo.custom.BoldTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/eighteen_dp"
+                    android:text="Choose Your audience"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/fourteen_sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/five_dp"
+                    android:orientation="vertical">
+
+
+                    <CheckBox
+                        android:id="@+id/chkfollowing"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="start|center"
+                        android:text="Following"
+                        android:textColor="@color/text_color"
+                        android:textSize="@dimen/fourteen_sp" />
+
+                    <CheckBox
+                        android:id="@+id/chkfollower"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="start|center"
+                        android:text="Follower"
+                        android:textColor="@color/text_color"
+                        android:textSize="@dimen/fourteen_sp" />
+
+                    <CheckBox
+                        android:id="@+id/chkEveryone"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="start|center"
+                        android:text="Every one on ParGo"
+                        android:textColor="@color/text_color"
+                        android:textSize="@dimen/fourteen_sp" />
+
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

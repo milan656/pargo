@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/fragment_background"
+    tools:context=".fragment.CollabFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/eighteen_dp"
+        android:layout_marginTop="@dimen/eighteen_dp"
+        android:layout_marginEnd="@dimen/eighteen_dp"
+        android:orientation="vertical">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardUploadContent"
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+            app:cardCornerRadius="@dimen/eight_dp"
+            app:cardElevation="@dimen/two_dp"
+            app:cardUseCompatPadding="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="Choose video / audio from device"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/fourteen_sp" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+            app:cardCornerRadius="@dimen/eight_dp"
+            app:cardElevation="@dimen/two_dp"
+            android:visibility="gone"
+            app:cardUseCompatPadding="true"
+            android:layout_marginTop="@dimen/eight_dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="Create a Live Stream"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/fourteen_sp" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/startCollabCard"
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+            app:cardCornerRadius="@dimen/eight_dp"
+            app:cardElevation="@dimen/two_dp"
+            app:cardUseCompatPadding="true"
+            android:layout_marginTop="@dimen/eight_dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="Start a collaboration"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/fourteen_sp" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/twenty_four_dp"
+            android:textStyle="bold"
+            android:text="OnGoing Collaboration"
+            android:textSize="@dimen/sixteen_sp"
+            android:textColor="@color/black"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/requestAceptedRecycView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/ten_dp"
+            android:nestedScrollingEnabled="false"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+    </LinearLayout>
+
+</androidx.core.widget.NestedScrollView>

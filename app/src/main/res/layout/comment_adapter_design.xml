@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:layout_marginTop="@dimen/fourteeen_dp">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/ivmessageImage"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+             />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginStart="@dimen/five_dp"
+        android:layout_marginLeft="@dimen/five_dp"
+        android:gravity="center"
+        android:orientation="vertical">
+
+
+        <com.tntra.pargo.custom.NormalTextView
+            android:id="@+id/tvComment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="hello what are you doing"
+            android:textColor="@color/black"
+            android:padding="@dimen/ten_dp"
+            android:textSize="@dimen/fourteen_sp" />
+    </LinearLayout>
+</LinearLayout>

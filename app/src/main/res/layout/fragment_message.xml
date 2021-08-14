@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragment.MessageFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/eighteen_dp"
+        android:orientation="vertical">
+
+        <com.tntra.pargo.custom.NormalEditText
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginTop="@dimen/twenty_four_dp"
+            android:background="@drawable/layout_bg_corner"
+            android:hint="Search"
+            android:padding="@dimen/ten_dp"
+            android:textColor="@color/text_color"
+            android:textColorHint="@color/dark_gray_text_color"
+            android:textSize="@dimen/fourteen_sp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/followersRecycView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+</RelativeLayout>

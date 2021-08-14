@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".activities.CollabStudioActivity">
+
+    <include layout="@layout/common_toolbar_main" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/eighteen_dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="What kind of collab are you thinking of?"
+            android:textColor="@color/black"
+            android:textSize="@dimen/sixteen_sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/twenty_four_dp"
+            android:text="Audio"
+            android:textColor="@color/light_gray"
+            android:textSize="@dimen/fourteen_sp"
+            android:textStyle="bold" />
+
+        <com.tntra.pargo.custom.UnderlineTextView
+            android:id="@+id/tvPodcast"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/three_dp"
+            android:text="Podcast"
+            android:textColor="@color/black"
+            android:textSize="@dimen/fourteen_sp"
+            android:textStyle="bold" />
+
+        <com.tntra.pargo.custom.UnderlineTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/three_dp"
+            android:text="Music composition"
+            android:textColor="@color/gray"
+            android:textSize="@dimen/fourteen_sp"
+            android:visibility="gone"
+            android:textStyle="bold" />
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/twenty_four_dp"
+            android:text="Video"
+            android:textColor="@color/light_gray"
+            android:textSize="@dimen/fourteen_sp"
+            android:textStyle="bold" />
+
+        <com.tntra.pargo.custom.UnderlineTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/three_dp"
+            android:text="Live stream"
+            android:textColor="@color/black"
+            android:textSize="@dimen/fourteen_sp"
+            android:textStyle="bold" />
+
+        <com.tntra.pargo.custom.UnderlineTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/three_dp"
+            android:text="Jugalbandi"
+            android:textColor="@color/black"
+            android:textSize="@dimen/fourteen_sp"
+            android:textStyle="bold" />
+
+        <com.tntra.pargo.custom.UnderlineTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/three_dp"
+            android:text="Video kit"
+            android:textColor="@color/black"
+            android:visibility="gone"
+            android:textSize="@dimen/fourteen_sp"
+            android:textStyle="bold" />
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/gray"
+            android:layout_marginTop="@dimen/twenty_four_dp"
+            android:layout_marginBottom="@dimen/twenty_four_dp"/>
+
+        <com.tntra.pargo.custom.UnderlineTextView
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/three_dp"
+            android:text="Start a collab now"
+            android:textColor="@color/black"
+            android:textSize="@dimen/sixteen_sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+</LinearLayout>

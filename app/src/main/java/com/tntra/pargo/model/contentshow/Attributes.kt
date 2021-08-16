@@ -1,4 +1,4 @@
-package com.tntra.pargo.model.content_list.show
+package com.tntra.pargo.model.contentshow
 
 data class Attributes(
     val accessibility: String,

@@ -6,6 +6,8 @@ import com.tntra.pargo.common.Common
 import com.tntra.pargo.common.RetrofitCommonClass
 import com.tntra.pargo.model.CommonResponseModel
 import com.tntra.pargo.model.collabsession.CollabSessionModel
+import com.tntra.pargo.model.comments.CommentListModel
+import com.tntra.pargo.model.comments.list.CommentsListingModel
 import com.tntra.pargo.model.content_list.Content
 import com.tntra.pargo.model.content_list.ContentListModel
 import com.tntra.pargo.model.content_list.show.ContentShowModel
@@ -86,7 +88,7 @@ class ContentRepository {
     ): MutableLiveData<ContentShowModel> {
         val loginData = MutableLiveData<ContentShowModel>()
         contentApi?.contentShow(
-                authorizationToke,id
+                authorizationToke, id
         )?.enqueue(object : Callback<ContentShowModel> {
             override fun onResponse(
                     call: Call<ContentShowModel>,
@@ -123,15 +125,100 @@ class ContentRepository {
         return loginData
     }
 
+    fun commentAddApi(
+            authorizationToke: String,
+            jsonObject: JsonObject,
+            id: Int
+    ): MutableLiveData<CommentListModel> {
+        val loginData = MutableLiveData<CommentListModel>()
+        contentApi?.commentAdd(
+                authorizationToke, jsonObject, id
+        )?.enqueue(object : Callback<CommentListModel> {
+            override fun onResponse(
+                    call: Call<CommentListModel>,
+                    response: Response<CommentListModel>
+            ) {
+                if (response.isSuccessful) {
+                    loginData.value = response.body()
+                } else {
+                    try {
+                        val responce = response.errorBody()?.string()
+                        val jsonObjectError = JSONObject(responce)
+
+                        val CommentListModel: CommentListModel =
+                                Common.getErrorModel(jsonObjectError, "CommentListModel") as CommentListModel
+                        //recoveryData.setValue(recoveryPasswordModel)
+
+                        loginData.value = CommentListModel
+
+                    } catch (e: IOException) {
+                        e.printStackTrace()
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+
+                }
+            }
+
+            override fun onFailure(call: Call<CommentListModel>, t: Throwable) {
+
+                t.printStackTrace()
+            }
+        })
+        return loginData
+    }
+
+    fun commentListApi(
+            authorizationToke: String,
+            id: Int
+    ): MutableLiveData<CommentsListingModel> {
+        val loginData = MutableLiveData<CommentsListingModel>()
+        contentApi?.commentList(
+                authorizationToke, id
+        )?.enqueue(object : Callback<CommentsListingModel> {
+            override fun onResponse(
+                    call: Call<CommentsListingModel>,
+                    response: Response<CommentsListingModel>
+            ) {
+                if (response.isSuccessful) {
+                    loginData.value = response.body()
+                } else {
+                    try {
+                        val responce = response.errorBody()?.string()
+                        val jsonObjectError = JSONObject(responce)
+
+                        val CommentsListingModel: CommentsListingModel =
+                                Common.getErrorModel(jsonObjectError, "CommentsListingModel") as CommentsListingModel
+                        //recoveryData.setValue(recoveryPasswordModel)
+
+                        loginData.value = CommentsListingModel
+
+                    } catch (e: IOException) {
+                        e.printStackTrace()
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+
+                }
+            }
+
+            override fun onFailure(call: Call<CommentsListingModel>, t: Throwable) {
+
+                t.printStackTrace()
+            }
+        })
+        return loginData
+    }
+
     fun treadingContentApi(
             authorizationToke: String,
-            type:String,
-            page:Int,
-            type_wise_content:String
+            type: String,
+            page: Int,
+            type_wise_content: String
     ): MutableLiveData<TreadingContentModel> {
         val loginData = MutableLiveData<TreadingContentModel>()
         contentApi?.treadingContent(
-                authorizationToke,type,page,type_wise_content
+                authorizationToke, type, page, type_wise_content
         )?.enqueue(object : Callback<TreadingContentModel> {
             override fun onResponse(
                     call: Call<TreadingContentModel>,

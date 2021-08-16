@@ -56,11 +56,12 @@ class TreadingContentAdapter(var item: ArrayList<Content>?,
 //        }
 
         holder.videoContent.setOnClickListener {
-            Log.e("TAGG", "onBindViewHolder: "+item?.get(position)?.attributes?.posts_path )
-            Log.e("TAGG", "onBindViewHolder: "+item?.get(position)?.attributes?.body )
+            Log.e("TAGG", "onBindViewHolder: " + item?.get(position)?.attributes?.posts_path)
+            Log.e("TAGG", "onBindViewHolder: " + item?.get(position)?.attributes?.body)
             val intent = Intent(context, ContentDetailActivity::class.java)
 //            Log.e("TAGclick", "onPositionClick: "+treadingContentList?.get(check)?.attributes?.posts_path )
             intent.putExtra("video_link", item?.get(position)?.attributes?.posts_path)
+            intent.putExtra("id", item?.get(position)?.id)
 //            intent.putExtra("video_link","https://pargo-back-end-devlopment.s3.ap-south-1.amazonaws.com//storage/emulated/0/20210727_223815.mp41628514097792")
 //            intent.putExtra("video_link", "https://pargo-back-end-devlopment.s3.ap-south-1.amazonaws.com/iOS/trim.3D4A8881-D584-4E6C-B3F2-C2FE10E89125.MOV")
 //            intent.putExtra("video_link", "https://pargo-back-end-devlopment.s3.ap-south-1.amazonaws.com/ganpati+sanskrit/AnyConv.com__Hanuman+Sankirtan.m3u8")

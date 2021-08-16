@@ -7,10 +7,7 @@ import android.annotation.TargetApi
 import android.app.Activity
 import android.app.AlertDialog
 import android.app.Dialog
-import android.content.ContentResolver
-import android.content.ContentUris
-import android.content.Context
-import android.content.Intent
+import android.content.*
 import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.content.res.Resources
@@ -23,6 +20,7 @@ import android.net.NetworkCapabilities
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
+import android.os.FileUtils.copy
 import android.provider.DocumentsContract
 import android.provider.MediaStore
 import android.text.TextUtils
@@ -40,11 +38,13 @@ import androidx.core.content.PermissionChecker.checkSelfPermission
 import androidx.core.widget.ImageViewCompat
 import androidx.exifinterface.media.ExifInterface
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.gms.common.util.IOUtils
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.jkadvantagandbadsha.model.login.UserModel
 import com.tntra.pargo.R
 import com.tntra.pargo.activity.LoginActivity
+import com.tntra.pargo.model.comments.list.CommentsListingModel
 import com.tntra.pargo.model.content_list.ContentListModel
 import com.tntra.pargo.model.followers.FollowerModel
 import com.tntra.pargo.model.login.OtpModel
@@ -403,6 +403,12 @@ class Common {
                         val TreadingContentModel =
                                 gson.fromJson(jsonObject.toString(), TreadingContentModel::class.java)
                         return TreadingContentModel
+                    }
+
+                    "CommentsListingModel" -> {
+                        val CommentsListingModel =
+                                gson.fromJson(jsonObject.toString(), CommentsListingModel::class.java)
+                        return CommentsListingModel
                     }
 
 
@@ -794,13 +800,14 @@ class Common {
             builder.show()
         }
 
-        fun getfileExtension(context: Context,uri: Uri): String {
+        fun getfileExtension(context: Context, uri: Uri): String {
             val extension: String
             val contentResolver: ContentResolver = context.getContentResolver()
             val mimeTypeMap = MimeTypeMap.getSingleton()
             extension = mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uri))!!
             return extension
         }
+
         fun expand(v: View) {
             v.measure(
                     RecyclerView.LayoutParams.MATCH_PARENT,
@@ -1015,7 +1022,7 @@ class Common {
         @RequiresApi(Build.VERSION_CODES.KITKAT)
         fun getPath(context: Context, uri: Uri): String? {
 
-
+            var contentUri: Uri? = null
             val isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT
 
             // DocumentProvider
@@ -1033,15 +1040,66 @@ class Common {
 
                     // TODO handle non-primary volumes
                 } else if (isDownloadsDocument(uri)) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        val id: String
+                        var cursor: Cursor? = null
+                        try {
+                            cursor = context.contentResolver.query(uri, arrayOf(MediaStore.MediaColumns.DISPLAY_NAME), null, null, null)
+                            if (cursor != null && cursor.moveToFirst()) {
+                                val fileName = cursor.getString(0)
+                                val path = Environment.getExternalStorageDirectory().toString() + "/Download/" + fileName
+                                if (!TextUtils.isEmpty(path)) {
+                                    return path
+                                }
+                            }
+                        } finally {
+                            cursor?.close()
+                        }
+                        id = DocumentsContract.getDocumentId(uri);
+                        if (!TextUtils.isEmpty(id)) {
+                            if (id.startsWith("raw:")) {
+                                return id.replaceFirst("raw:", "")
+                            }
+                            val contentUriPrefixesToTry = arrayOf(
+                                    "content://downloads/public_downloads",
+                                    "content://downloads/my_downloads"
+                            )
+                            for (contentUriPrefix in contentUriPrefixesToTry) {
+                                return try {
+                                    val contentUri = ContentUris.withAppendedId(Uri.parse(contentUriPrefix), java.lang.Long.valueOf(id))
+                                    getDataColumn(context, contentUri, null, null)
+                                } catch (e: NumberFormatException) {
+                                    //In Android 8 and Android P the id is not a number
+                                    uri.path!!.replaceFirst("^/document/raw:", "").replaceFirst("^raw:", "")
+                                }
+                            }
+                        }
+                    } else {
+                        val id = DocumentsContract.getDocumentId(uri)
+                        if (id.startsWith("raw:")) {
+                            return id.replaceFirst("raw:".toRegex(), "")
+                        }
+                        try {
+                            contentUri = ContentUris.withAppendedId(
+                                    Uri.parse("content://downloads/public_downloads"), java.lang.Long.valueOf(id))
+                        } catch (e: java.lang.NumberFormatException) {
+                            e.printStackTrace()
+                        }
+                        if (contentUri != null) {
+                            return getDataColumn(context, contentUri, null, null)
+                        }
+                    }
+                } /*else if (isDownloadsDocument(uri)) {
 
                     val id = DocumentsContract.getDocumentId(uri)
+                    Log.e("TAGG", "getPath: " + id)
                     val contentUri = ContentUris.withAppendedId(
                             Uri.parse("content://downloads/public_downloads"),
-                            java.lang.Long.valueOf(id)
+                            id?.toString()?.toLong()!!
                     )
 
                     return getDataColumn(context, contentUri, null, null)
-                } else if (isMediaDocument(uri)) {
+                }*/ else if (isMediaDocument(uri)) {
                     val docId = DocumentsContract.getDocumentId(uri)
                     val split =
                             docId.split((":").toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
@@ -1077,6 +1135,7 @@ class Common {
                 return uri.path
             }// File
             // MediaStore (and general)
+
 
             return null
         }
@@ -1120,7 +1179,7 @@ class Common {
                 selection: String?, selectionArgs: Array<String>?,
         ): String? {
 
-            var cursor: Cursor? = null
+            /*var cursor: Cursor? = null
             val column = "_data"
             val projection = arrayOf(column)
 
@@ -1136,7 +1195,124 @@ class Common {
             } finally {
                 cursor?.close()
             }
+            return null*/
+
+            var cursor: Cursor? = null
+            val column = "_data"
+            val projection = arrayOf(
+                    column
+            )
+
+            try {
+                cursor = context.contentResolver.query(uri!!, projection, selection, selectionArgs,
+                        null)
+                if (cursor != null && cursor.moveToFirst()) {
+                    val column_index = cursor.getColumnIndexOrThrow(column)
+                    return cursor.getString(column_index)
+                }
+            } catch (e: java.lang.IllegalArgumentException) {
+                getFilePathFromURI(context, uri)
+            } finally {
+                cursor?.close()
+            }
             return null
+        }
+
+        fun getImageUriFromBitmap(context: Context, bitmap: Bitmap): Uri{
+            val bytes = ByteArrayOutputStream()
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
+            val path = MediaStore.Images.Media.insertImage(context.contentResolver, bitmap, "Title", null)
+            return Uri.parse(path.toString())
+        }
+
+        fun bitmapToFile(bitmap: Bitmap, fileNameToSave: String): File? { // File name like "image.png"
+            //create a file to write bitmap data
+            var file: File? = null
+            return try {
+                file = File(Environment.getExternalStorageDirectory().toString() + File.separator + fileNameToSave)
+                file.createNewFile()
+
+                //Convert bitmap to byte array
+                val bos = ByteArrayOutputStream()
+                bitmap.compress(Bitmap.CompressFormat.PNG, 0, bos) // YOU can also save it in JPEG
+                val bitmapdata = bos.toByteArray()
+
+                //write the bytes in file
+                val fos = FileOutputStream(file)
+                fos.write(bitmapdata)
+                fos.flush()
+                fos.close()
+                file
+            } catch (e: Exception) {
+                e.printStackTrace()
+                file // it will return null
+            }
+        }
+
+       /* private fun bitmapToFile(bitmap: Bitmap, context: Context): Uri {
+            // Get the context wrapper
+            val wrapper = ContextWrapper(context)
+
+            // Initialize a new file instance to save bitmap object
+            var file = wrapper.getDir("Images", Context.MODE_PRIVATE)
+            file = File(file, "${UUID.randomUUID()}.jpg")
+
+            try {
+                // Compress the bitmap and save in jpg format
+                val stream: OutputStream = FileOutputStream(file)
+                Log.e("TAGG", "bitmapToFile: " + file.name + " " + file.path)
+//                bitmap.compress(Bitmap.CompressFormat.JPEG,100,stream)
+                stream.flush()
+                stream.close()
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+
+            // Return the saved bitmap uri
+            return Uri.parse(file.absolutePath)
+        }*/
+
+        fun getFilePathFromURI(context: Context?, contentUri: Uri?): String? {
+            //copy file and send new file path
+            val moviesDir = Environment.getExternalStoragePublicDirectory(
+                    Environment.DIRECTORY_MOVIES
+            )
+            var success = true
+            if (!moviesDir.exists()) {
+                success = moviesDir.mkdir()
+            }
+            if (success) {
+                val fileName: String = getFileName(contentUri)!!
+                if (!TextUtils.isEmpty(fileName)) {
+                    val copyFile = File(moviesDir, "$fileName.mp4")
+                    context?.let { copy(it, contentUri, copyFile) }
+                    return copyFile.absolutePath
+                }
+            }
+            return null
+        }
+
+        fun getFileName(uri: Uri?): String? {
+            if (uri == null) return null
+            var fileName: String? = null
+            val path = uri.path
+            val cut = path!!.lastIndexOf('/')
+            if (cut != -1) {
+                fileName = path.substring(cut + 1)
+            }
+            return fileName
+        }
+
+        fun copy(context: Context, srcUri: Uri?, dstFile: File?) {
+            try {
+                val inputStream = context.contentResolver.openInputStream(srcUri!!) ?: return
+                val outputStream: OutputStream = FileOutputStream(dstFile)
+                IOUtils.copyStream(inputStream, outputStream)
+                inputStream.close()
+                outputStream.close()
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
         }
 
         fun saveBitmapToFile(file: File): File? {

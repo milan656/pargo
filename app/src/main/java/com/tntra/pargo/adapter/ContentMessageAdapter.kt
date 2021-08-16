@@ -11,9 +11,10 @@ import com.bumptech.glide.Glide
 import com.tntra.pargo.R
 import com.tntra.pargo.common.onClickAdapter
 import com.tntra.pargo.model.comments.CommentListModel
+import com.tntra.pargo.model.comments.list.Comment
 import java.lang.Exception
 
-class ContentMessageAdapter(var list: ArrayList<CommentListModel>,
+class ContentMessageAdapter(var list: ArrayList<Comment>,
                             var context: Context,
                             var onpositionClick: onClickAdapter?) : RecyclerView.Adapter<ContentMessageAdapter.Viewholder>() {
     private val positionClick: onClickAdapter = onpositionClick!!
@@ -30,12 +31,12 @@ class ContentMessageAdapter(var list: ArrayList<CommentListModel>,
 
     override fun onBindViewHolder(holder: Viewholder, position: Int) {
 
-        holder.tvComment?.text = list[position].commentName
-        try {
-            Glide.with(context).load(list[position].commentImage).into(holder.ivmessageImage)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
+        holder.tvComment?.text = list[position].attributes.message
+//        try {
+//            Glide.with(context).load(list[position].commentImage).into(holder.ivmessageImage)
+//        } catch (e: Exception) {
+//            e.printStackTrace()
+//        }
     }
 
     override fun getItemCount(): Int {

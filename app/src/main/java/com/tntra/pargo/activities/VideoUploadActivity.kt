@@ -25,6 +25,8 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProviders
+import com.amazonaws.ClientConfiguration
+import com.amazonaws.Protocol
 import com.amazonaws.auth.BasicAWSCredentials
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferState
@@ -33,14 +35,13 @@ import com.amazonaws.regions.Region
 import com.amazonaws.regions.Regions
 import com.amazonaws.services.s3.AmazonS3Client
 import com.amazonaws.services.s3.model.CannedAccessControlList
+import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.tntra.pargo.R
-import com.tntra.pargo.adapter.ExploreGeneresAdapter
 import com.tntra.pargo.common.Common
 import com.tntra.pargo.common.Common.Companion.getFile
 import com.tntra.pargo.common.PrefManager
 import com.tntra.pargo.common.RetrofitCommonClass
-import com.tntra.pargo.model.collabsession.CollabSessionModel
 import com.tntra.pargo.model.contentcreate.ContentCreateModel
 import com.tntra.pargo.model.generes.Genre
 import com.tntra.pargo.networkApi.login.ContentApi
@@ -52,6 +53,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.io.*
+import java.net.URL
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -449,14 +451,28 @@ class VideoUploadActivity : AppCompatActivity(), View.OnClickListener {
 
                     val selectedImage = data?.data
                     fileUri_ = selectedImage
+                    var imagePath: File? = null
 
-                    val imagePath = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                        getFile(this@VideoUploadActivity, selectedImage)
-                    } else {
-                        TODO("VERSION.SDK_INT < KITKAT")
+                    if (selectedImage != null) {
+                        imagePath = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                            getFile(this@VideoUploadActivity, selectedImage)
+                        } else {
+                            TODO("VERSION.SDK_INT < KITKAT")
+                        }
+                        Log.i("imagePath0", "++++" + imagePath?.name)
                     }
-                    Log.i("imagePath", "++++" + imagePath?.name)
 
+                    if (imagePath?.name == null) {
+                        val path = data?.data?.path
+
+                        val uri = Uri.fromFile(File(path!!))
+                        imagePath = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                            getFile(this@VideoUploadActivity, uri)
+                        } else {
+                            TODO("VERSION.SDK_INT < KITKAT")
+                        }
+                        Log.i("imagePath1", "++++" + imagePath?.name)
+                    }
                     if (imageUpload) {
                         try {
                             val bmThumbnail: Bitmap
@@ -464,7 +480,6 @@ class VideoUploadActivity : AppCompatActivity(), View.OnClickListener {
                             bmThumbnail = ThumbnailUtils.createImageThumbnail(imagePath?.path!!, MediaStore.Video.Thumbnails.MINI_KIND)!!
 
                             ivCoverpicView?.setImageBitmap(bmThumbnail)
-//                        ivCoverpicView?.setImageURI(selectedImage)
                             selectedImageUrl = true
                             imagefileUri_ = selectedImage
 
@@ -481,7 +496,6 @@ class VideoUploadActivity : AppCompatActivity(), View.OnClickListener {
                                     post_type = "audio"
                                 }
                             }
-                            Log.e("imagePath", "onActivityResult: " + post_type)
                             tvSelectfile?.visibility = View.GONE
 //                            Log.e("zvzvzv", "onStateChanged: " + "https://$bucket_name.s3-ap-south-1.amazonaws.com/Android/$filename")
                             selectedVideoUrl = "https://$bucket_name.s3-ap-south-1.amazonaws.com/Android/${imagePath?.name}"
@@ -494,8 +508,13 @@ class VideoUploadActivity : AppCompatActivity(), View.OnClickListener {
                             }
 
                             ivVidoFile?.setImageBitmap(bmThumbnail)
+                            ivCoverpicView?.setImageBitmap(bmThumbnail)
                             ivVidoIcon?.visibility = View.VISIBLE
 
+                            imagefileUri_ = Common.getImageUriFromBitmap(this, bmThumbnail)
+                            if (imagefileUri_ != null) {
+                                selectedImageUrl = true
+                            }
                             val retriever = MediaMetadataRetriever()
                             retriever.setDataSource(this, Uri.fromFile(imagePath))
                             val time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
@@ -603,15 +622,22 @@ class VideoUploadActivity : AppCompatActivity(), View.OnClickListener {
         val policy: StrictMode.ThreadPolicy =
                 StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy)
+
+        val configuration = ClientConfiguration()
+        configuration.maxErrorRetry = 3
+        configuration.connectionTimeout = 801000
+        configuration.socketTimeout = 801000
+//        configuration.protocol = Protocol.HTTP
         val credentials = BasicAWSCredentials(
                 accessKey,
                 secreteKey);
-        val s3 = AmazonS3Client(credentials)
-        s3.timeOffset = 10000000
-        java.security.Security.setProperty("networkaddress.cache.ttl", "6000");
+        val s3 = AmazonS3Client(credentials, configuration)
+//        s3.timeOffset = 10000000
+        java.security.Security.setProperty("networkaddress.cache.ttl", "60");
         s3.setRegion(Region.getRegion(Regions.AP_SOUTH_1));
         s3.setEndpoint("https://s3-ap-south-1.amazonaws.com/");
-
+//        val request = GeneratePresignedUrlRequest(bucket_name, objectName)
+//        val objectURL: URL = s3.generatePresignedUrl(request)
         val transferUtility = TransferUtility.builder()
                 .defaultBucket(
                         bucket_name)
@@ -641,10 +667,10 @@ class VideoUploadActivity : AppCompatActivity(), View.OnClickListener {
                     }
 
                     Toast.makeText(this@VideoUploadActivity, "File Upload Successfully", Toast.LENGTH_SHORT).show()
-                } else if (TransferState.FAILED == state) {
+                } /*else if (TransferState.FAILED == state) {
                     Toast.makeText(this@VideoUploadActivity, "File Upload Failed", Toast.LENGTH_SHORT).show()
 //                    failed
-                }
+                }*/
             }
 
             override fun onProgressChanged(id: Int, current: Long, total: Long) {
@@ -852,5 +878,10 @@ class VideoUploadActivity : AppCompatActivity(), View.OnClickListener {
         startActivityForResult(cameraIntent, IMAGE_CAPTURE_CODE)
     }
 
-
+    private fun File.writeBitmap(bitmap: Bitmap, format: Bitmap.CompressFormat, quality: Int) {
+        outputStream().use { out ->
+            bitmap.compress(format, quality, out)
+            out.flush()
+        }
+    }
 }

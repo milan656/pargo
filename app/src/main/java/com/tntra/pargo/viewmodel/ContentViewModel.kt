@@ -7,6 +7,8 @@ import com.google.gson.JsonObject
 import com.tntra.pargo.common.Common
 import com.tntra.pargo.model.CommonResponseModel
 import com.tntra.pargo.model.collabsession.CollabSessionModel
+import com.tntra.pargo.model.comments.CommentListModel
+import com.tntra.pargo.model.comments.list.CommentsListingModel
 import com.tntra.pargo.model.content_list.ContentListModel
 import com.tntra.pargo.model.content_list.show.ContentShowModel
 import com.tntra.pargo.model.login_response.UserLoginModel
@@ -20,6 +22,8 @@ class ContentViewModel : ViewModel() {
     var commonResponseModel: MutableLiveData<CommonResponseModel>? = null
     var contentListModel: MutableLiveData<ContentListModel>? = null
     var contentShowModel: MutableLiveData<ContentShowModel>? = null
+    var commentListModel: MutableLiveData<CommentListModel>? = null
+    var commentsListingModel: MutableLiveData<CommentsListingModel>? = null
     var treadingContentModel: MutableLiveData<TreadingContentModel>? = null
 
 
@@ -44,6 +48,44 @@ class ContentViewModel : ViewModel() {
         contentShowModel = contentRepository?.contentShowApi(
                 authorizationToke, id
         )
+    }
+
+    fun commentAdd(
+            authorizationToke: String,
+            jsonObject: JsonObject,
+            id: Int
+    ) {
+        contentRepository = ContentRepository().getInstance()
+        commentListModel = contentRepository?.commentAddApi(
+                authorizationToke, jsonObject, id
+        )
+    }
+
+    fun commentList(
+            authorizationToke: String,
+            id: Int
+    ) {
+        contentRepository = ContentRepository().getInstance()
+        commentsListingModel = contentRepository?.commentListApi(
+                authorizationToke, id
+        )
+    }
+    fun commentShow(
+            authorizationToke: String,
+            id: Int
+    ) {
+        contentRepository = ContentRepository().getInstance()
+        commentsListingModel = contentRepository?.commentListApi(
+                authorizationToke, id
+        )
+    }
+
+    fun getCommentsList(): LiveData<CommentsListingModel> {
+        return commentsListingModel!!
+    }
+
+    fun getCommentAdd(): LiveData<CommentListModel> {
+        return commentListModel!!
     }
 
     fun getContentShow(): LiveData<ContentShowModel>? {

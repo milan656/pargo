@@ -149,8 +149,10 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
                         prefManager.isCreator(false)
                     }
                     userLoginModel = it
-
-                    showDialogue(this, "Success", "" + it, false, true)
+                    val intent = Intent(this, HomeActivity::class.java)
+                    intent.putExtra("name", userLoginModel?.user?.attributes?.roles!![0].name)
+                    startActivity(intent)
+//                    showDialogue(this, "Success", "" + it, false, true)
 
                 } else {
                     Common.hideLoader()

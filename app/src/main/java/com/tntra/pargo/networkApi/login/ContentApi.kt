@@ -1,6 +1,9 @@
 package com.tntra.pargo.networkApi.login
 
+import com.google.gson.JsonObject
 import com.tntra.pargo.model.CommonResponseModel
+import com.tntra.pargo.model.comments.CommentListModel
+import com.tntra.pargo.model.comments.list.CommentsListingModel
 import com.tntra.pargo.model.content_list.ContentListModel
 import com.tntra.pargo.model.content_list.show.ContentShowModel
 import com.tntra.pargo.model.contentcreate.ContentCreateModel
@@ -24,6 +27,19 @@ interface ContentApi {
             @Header("Authorization") Authorization: String,
             @Path("id") id: Int
     ): Call<ContentShowModel>
+
+    @POST("api/v1/contents/{id}/comments")
+    fun commentAdd(
+            @Header("Authorization") Authorization: String,
+            @Body jsonObject: JsonObject,
+            @Path("id") id: Int
+    ): Call<CommentListModel>
+
+    @GET("api/v1/contents/{id}/comments")
+    fun commentList(
+            @Header("Authorization") Authorization: String,
+            @Path("id") id: Int
+    ): Call<CommentsListingModel>
 
     @GET("api/v1/contents")
     fun treadingContent(

@@ -59,12 +59,14 @@
                     android:orientation="horizontal">
 
                     <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/ivUserImg"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:src="@drawable/nature" />
 
 
                     <com.tntra.pargo.custom.NormalTextView
+                        android:id="@+id/tvUsername"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -79,6 +81,7 @@
                 </LinearLayout>
 
                 <com.tntra.pargo.custom.BoldTextView
+                    android:id="@+id/tvTitleContent"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/ten_dp"
@@ -88,6 +91,7 @@
                     android:textStyle="bold" />
 
                 <com.tntra.pargo.custom.NormalTextView
+                    android:id="@+id/tvdesc"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/five_dp"
@@ -157,26 +161,46 @@
         android:layout_marginStart="@dimen/sixteen_dp"
         android:layout_marginEnd="@dimen/sixteen_dp"
         android:layout_marginBottom="@dimen/ten_dp"
-        android:background="@drawable/layout_bg_corner_rounded"
+
         android:orientation="horizontal">
 
-        <com.tntra.pargo.custom.NormalEditText
-            android:layout_width="0dp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@null"
-            android:hint="Enter a Message"
-            android:padding="@dimen/ten_dp"
-            android:textColor="@color/text_color"
+            android:background="@drawable/layout_bg_corner_rounded"
+            android:orientation="horizontal"
+            android:layout_weight="1">
+
+            <com.tntra.pargo.custom.NormalEditText
+                android:id="@+id/edtComment"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@null"
+                android:hint="Enter a Message"
+                android:padding="@dimen/ten_dp"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/fourteen_sp" />
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:paddingEnd="@dimen/five_dp"
+                android:paddingRight="@dimen/five_dp"
+                android:src="@drawable/ic_close" />
+
+        </LinearLayout>
+
+        <com.tntra.pargo.custom.NormalButton
+            android:id="@+id/btnSend"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:text="Send"
+            android:textColor="@color/black"
             android:textSize="@dimen/fourteen_sp" />
 
-        <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_gravity="center"
-            android:paddingEnd="@dimen/five_dp"
-            android:paddingRight="@dimen/five_dp"
-            android:src="@drawable/ic_close" />
+
     </LinearLayout>
 
 </RelativeLayout>

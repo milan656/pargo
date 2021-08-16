@@ -147,6 +147,10 @@ class CollabFragment : Fragment(), onClickAdapter, View.OnClickListener {
                     ) !== PackageManager.PERMISSION_GRANTED
                     || ContextCompat.checkSelfPermission(
                             context,
+                            Manifest.permission.ACCESS_MEDIA_LOCATION
+                    ) !== PackageManager.PERMISSION_GRANTED
+                    || ContextCompat.checkSelfPermission(
+                            context,
                             Manifest.permission.MANAGE_DOCUMENTS
                     ) !== PackageManager.PERMISSION_GRANTED) {
                 if (ActivityCompat.shouldShowRequestPermissionRationale(
@@ -160,6 +164,10 @@ class CollabFragment : Fragment(), onClickAdapter, View.OnClickListener {
                         || ActivityCompat.shouldShowRequestPermissionRationale(
                                 context as Activity,
                                 Manifest.permission.WRITE_EXTERNAL_STORAGE
+                        )
+                        || ActivityCompat.shouldShowRequestPermissionRationale(
+                                context as Activity,
+                                Manifest.permission.ACCESS_MEDIA_LOCATION
                         )
                         || ActivityCompat.shouldShowRequestPermissionRationale(
                                 context as Activity,
@@ -178,7 +186,8 @@ class CollabFragment : Fragment(), onClickAdapter, View.OnClickListener {
                                         Manifest.permission.READ_EXTERNAL_STORAGE,
                                         Manifest.permission.CAMERA,
                                         Manifest.permission.MANAGE_DOCUMENTS,
-                                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+                                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                        Manifest.permission.ACCESS_MEDIA_LOCATION
                                 ),
                                 123
                         )
@@ -191,6 +200,7 @@ class CollabFragment : Fragment(), onClickAdapter, View.OnClickListener {
                                     Manifest.permission.READ_EXTERNAL_STORAGE,
                                     Manifest.permission.CAMERA,
                                     Manifest.permission.MANAGE_DOCUMENTS,
+                                    Manifest.permission.ACCESS_MEDIA_LOCATION,
                                     Manifest.permission.WRITE_EXTERNAL_STORAGE
 
                             ), 123

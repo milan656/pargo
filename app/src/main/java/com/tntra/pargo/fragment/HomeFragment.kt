@@ -168,7 +168,6 @@ class HomeFragment : Fragment(), onClickAdapter {
 
         getTreadingContentApiList(true)
         getGeneresList()
-        playVideo()
 
         nestedScrollHomePage?.viewTreeObserver
                 ?.addOnScrollChangedListener {
@@ -181,21 +180,6 @@ class HomeFragment : Fragment(), onClickAdapter {
                         }
                     }
                 }
-        /*btnCreateSession = findViewById(R.id.btnCreateSession)
-        btnCreateRequest = findViewById(R.id.btnCreateRequest)
-        btnAcceptRejectRequest = findViewById(R.id.btnAcceptRejectRequest)
-        btnLogout = findViewById(R.id.btnLogout)
-        btnContentList = findViewById(R.id.btnContentList)
-        btnContentShow = findViewById(R.id.btnContentShow)
-        btnLikeUnlike = findViewById(R.id.btnLikeUnlike)
-
-        btnCreateSession?.setOnClickListener(this)
-        btnCreateRequest?.setOnClickListener(this)
-        btnAcceptRejectRequest?.setOnClickListener(this)
-        btnLogout?.setOnClickListener(this)
-        btnContentList?.setOnClickListener(this)
-        btnContentShow?.setOnClickListener(this)
-        btnLikeUnlike?.setOnClickListener(this)*/
     }
 
     @SuppressLint("FragmentLiveDataObserve")
@@ -232,30 +216,6 @@ class HomeFragment : Fragment(), onClickAdapter {
 
     @SuppressLint("FragmentLiveDataObserve")
     private fun getTreadingContentApiList(isclear: Boolean) {
-//
-//        for (i in 1..10) {
-//            if (i == 1) {
-//                treadingContentList?.add(Content(Attributes("follwings", "content-upload-body-demo",
-//                        "/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBXdz09IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--a6c5a620a6214e81dd163e45619be69e684e7b5d/unnamed.png", null, "Jigar", "type", "https://pargo-back-end-devlopment.s3-ap-south-1.amazonaws.com/Android/VID_20210811_142825.mp4", "content-upload-demo", 0, 0, 0, 3,
-//                        "/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBFdz09IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--597cca51b4cf22af65be308f35d9d945ac2c1dbf/jigar.jpg","3:45","12 August, 2021"),
-//                        "1", "content")
-//                )
-//            } else if (i == 2) {
-//                treadingContentList?.add(Content(Attributes("follwings", "content-upload-body-demo",
-//                        "/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBXdz09IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--a6c5a620a6214e81dd163e45619be69e684e7b5d/unnamed.png", null, "Jigar", "type", "https://pargo-back-end-devlopment.s3-ap-south-1.amazonaws.com/Android/maxkomusic-digital-world.mp3", "content-upload-demo", 0, 0, 0, 3,
-//                        "/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBFdz09IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--597cca51b4cf22af65be308f35d9d945ac2c1dbf/jigar.jpg","4:10","11 August, 2021"),
-//                        "1", "content")
-//                )
-//            } else {
-//                treadingContentList?.add(Content(Attributes("follwings", "content-upload-body-demo",
-//                        "/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBXdz09IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--a6c5a620a6214e81dd163e45619be69e684e7b5d/unnamed.png", null, "Jigar", "type", "https://pargo-back-end-devlopment.s3-ap-south-1.amazonaws.com/Android/VID_20210724_062618.mp4", "content-upload-demo", 0, 0, 0, 3,
-//                        "/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBFdz09IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--597cca51b4cf22af65be308f35d9d945ac2c1dbf/jigar.jpg","3:15","10 August, 2021"),
-//                        "1", "content")
-//                )
-//            }
-//        }
-//        treadingContentAdapter?.notifyDataSetChanged()
-
         context?.let { Common.showLoader(it) }
         contentViewModel.treadingContentApi(prefManager?.getAccessToken()!!,
                 "timeline", treadingContentPage, "latest")
@@ -303,46 +263,9 @@ class HomeFragment : Fragment(), onClickAdapter {
 
     }
 
-    @SuppressLint("RestrictedApi")
-    private fun playVideo() {
-        try {
-            val trackSelectorDef: androidx.media2.exoplayer.external.trackselection.DefaultTrackSelector = androidx.media2.exoplayer.external.trackselection.DefaultTrackSelector()
-
-//            exoPlayer = context?.let {
-//                ExoPlayerFactory.newSimpleInstance(it, trackSelectorDef)
-//            }
-//            val trackSelectorDef: TrackSelector = DefaultTrackSelector()
-            exoPlayer = ExoPlayerFactory.newSimpleInstance(context, trackSelectorDef)
-
-            val userAgent: String = context?.let { Util.getUserAgent(it, this.getString(R.string.app_name)) }!!
-            val defdataSourceFactory = context?.let {
-                androidx.media2.exoplayer.external.upstream.DefaultDataSourceFactory(it, userAgent)
-            }
-
-            val uriOfContentUrl = Uri.parse(CONTENT_URL)
-//            val mediaSource: MediaSource = ProgressiveMediaSource.Factory(defdataSourceFactory!!).createMediaSource(uriOfContentUrl) // creating a media source
-
-            val mediaSource: androidx.media2.exoplayer.external.source.MediaSource = androidx.media2.exoplayer.external.source.ProgressiveMediaSource.Factory(defdataSourceFactory!!).createMediaSource(uriOfContentUrl) // creating a media source
-            exoPlayer?.prepare(mediaSource)
-            exoPlayer?.setPlayWhenReady(true) // start loading video and play it at the moment a chunk of it is available offline
-
-//            exoPlayerView?.setPlayer(exoPlayer) // attach surface to the view
-
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-    }
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment HomeFragment.
-         */
-        // TODO: Rename and change types and number of parameters
+
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
                 HomeFragment().apply {

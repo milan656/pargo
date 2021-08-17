@@ -6,6 +6,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
@@ -36,6 +37,9 @@ import com.tntra.pargo.common.PrefManager
 import com.tntra.pargo.common.onClickAdapter
 import com.tntra.pargo.model.comments.list.Comment
 import com.tntra.pargo.viewmodel.ContentViewModel
+import com.vanniktech.emoji.EmojiEditText
+import com.vanniktech.emoji.EmojiPopup
+import com.vanniktech.emoji.EmojiTextView
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -62,8 +66,8 @@ class ContentDetailActivity : AppCompatActivity(), onClickAdapter, Player.EventL
 
     private var player: SimpleExoPlayer? = null
     private var prefManager: PrefManager? = null
-    private var edtComment: EditText? = null
-    private var btnSend: Button? = null
+    private var edtComment: EmojiEditText? = null
+    private var btnSend: ImageView? = null
     private var ivUserImg: ImageView? = null
     private var tvUsername: TextView? = null
     private var tvdesc: TextView? = null
@@ -103,12 +107,16 @@ class ContentDetailActivity : AppCompatActivity(), onClickAdapter, Player.EventL
     }
 
     var contentViewModel: ContentViewModel? = null
+    var ivEmoji: ImageView? = null
 
     var dataSourceFactory_: DataSource.Factory = DefaultHttpDataSourceFactory(
             "exoplayer-sample",
             DefaultHttpDataSource.DEFAULT_CONNECT_TIMEOUT_MILLIS,
             10800000,
             true)
+
+    var emojiPopup: EmojiPopup? = null
+    var rootView: RelativeLayout? = null
 
     @SuppressLint("RestrictedApi")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -120,7 +128,10 @@ class ContentDetailActivity : AppCompatActivity(), onClickAdapter, Player.EventL
     }
 
     private fun initView() {
-
+        edtComment = findViewById(R.id.etEmoji)
+        rootView = findViewById(R.id.rootView)
+        emojiPopup = EmojiPopup.Builder.fromRootView(rootView).build(edtComment!!)
+        ivEmoji = findViewById(R.id.ivEmoji)
         llparent = findViewById(R.id.llparent)
         tvViewCount = findViewById(R.id.tvViewCount)
         tvUsername = findViewById(R.id.tvUsername)
@@ -128,7 +139,7 @@ class ContentDetailActivity : AppCompatActivity(), onClickAdapter, Player.EventL
         tvdesc = findViewById(R.id.tvdesc)
         ivUserImg = findViewById(R.id.ivUserImg)
         btnSend = findViewById(R.id.btnSend)
-        edtComment = findViewById(R.id.edtComment)
+
         ivBack = findViewById(R.id.ivBack)
         tvTitle = findViewById(R.id.tvTitle)
         ivLike = findViewById(R.id.ivLike)
@@ -142,9 +153,11 @@ class ContentDetailActivity : AppCompatActivity(), onClickAdapter, Player.EventL
         commentsRecycView?.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         commentsRecycView?.adapter = commentAdapter
 
+
         ivLike?.setOnClickListener(this)
         ivBack?.setOnClickListener(this)
         btnSend?.setOnClickListener(this)
+        ivEmoji?.setOnClickListener(this)
 
         if (intent != null) {
             if (intent.hasExtra("video_link")) {
@@ -303,6 +316,7 @@ class ContentDetailActivity : AppCompatActivity(), onClickAdapter, Player.EventL
                 if (it.success) {
                     Log.e("TAG", "addComment: " + it.message)
                     edtComment?.setText("")
+                    Common.hideKeyboard(this)
                     listComment()
                 } else {
                     try {
@@ -412,7 +426,19 @@ class ContentDetailActivity : AppCompatActivity(), onClickAdapter, Player.EventL
                 onBackPressed()
             }
             R.id.btnSend -> {
-                addComment()
+                if (edtComment?.text?.toString()?.isEmpty()!!) {
+                    Toast.makeText(this, "Please add comment", Toast.LENGTH_SHORT).show()
+                } else {
+                    addComment()
+                }
+            }
+            R.id.ivEmoji -> {
+                try {
+                    emojiPopup?.toggle()
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+
             }
         }
     }
@@ -509,4 +535,6 @@ class ContentDetailActivity : AppCompatActivity(), onClickAdapter, Player.EventL
     private fun isRunning(): Boolean {
         return !isIdle()
     }
+
+
 }

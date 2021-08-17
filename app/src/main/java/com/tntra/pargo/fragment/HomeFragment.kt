@@ -9,7 +9,9 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
@@ -32,6 +34,7 @@ import com.tntra.pargo.adapter.TreadingContentAdapter
 import com.tntra.pargo.common.Common
 import com.tntra.pargo.common.PrefManager
 import com.tntra.pargo.common.onClickAdapter
+import com.tntra.pargo.custom.HeightWrappingViewPager
 import com.tntra.pargo.model.generes.Genre
 import com.tntra.pargo.model.treading_content.Content
 import com.tntra.pargo.viewmodel.ContentViewModel
@@ -60,6 +63,7 @@ class HomeFragment : Fragment(), onClickAdapter {
     var eventAdapter: EventAdapter? = null
 
     var treadingContentPage = 1
+    var isDataFinishTreading = false
 
     var exploreGenList: ArrayList<Genre>? = ArrayList()
     var exploreGeneresAdapter: ExploreGeneresAdapter? = null
@@ -75,12 +79,13 @@ class HomeFragment : Fragment(), onClickAdapter {
     private var param1: String? = null
     private var param2: String? = null
 
-    private var view_pager: ViewPager? = null
+    private var view_pager: HeightWrappingViewPager? = null
     private var tab_layout: TabLayout? = null
     private var dots_indicator: DotsIndicator? = null
     var dot: ArrayList<TextView>? = ArrayList()
     var timer: Timer? = null
     private var tvNoContentFound: TextView? = null
+    private var nestedScrollHomePage: NestedScrollView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -105,6 +110,7 @@ class HomeFragment : Fragment(), onClickAdapter {
     }
 
     private fun initView(view: View) {
+        nestedScrollHomePage = view.findViewById(R.id.nestedScrollHomePage)
         tvNoContentFound = view.findViewById(R.id.tvNoContentFound)
         dots_indicator = view.findViewById(R.id.dots_indicator)
         tab_layout = view.findViewById(R.id.tab_layout)
@@ -160,10 +166,21 @@ class HomeFragment : Fragment(), onClickAdapter {
         treadingContentAdapter = context?.let { TreadingContentAdapter(treadingContentList, it, this) }
         contentRecycView?.adapter = treadingContentAdapter
 
-        getTreadingContentApiList()
+        getTreadingContentApiList(true)
         getGeneresList()
         playVideo()
 
+        nestedScrollHomePage?.viewTreeObserver
+                ?.addOnScrollChangedListener {
+                    if (nestedScrollHomePage?.getChildAt(0)?.bottom!! <= nestedScrollHomePage?.height!! + nestedScrollHomePage?.scrollY!!) {
+                        //scroll view is at bottom
+                        Log.e("TAG", "initView: at bottom")
+                        if (!isDataFinishTreading) {
+                            treadingContentPage += 1
+                            getTreadingContentApiList(false)
+                        }
+                    }
+                }
         /*btnCreateSession = findViewById(R.id.btnCreateSession)
         btnCreateRequest = findViewById(R.id.btnCreateRequest)
         btnAcceptRejectRequest = findViewById(R.id.btnAcceptRejectRequest)
@@ -200,7 +217,7 @@ class HomeFragment : Fragment(), onClickAdapter {
                     view_pager?.setAdapter(adapter)
                     tab_layout?.setupWithViewPager(view_pager, true);
                     dots_indicator?.setViewPager(view_pager!!)
-
+                    view_pager?.measure(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                     val timerTask: TimerTask = object : TimerTask() {
                         override fun run() {
                             view_pager?.post({ view_pager?.setCurrentItem((view_pager?.getCurrentItem()!! + 1) % it.contents.size) })
@@ -214,7 +231,7 @@ class HomeFragment : Fragment(), onClickAdapter {
     }
 
     @SuppressLint("FragmentLiveDataObserve")
-    private fun getTreadingContentApiList() {
+    private fun getTreadingContentApiList(isclear: Boolean) {
 //
 //        for (i in 1..10) {
 //            if (i == 1) {
@@ -246,7 +263,13 @@ class HomeFragment : Fragment(), onClickAdapter {
             Common.hideLoader()
             if (it != null) {
                 if (it.success) {
-                    treadingContentList?.clear()
+                    if (isclear) {
+                        treadingContentList?.clear()
+                    }
+
+                    if (it.contents.size == 0) {
+                        isDataFinishTreading = true
+                    }
                     treadingContentList?.addAll(it.contents)
                     treadingContentAdapter?.notifyDataSetChanged()
 

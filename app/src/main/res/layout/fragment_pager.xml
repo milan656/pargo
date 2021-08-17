@@ -1,17 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragment.PagerFragment">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/twelve_dp"
         android:layout_marginTop="@dimen/ten_dp"
-        android:layout_marginEnd="@dimen/twelve_dp"
         android:background="@color/transparent"
         app:cardCornerRadius="@dimen/five_dp"
         app:cardElevation="@dimen/two_dp"
@@ -29,7 +27,6 @@
                 android:layout_marginStart="@dimen/eighteen_dp"
                 android:layout_marginLeft="@dimen/eighteen_dp"
                 android:layout_marginTop="@dimen/twenty_dp"
-                android:text="sonu \nnigam"
                 android:textAllCaps="true"
                 android:textColor="@color/black"
                 android:textSize="@dimen/thirty_six_sp"
@@ -42,8 +39,7 @@
                 android:layout_marginStart="@dimen/eighteen_dp"
                 android:layout_marginTop="@dimen/ten_dp"
                 android:layout_marginEnd="@dimen/eighteen_dp"
-                android:layout_marginBottom="@dimen/twelve_dp"
-                android:text="Musician Singer" />
+                android:layout_marginBottom="@dimen/twelve_dp" />
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/videoContent"
@@ -56,12 +52,12 @@
                 android:thicknessRatio="1.9"
                 app:cardCornerRadius="10dp">
 
-            <ImageView
-                android:id="@+id/ivCoverLatestContent"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scaleType="fitXY"
-                android:src="@drawable/nature" />
+                <ImageView
+                    android:id="@+id/ivCoverLatestContent"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/nature" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -98,10 +94,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/eighteen_dp"
-                android:layout_marginEnd="@dimen/eighteen_dp"
-                android:layout_marginBottom="@dimen/thirty_dp"
                 android:layout_marginTop="@dimen/ten_dp"
-                android:text="The meaning of Kandisa: First look"
+                android:layout_marginEnd="@dimen/eighteen_dp"
+                android:layout_marginBottom="@dimen/twenty_dp"
                 android:textColor="@color/black"
                 android:textSize="@dimen/sixteen_sp" />
 

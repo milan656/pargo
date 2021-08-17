@@ -9,7 +9,10 @@ import com.tntra.pargo.rtc.EngineConfig
 import com.tntra.pargo.rtc.EventHandler
 import com.tntra.pargo.stats.StatsManager
 import com.tntra.pargo.utils.FileUtil
+import com.vanniktech.emoji.EmojiManager
+import com.vanniktech.emoji.google.GoogleEmojiProvider
 import io.agora.rtc.RtcEngine
+
 
 class AgoraApplication : MultiDexApplication() {
     private var mRtcEngine: RtcEngine? = null
@@ -42,6 +45,8 @@ class AgoraApplication : MultiDexApplication() {
         } catch (e: Exception) {
             e.printStackTrace()
         }
+
+        EmojiManager.install(GoogleEmojiProvider())
         initConfig()
 
 

@@ -9,6 +9,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.tntra.pargo.R
+import com.tntra.pargo.common.Common
 import com.tntra.pargo.common.onClickAdapter
 import com.tntra.pargo.model.comments.CommentListModel
 import com.tntra.pargo.model.comments.list.Comment
@@ -32,11 +33,11 @@ class ContentMessageAdapter(var list: ArrayList<Comment>,
     override fun onBindViewHolder(holder: Viewholder, position: Int) {
 
         holder.tvComment?.text = list[position].attributes.message
-//        try {
-//            Glide.with(context).load(list[position].commentImage).into(holder.ivmessageImage)
-//        } catch (e: Exception) {
-//            e.printStackTrace()
-//        }
+        try {
+            Glide.with(context).load(Common.url + list[position].attributes.user_profile_img_path).into(holder.ivmessageImage)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     override fun getItemCount(): Int {

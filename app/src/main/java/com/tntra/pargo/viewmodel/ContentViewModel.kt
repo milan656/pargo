@@ -50,6 +50,16 @@ class ContentViewModel : ViewModel() {
         )
     }
 
+    fun contentShowTopContent(
+            authorizationToke: String,
+            id: Int
+    ) {
+        contentRepository = ContentRepository().getInstance()
+        contentShowModel = contentRepository?.contentShowApi(
+                authorizationToke, id
+        )
+    }
+
     fun commentAdd(
             authorizationToke: String,
             jsonObject: JsonObject,
@@ -70,6 +80,7 @@ class ContentViewModel : ViewModel() {
                 authorizationToke, id
         )
     }
+
     fun commentShow(
             authorizationToke: String,
             id: Int
@@ -104,6 +115,18 @@ class ContentViewModel : ViewModel() {
         )
     }
 
+    fun topLatestContentApi(
+            authorizationToke: String,
+            type: String,
+            type_wise_content: String
+    ) {
+        contentRepository = ContentRepository().getInstance()
+        treadingContentModel = contentRepository?.topLatestContentApi(
+                authorizationToke, type, type_wise_content
+        )
+    }
+
+
     fun uploadContentApi(
             authorizationToke: String,
             type: String,
@@ -117,6 +140,10 @@ class ContentViewModel : ViewModel() {
     }
 
     fun getTreadingContent(): LiveData<TreadingContentModel>? {
+        return treadingContentModel
+    }
+
+    fun getTopLatestContent(): LiveData<TreadingContentModel>? {
         return treadingContentModel
     }
 

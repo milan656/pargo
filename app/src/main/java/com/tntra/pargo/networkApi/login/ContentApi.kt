@@ -47,6 +47,12 @@ interface ContentApi {
             @Query("type") type: String, @Query("page") page: Int, @Query("type_wise_content") type_wise_content: String
     ): Call<TreadingContentModel>
 
+    @GET("api/v1/contents")
+    fun topLatestContent(
+            @Header("Authorization") Authorization: String,
+            @Query("type") type: String, @Query("type_wise_content") type_wise_content: String
+    ): Call<TreadingContentModel>
+
     @POST("api/v1/contents/{id}/likes")
     fun likeUnLikeApi(
             @Header("Authorization") Authorization: String,

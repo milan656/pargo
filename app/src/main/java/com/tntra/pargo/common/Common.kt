@@ -3,11 +3,15 @@ package com.tntra.pargo.common
 import android.Manifest
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
+import android.annotation.SuppressLint
 import android.annotation.TargetApi
 import android.app.Activity
 import android.app.AlertDialog
 import android.app.Dialog
-import android.content.*
+import android.content.ContentResolver
+import android.content.ContentUris
+import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.content.res.Resources
@@ -15,12 +19,12 @@ import android.database.Cursor
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
+import android.media.MediaMetadataRetriever
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
-import android.os.FileUtils.copy
 import android.provider.DocumentsContract
 import android.provider.MediaStore
 import android.text.TextUtils
@@ -86,6 +90,7 @@ class Common {
 
         private var dialogue: Dialog? = null
 
+        @SuppressLint("SimpleDateFormat")
         fun timeStampaTimeago(time1: String): String? {
             var time: String = time1
             try {
@@ -94,14 +99,14 @@ class Common {
                 format.timeZone = TimeZone.getTimeZone("UTC")
                 val past = format.parse(time)
                 val now = Date()
-                val seconds1 = TimeUnit.MILLISECONDS.toSeconds(now.time - past.time)
+                val seconds1 = TimeUnit.MILLISECONDS.toSeconds(now.time - past?.time!!)
                 val minutes1 = TimeUnit.MILLISECONDS.toMinutes(now.time - past.time)
                 val hours1 = TimeUnit.MILLISECONDS.toHours(now.time - past.time)
                 val days1 = TimeUnit.MILLISECONDS.toDays(now.time - past.time)
-                var seconds = Math.abs(seconds1)
-                var minutes = Math.abs(minutes1)
-                var hours = Math.abs(hours1)
-                var days = Math.abs(days1)
+                val seconds = Math.abs(seconds1)
+                val minutes = Math.abs(minutes1)
+                val hours = Math.abs(hours1)
+                val days = Math.abs(days1)
                 if (seconds < 60) {
                     println("$seconds seconds ago")
                     time = "$seconds seconds ago"
@@ -119,7 +124,7 @@ class Common {
                         time = "$days days ago"
                     }
                 } else if (days < 365) {
-                    var month = days / 30
+                    val month = days / 30
                     time = "$month month ago"
                 } else if (days >= 365) {
                     time = (days / 365).toString() + " year ago"
@@ -171,7 +176,7 @@ class Common {
 
                 // Calucalte time difference
                 // in milliseconds
-                difference_In_Time = d2.time - d1.time
+                difference_In_Time = d2?.time!! - d1?.time!!
 
                 // Calucalte time difference in
                 // seconds, minutes, hours, years,
@@ -283,7 +288,7 @@ class Common {
         fun saveImage(context: Context, bitmap: Bitmap, name: String, extension: String) {
             val folder =
                     Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-            var file = File(folder, name + extension)
+            val file = File(folder, name + extension)
             try {
                 var stream: OutputStream? = null
                 stream = FileOutputStream(file);
@@ -798,6 +803,14 @@ class Common {
 
             builder.window!!.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
             builder.show()
+        }
+
+        fun coverpicture(path: String?): Bitmap? {
+            val mr = MediaMetadataRetriever()
+            mr.setDataSource(path)
+            val byte1 = mr.embeddedPicture
+            mr.release()
+            return if (byte1 != null) BitmapFactory.decodeByteArray(byte1, 0, byte1.size) else null
         }
 
         fun getfileExtension(context: Context, uri: Uri): String {

@@ -41,7 +41,8 @@
         <activity android:name=".activities.GenersDetailActivity" />
         <activity
             android:name=".activities.ContentDetailActivity"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode" />
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode"
+            android:windowSoftInputMode="adjustResize"/>
         <activity android:name=".activities.GoLiveScreenActivity" />
         <activity android:name=".activities.MessageDetailActivity" />
         <activity android:name=".activities.RequestSentActivity" />

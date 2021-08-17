@@ -15,6 +15,7 @@ import android.os.Bundle
 import android.os.StrictMode
 import android.provider.MediaStore
 import android.util.Log
+import android.util.Size
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.*
@@ -487,6 +488,7 @@ class VideoUploadActivity : AppCompatActivity(), View.OnClickListener {
                             e.printStackTrace()
                         }
                     } else {
+                        var bmThumbnail: Bitmap? = null
                         try {
                             val extension: String = Common.getfileExtension(this, selectedImage!!)
                             if (!extension.equals("")) {
@@ -499,19 +501,40 @@ class VideoUploadActivity : AppCompatActivity(), View.OnClickListener {
                             tvSelectfile?.visibility = View.GONE
 //                            Log.e("zvzvzv", "onStateChanged: " + "https://$bucket_name.s3-ap-south-1.amazonaws.com/Android/$filename")
                             selectedVideoUrl = "https://$bucket_name.s3-ap-south-1.amazonaws.com/Android/${imagePath?.name}"
-                            val bmThumbnail: Bitmap
 
                             if (post_type.equals("video")) {
                                 bmThumbnail = ThumbnailUtils.createVideoThumbnail(imagePath?.path!!, MediaStore.Video.Thumbnails.MINI_KIND)!!
                             } else {
-                                bmThumbnail = ThumbnailUtils.createAudioThumbnail(imagePath?.path!!, MediaStore.Video.Thumbnails.MINI_KIND)!!
+
+                                try {
+                                    bmThumbnail = Common.coverpicture(imagePath?.path)
+                                } catch (e: java.lang.Exception) {
+                                    e.printStackTrace()
+                                }
+
+//                                bmThumbnail = ThumbnailUtils.createAudioThumbnail(imagePath?.path!!, MediaStore.Audio.Thumbnails.MINI_KIND)!!
+//                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+//                                    ThumbnailUtils.createAudioThumbnail(imagePath!!, Size(100, 100), null)
+//                                } else {
+//                                    // Use the deprecated version for older devices.
+//                                    ThumbnailUtils.createAudioThumbnail(imagePath?.path!!, MediaStore.Images.Thumbnails.MINI_KIND)
+//                                }
+
+
+//                                bmThumbnail = ThumbnailUtils.createVideoThumbnail(imagePath?.path!!, MediaStore.Video.Thumbnails.MINI_KIND)!!
+
                             }
 
-                            ivVidoFile?.setImageBitmap(bmThumbnail)
-                            ivCoverpicView?.setImageBitmap(bmThumbnail)
+                            try {
+                                ivVidoFile?.setImageBitmap(bmThumbnail)
+                                ivCoverpicView?.setImageBitmap(bmThumbnail)
+                                imagefileUri_ = Common.getImageUriFromBitmap(this, bmThumbnail!!)
+                            } catch (e: Exception) {
+                                e.printStackTrace()
+                            }
+
                             ivVidoIcon?.visibility = View.VISIBLE
 
-                            imagefileUri_ = Common.getImageUriFromBitmap(this, bmThumbnail)
                             if (imagefileUri_ != null) {
                                 selectedImageUrl = true
                             }
@@ -529,7 +552,14 @@ class VideoUploadActivity : AppCompatActivity(), View.OnClickListener {
                         } catch (e: Exception) {
                             e.printStackTrace()
                         }
-                        upload_FileAWS_S3_Bucket(imagePath?.name!!, imagePath)
+
+                        Log.e("TAGv", "onActivityResult: " + bmThumbnail)
+                        if (bmThumbnail == null) {
+                            Toast.makeText(this, "Selected file format invalid, please select other file", Toast.LENGTH_SHORT).show()
+                            selectedImageUrl = false
+                        } else {
+                            upload_FileAWS_S3_Bucket(imagePath?.name!!, imagePath)
+                        }
                     }
 
                 } else {
@@ -812,10 +842,14 @@ class VideoUploadActivity : AppCompatActivity(), View.OnClickListener {
             try {
                 Log.e("TAGG", "pickFileFromGallary: " + type)
                 val intent = Intent(Intent.ACTION_GET_CONTENT)
-                intent.setType("video/*");
+                intent.setType("video/* audio/*");
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                    intent.putExtra(Intent.EXTRA_MIME_TYPES, arrayOf("video/*", "audio/*"))
+                }
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
                     intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false)
                 }
+
                 intent.action = Intent.ACTION_GET_CONTENT
                 startActivityForResult(intent, PICK_IMAGE_REQUEST)
 
@@ -828,7 +862,10 @@ class VideoUploadActivity : AppCompatActivity(), View.OnClickListener {
             try {
                 val intent = Intent(Intent.ACTION_GET_CONTENT)
                 Log.e("TAGG", "pickFileFromGallary: video" + type)
-                intent.setType("video/*");
+                intent.setType("video/* audio/*");
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                    intent.putExtra(Intent.EXTRA_MIME_TYPES, arrayOf("video/*", "audio/*"))
+                }
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
                     intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false)
                 }
@@ -878,10 +915,4 @@ class VideoUploadActivity : AppCompatActivity(), View.OnClickListener {
         startActivityForResult(cameraIntent, IMAGE_CAPTURE_CODE)
     }
 
-    private fun File.writeBitmap(bitmap: Bitmap, format: Bitmap.CompressFormat, quality: Int) {
-        outputStream().use { out ->
-            bitmap.compress(format, quality, out)
-            out.flush()
-        }
-    }
 }

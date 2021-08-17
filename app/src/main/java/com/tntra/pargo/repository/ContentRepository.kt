@@ -255,6 +255,50 @@ class ContentRepository {
         return loginData
     }
 
+    fun topLatestContentApi(
+            authorizationToke: String,
+            type: String,
+            type_wise_content: String
+    ): MutableLiveData<TreadingContentModel> {
+        val loginData = MutableLiveData<TreadingContentModel>()
+        contentApi?.topLatestContent(
+                authorizationToke, type, type_wise_content
+        )?.enqueue(object : Callback<TreadingContentModel> {
+            override fun onResponse(
+                    call: Call<TreadingContentModel>,
+                    response: Response<TreadingContentModel>
+            ) {
+                if (response.isSuccessful) {
+                    loginData.value = response.body()
+                } else {
+                    try {
+                        val responce = response.errorBody()?.string()
+                        val jsonObjectError = JSONObject(responce)
+
+                        val TreadingContentModel: TreadingContentModel =
+                                Common.getErrorModel(jsonObjectError, "TreadingContentModel") as TreadingContentModel
+                        //recoveryData.setValue(recoveryPasswordModel)
+
+
+                        loginData.value = TreadingContentModel
+
+                    } catch (e: IOException) {
+                        e.printStackTrace()
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+
+                }
+            }
+
+            override fun onFailure(call: Call<TreadingContentModel>, t: Throwable) {
+
+                t.printStackTrace()
+            }
+        })
+        return loginData
+    }
+
     fun likeUnLikeApi(
             authorizationToke: String, id: Int
     ): MutableLiveData<CommonResponseModel> {

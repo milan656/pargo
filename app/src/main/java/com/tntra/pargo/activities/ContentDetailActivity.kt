@@ -1,20 +1,18 @@
 package com.tntra.pargo.activities
 
+import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
-import android.media.Image
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import android.widget.*
-import androidx.annotation.ContentView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.amazonaws.regions.Region
-import com.amazonaws.regions.Regions
 import com.bumptech.glide.Glide
 import com.google.android.exoplayer2.ExoPlaybackException
 import com.google.android.exoplayer2.Player
@@ -24,20 +22,18 @@ import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.source.dash.DashMediaSource
 import com.google.android.exoplayer2.source.hls.HlsMediaSource
 import com.google.android.exoplayer2.ui.PlayerView
-import com.google.android.exoplayer2.upstream.DataSource
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
-import com.google.android.exoplayer2.upstream.DefaultHttpDataSource
-import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
+import com.google.android.exoplayer2.upstream.*
 import com.google.gson.JsonObject
 import com.tntra.pargo.R
 import com.tntra.pargo.adapter.ContentMessageAdapter
 import com.tntra.pargo.common.Common
 import com.tntra.pargo.common.PrefManager
 import com.tntra.pargo.common.onClickAdapter
-import com.tntra.pargo.model.comments.CommentListModel
 import com.tntra.pargo.model.comments.list.Comment
 import com.tntra.pargo.viewmodel.ContentViewModel
-import java.lang.Exception
+import java.util.*
+import kotlin.collections.ArrayList
+
 
 class ContentDetailActivity : AppCompatActivity(), onClickAdapter, Player.EventListener, View.OnClickListener {
 
@@ -67,11 +63,27 @@ class ContentDetailActivity : AppCompatActivity(), onClickAdapter, Player.EventL
     private var tvUsername: TextView? = null
     private var tvdesc: TextView? = null
     private var tvTitleContent: TextView? = null
+    private var tvViewCount: TextView? = null
+
+    private var timer: Timer? = null
+
+    var HI_BITRATE = 2097152
+    var MI_BITRATE = 1048576
+    var LO_BITRATE = 524288
 
     private var accessKey: String = "AKIAYI7XP4UNI7KFDUFZ"
     private var secreteKey: String = "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"
     private var bucket_name: String = "pargo-back-end-devlopment"
+//    val bandwidthMeter = DefaultBandwidthMeter()
+//    val trackSelector = DefaultTrackSelector()
+//    val defaultTrackParam: DefaultTrackSelector.Parameters = trackSelector.buildUponParameters().build()
 
+//    val defaultMaxInitialBitrate = Int.MAX_VALUE.toLong()
+//    val defaultBandwidthMeter: DefaultBandwidthMeter = DefaultBandwidthMeter.Builder(this)
+//            .setInitialBitrateEstimate(defaultMaxInitialBitrate)
+//            .build()
+
+    //    final val videoTrackSelectionFactory: AdaptiveTrackSelection.Factory  =AdaptiveTrackSelection.Factory(defaultBandwidthMeter,0,0,0f)
     private val dataSourceFactory: DataSource.Factory by lazy {
         DefaultDataSourceFactory(this, "exoplayer-sample")
     }
@@ -79,7 +91,7 @@ class ContentDetailActivity : AppCompatActivity(), onClickAdapter, Player.EventL
     var contentViewModel: ContentViewModel? = null
 
     var dataSourceFactory_: DataSource.Factory = DefaultHttpDataSourceFactory(
-            "exoplayer-sample", null,
+            "exoplayer-sample",
             DefaultHttpDataSource.DEFAULT_CONNECT_TIMEOUT_MILLIS,
             10800000,
             true)
@@ -95,6 +107,7 @@ class ContentDetailActivity : AppCompatActivity(), onClickAdapter, Player.EventL
 
     private fun initView() {
 
+        tvViewCount = findViewById(R.id.tvViewCount)
         tvUsername = findViewById(R.id.tvUsername)
         tvTitleContent = findViewById(R.id.tvTitleContent)
         tvdesc = findViewById(R.id.tvdesc)
@@ -108,9 +121,8 @@ class ContentDetailActivity : AppCompatActivity(), onClickAdapter, Player.EventL
         exoplayerView = findViewById(R.id.exoplayerView)
         commentsRecycView = findViewById(R.id.commentsRecycView)
 
-        for (i in 0..9) {
-//            commentsList?.add(CommentListModel("Hi", "http://placehold.it/120x120&text=image1", "", if (i % 2 == 0) 1 else 2))
-        }
+        tvdesc?.text = "lorem ilpsum text with description lorem ilpsum text with description lorem ilpsum text with description lorem ilpsum text with description lorem ilpsum text with description lorem ilpsum text with description with description lorem ilpsum text with description lorem ilpsum text with description"
+
         commentAdapter = ContentMessageAdapter(commentsList!!, this, this)
         commentsRecycView?.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         commentsRecycView?.adapter = commentAdapter
@@ -123,7 +135,7 @@ class ContentDetailActivity : AppCompatActivity(), onClickAdapter, Player.EventL
             if (intent.hasExtra("video_link")) {
                 video_link = intent.getStringExtra("video_link")!!
                 mp4Url = video_link
-                dashUrl=video_link
+                dashUrl = video_link
             }
             if (intent.hasExtra("id")) {
                 id = intent.getStringExtra("id")!!
@@ -136,6 +148,17 @@ class ContentDetailActivity : AppCompatActivity(), onClickAdapter, Player.EventL
         listComment()
 
         showContent()
+
+//        timer = Timer()
+//        timer?.schedule(
+//                object : TimerTask() {
+//                    override fun run() {
+//                        runOnUiThread {
+//                            showContentUpdates()
+//                        }
+//                    }
+//                }, 60 * 1000
+//        )
 //        addComment()
     }
 
@@ -155,6 +178,33 @@ class ContentDetailActivity : AppCompatActivity(), onClickAdapter, Player.EventL
                     tvUsername?.text = it.content.attributes.name
                     tvdesc?.text = it.content.attributes.body
                     tvTitleContent?.text = it.content.attributes.title
+                    if (it.content.attributes.total_visits != 0 ||
+                            it.content.attributes.total_visits == 1) {
+                        tvViewCount?.text = "" + it.content.attributes.total_visits + " " + "View"
+                    } else {
+                        tvViewCount?.text = "" + it.content.attributes.total_visits + " " + "Views"
+
+                    }
+
+                    tvdesc?.text = "lorem ilpsum text with description lorem ilpsum text with description lorem ilpsum text with description lorem ilpsum text with description lorem ilpsum text with description lorem ilpsum text with description with description lorem ilpsum text with description lorem ilpsum text with description"
+                }
+            }
+        })
+    }
+
+    private fun showContentUpdates() {
+        contentViewModel?.contentShowApi(prefManager?.getAccessToken()!!, id.toInt())
+        contentViewModel?.getContentShow()?.observe(this, Observer {
+            if (it != null) {
+                if (it.success) {
+
+                    if (it.content.attributes.total_visits != 0 ||
+                            it.content.attributes.total_visits == 1) {
+                        tvViewCount?.text = "" + it.content.attributes.total_visits + " " + "View"
+                    } else {
+                        tvViewCount?.text = "" + it.content.attributes.total_visits + " " + "Views"
+
+                    }
                 }
             }
         })
@@ -233,6 +283,10 @@ class ContentDetailActivity : AppCompatActivity(), onClickAdapter, Player.EventL
         val urlList_ = listOf(mp4Url to "default", dashUrl to "dash")
         val randomUrl = urlList_.random()
         preparePlayer(randomUrl.first, randomUrl.first)
+
+
+//        val player: SimpleExoPlayer = ExoPlayerFactory.newSimpleInstance(this, trackSelector)
+
         exoplayerView?.player = simpleExoplayer
         simpleExoplayer.seekTo(playbackPosition)
         simpleExoplayer.playWhenReady = true
@@ -272,6 +326,14 @@ class ContentDetailActivity : AppCompatActivity(), onClickAdapter, Player.EventL
         val uri = Uri.parse(videoUrl)
         val mediaSource = buildMediaSource(uri, type)
         Log.e("TAG", "preparePlayer: " + mediaSource)
+
+        // Produces DataSource instances through which media data is loaded.
+        // Produces DataSource instances through which media data is loaded.
+
+        // This is the MediaSource representing the media to be played.
+        // This is the MediaSource representing the media to be played.
+//        val videoSource: MediaSource = ExtractorMediaSource.Factory(dataSourceFactory)
+//                .createMediaSource(mUri)
         simpleExoplayer.prepare(mediaSource, false, false)
     }
 
@@ -320,4 +382,15 @@ class ContentDetailActivity : AppCompatActivity(), onClickAdapter, Player.EventL
         })
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        try {
+            if (timer != null) {
+                timer?.cancel()
+                timer = null
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
 }

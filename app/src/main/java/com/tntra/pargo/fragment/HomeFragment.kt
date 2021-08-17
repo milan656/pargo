@@ -1,7 +1,7 @@
 package com.tntra.pargo.fragment
 
+import android.R.attr.data
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.DisplayMetrics
@@ -23,9 +23,9 @@ import com.facebook.share.internal.ShareConstants.CONTENT_URL
 import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.exoplayer2.util.Util
 import com.google.android.material.tabs.TabLayout
+import com.google.gson.Gson
 import com.tbuonomo.viewpagerdotsindicator.DotsIndicator
 import com.tntra.pargo.R
-import com.tntra.pargo.activities.ContentDetailActivity
 import com.tntra.pargo.adapter.EventAdapter
 import com.tntra.pargo.adapter.ExploreGeneresAdapter
 import com.tntra.pargo.adapter.TreadingContentAdapter
@@ -33,7 +33,6 @@ import com.tntra.pargo.common.Common
 import com.tntra.pargo.common.PrefManager
 import com.tntra.pargo.common.onClickAdapter
 import com.tntra.pargo.model.generes.Genre
-import com.tntra.pargo.model.treading_content.Attributes
 import com.tntra.pargo.model.treading_content.Content
 import com.tntra.pargo.viewmodel.ContentViewModel
 import com.tntra.pargo.viewmodel.LoginActivityViewModel
@@ -113,27 +112,14 @@ class HomeFragment : Fragment(), onClickAdapter {
         val adapter = ViewPagerAdapter(getChildFragmentManager())
         // add the fragments
 
+        getShowTopContentApi(adapter)
         val count = 5
-        for (i in 0 until count) {
-            adapter.addFragment(PagerFragment(), "Page 1")
-        }
 
-        // Set the adapter
-        view_pager?.setAdapter(adapter)
-        tab_layout?.setupWithViewPager(view_pager, true);
         exoPlayerView = view.findViewById(R.id.idExoPlayerVIew);
         eventRecycView = view.findViewById(R.id.eventRecycView);
         contentRecycView = view.findViewById(R.id.contentRecycView);
         exploreGeneresRecycView = view.findViewById(R.id.exploreGeneresRecycView);
-        dots_indicator?.setViewPager(view_pager!!)
 
-        val timerTask: TimerTask = object : TimerTask() {
-            override fun run() {
-                view_pager?.post({ view_pager?.setCurrentItem((view_pager?.getCurrentItem()!! + 1) % count) })
-            }
-        }
-        timer = Timer()
-        timer?.schedule(timerTask, 3000, 3000)
 
         tab_layout?.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
@@ -193,6 +179,38 @@ class HomeFragment : Fragment(), onClickAdapter {
         btnContentList?.setOnClickListener(this)
         btnContentShow?.setOnClickListener(this)
         btnLikeUnlike?.setOnClickListener(this)*/
+    }
+
+    @SuppressLint("FragmentLiveDataObserve")
+    private fun getShowTopContentApi(adapter: ViewPagerAdapter) {
+        context?.let { Common.showLoader(it) }
+        contentViewModel.topLatestContentApi(prefManager?.getAccessToken()!!,
+                "timeline", "top_five")
+        contentViewModel.getTopLatestContent()?.observe(this, Observer {
+            Common.hideLoader()
+            if (it != null) {
+                if (it.success) {
+                    for (i in 0 until it.contents.size) {
+                        val gson = Gson()
+                        val Json = gson.toJson(it.contents.get(i))
+                        adapter.addFragment(PagerFragment.newInstance("", Json), "Page 1")
+                    }
+
+                    // Set the adapter
+                    view_pager?.setAdapter(adapter)
+                    tab_layout?.setupWithViewPager(view_pager, true);
+                    dots_indicator?.setViewPager(view_pager!!)
+
+                    val timerTask: TimerTask = object : TimerTask() {
+                        override fun run() {
+                            view_pager?.post({ view_pager?.setCurrentItem((view_pager?.getCurrentItem()!! + 1) % it.contents.size) })
+                        }
+                    }
+                    timer = Timer()
+                    timer?.schedule(timerTask, 3000, 3000)
+                }
+            }
+        })
     }
 
     @SuppressLint("FragmentLiveDataObserve")

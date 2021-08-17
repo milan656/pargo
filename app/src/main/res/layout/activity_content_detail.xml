@@ -90,7 +90,7 @@
                     android:textSize="@dimen/twenty_two_sp"
                     android:textStyle="bold" />
 
-                <com.tntra.pargo.custom.NormalTextView
+                <kr.co.prnd.readmore.ReadMoreTextView
                     android:id="@+id/tvdesc"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

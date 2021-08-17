@@ -35,7 +35,8 @@
                 android:textSize="@dimen/thirty_six_sp"
                 android:textStyle="bold" />
 
-            <TextView
+            <com.tntra.pargo.custom.NormalTextView
+                android:id="@+id/tvPassion"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/eighteen_dp"
@@ -44,21 +45,33 @@
                 android:layout_marginBottom="@dimen/twelve_dp"
                 android:text="Musician Singer" />
 
-
-            <com.google.android.exoplayer2.ui.PlayerView
-                android:id="@+id/idExoPlayerVIew"
+            <androidx.cardview.widget.CardView
+                android:id="@+id/videoContent"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:layout_marginStart="@dimen/eighteen_dp"
                 android:layout_marginEnd="@dimen/eighteen_dp"
-                android:layout_marginBottom="@dimen/ten_dp" />
+                android:innerRadius="0dp"
+                android:shape="ring"
+                android:thicknessRatio="1.9"
+                app:cardCornerRadius="10dp">
+
+            <ImageView
+                android:id="@+id/ivCoverLatestContent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="fitXY"
+                android:src="@drawable/nature" />
+            </androidx.cardview.widget.CardView>
 
             <TextView
+                android:id="@+id/tvDescription"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/eighteen_dp"
                 android:layout_marginEnd="@dimen/eighteen_dp"
                 android:layout_marginBottom="@dimen/thirty_dp"
+                android:layout_marginTop="@dimen/ten_dp"
                 android:text="The meaning of Kandisa: First look"
                 android:textColor="@color/black"
                 android:textSize="@dimen/sixteen_sp" />

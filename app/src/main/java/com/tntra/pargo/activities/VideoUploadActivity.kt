@@ -101,6 +101,7 @@ class VideoUploadActivity : AppCompatActivity(), View.OnClickListener {
     private var ivVidoIcon: ImageView? = null
     private var tvFileTime: TextView? = null
     private var ivBack: ImageView? = null
+    private var ivAudioFile: ImageView? = null
     private var spinnerTags: Spinner? = null
     private var listofTags: ArrayList<String>? = ArrayList()
 
@@ -117,6 +118,7 @@ class VideoUploadActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun initView() {
         ivBack = findViewById(R.id.ivBack)
+        ivAudioFile = findViewById(R.id.ivAudioFile)
         spinnerTags = findViewById(R.id.spinnerTags)
         ivVidoFile = findViewById(R.id.ivVidoFile)
         ivVidoIcon = findViewById(R.id.ivVidoIcon)
@@ -511,26 +513,22 @@ class VideoUploadActivity : AppCompatActivity(), View.OnClickListener {
                                 } catch (e: java.lang.Exception) {
                                     e.printStackTrace()
                                 }
-
-//                                bmThumbnail = ThumbnailUtils.createAudioThumbnail(imagePath?.path!!, MediaStore.Audio.Thumbnails.MINI_KIND)!!
-//                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-//                                    ThumbnailUtils.createAudioThumbnail(imagePath!!, Size(100, 100), null)
-//                                } else {
-//                                    // Use the deprecated version for older devices.
-//                                    ThumbnailUtils.createAudioThumbnail(imagePath?.path!!, MediaStore.Images.Thumbnails.MINI_KIND)
-//                                }
-
-
-//                                bmThumbnail = ThumbnailUtils.createVideoThumbnail(imagePath?.path!!, MediaStore.Video.Thumbnails.MINI_KIND)!!
-
                             }
 
                             try {
                                 ivVidoFile?.setImageBitmap(bmThumbnail)
                                 ivCoverpicView?.setImageBitmap(bmThumbnail)
                                 imagefileUri_ = Common.getImageUriFromBitmap(this, bmThumbnail!!)
+                                ivVidoFile?.visibility = View.VISIBLE
+                                ivAudioFile?.visibility = View.GONE
                             } catch (e: Exception) {
                                 e.printStackTrace()
+                                if (post_type.equals("audio")) {
+                                    ivAudioFile?.setImageResource(R.mipmap.ic_audio_icon)
+                                    ivVidoFile?.visibility = View.GONE
+                                    ivAudioFile?.visibility = View.VISIBLE
+                                }
+                                ivCoverpicView?.setImageResource(R.mipmap.ic_no_image)
                             }
 
                             ivVidoIcon?.visibility = View.VISIBLE
@@ -553,12 +551,8 @@ class VideoUploadActivity : AppCompatActivity(), View.OnClickListener {
                             e.printStackTrace()
                         }
 
-                        Log.e("TAGv", "onActivityResult: " + bmThumbnail)
-                        if (bmThumbnail == null) {
-                            Toast.makeText(this, "Selected file format invalid, please select other file", Toast.LENGTH_SHORT).show()
-                            selectedImageUrl = false
-                        } else {
-                            upload_FileAWS_S3_Bucket(imagePath?.name!!, imagePath)
+                        if (imagePath != null) {
+                            upload_FileAWS_S3_Bucket(imagePath.name, imagePath)
                         }
                     }
 
@@ -582,7 +576,6 @@ class VideoUploadActivity : AppCompatActivity(), View.OnClickListener {
                         selectedImageUrl = false
                     }
                 }
-
             }
         }
     }

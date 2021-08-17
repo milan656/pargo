@@ -40,6 +40,7 @@ class PagerFragment : Fragment() {
     private var tvDescription: TextView? = null
     private var ivCoverLatestContent: ImageView? = null
     private var tvPassion: TextView? = null
+    private var tvFileTime: TextView? = null
     private var videoContent: CardView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,8 +64,10 @@ class PagerFragment : Fragment() {
     private fun initView(view: View?) {
         videoContent = view?.findViewById(R.id.videoContent)
         tvCreatorName = view?.findViewById(R.id.tvCreatorName)
+        tvFileTime = view?.findViewById(R.id.tvFileTime)
         tvPassion = view?.findViewById(R.id.tvPassion)
         tvDescription = view?.findViewById(R.id.tvDescription)
+        ivCoverLatestContent = view?.findViewById(R.id.ivCoverLatestContent)
 
         val gson = Gson()
         val model = gson.fromJson(param2, Content::class.java)
@@ -72,6 +75,7 @@ class PagerFragment : Fragment() {
         tvCreatorName?.text = model.attributes.name
 
         try {
+            Log.e("TAG", "initView: " + Common.url + model.attributes.cover_img_path)
             context?.let { Glide.with(it).load(Common.url + model.attributes.cover_img_path).into(ivCoverLatestContent!!) }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -79,6 +83,7 @@ class PagerFragment : Fragment() {
 
         tvDescription?.text = model.attributes.body
         tvPassion?.text = model.attributes.genre?.name
+        tvFileTime?.text = model.attributes.duration
 
         videoContent?.setOnClickListener {
             val intent = Intent(context, ContentDetailActivity::class.java)

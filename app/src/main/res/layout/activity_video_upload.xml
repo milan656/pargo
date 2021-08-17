@@ -44,6 +44,16 @@
                         android:src="@mipmap/ic_no_video"
                         android:visibility="visible" />
 
+                    <ImageView
+                        android:id="@+id/ivAudioFile"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:adjustViewBounds="true"
+                        android:scaleType="fitXY"
+                        android:layout_gravity="center"
+                        android:src="@mipmap/ic_audio_icon"
+                        android:visibility="gone" />
+
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -128,7 +138,6 @@
                     android:gravity="top|start"
                     android:hint="Enter Description"
                     android:inputType="textCapSentences|textMultiLine"
-                    android:maxLines="2"
                     android:minLines="10"
                     android:padding="@dimen/ten_dp"
                     android:textColor="@color/black"

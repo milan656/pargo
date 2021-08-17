@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.widget.LinearLayout
+import android.widget.RelativeLayout
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.tntra.pargo.R
@@ -48,7 +49,7 @@ class GoLiveScreenActivity : AppCompatActivity(), onClickAdapter {
         memberRecycView?.layoutManager = GridLayoutManager(this, 2)
         memberRecycView?.adapter = liveStreamListAdapter
 
-        val params = LinearLayout.LayoutParams(
+        val params = RelativeLayout.LayoutParams(
                 width,
                 height
         )

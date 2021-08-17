@@ -1,6 +1,7 @@
 package com.tntra.pargo.adapter
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,6 +25,7 @@ class LiveStreamListAdapter(var list: ArrayList<String>,
 
     override fun onBindViewHolder(holder: LiveStreamListAdapter.Viewholder, position: Int) {
 
+        Log.e("TAGG", "onBindViewHolder: "+list.get(position) )
         try {
             Glide.with(context).load(list[position]).into(holder.ivMember)
         } catch (e: Exception) {

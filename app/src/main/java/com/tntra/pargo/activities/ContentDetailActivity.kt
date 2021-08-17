@@ -1,11 +1,13 @@
 package com.tntra.pargo.activities
 
-import android.animation.ObjectAnimator
+import android.animation.LayoutTransition
 import android.annotation.SuppressLint
 import android.net.Uri
 import android.os.Bundle
+import android.text.TextUtils
 import android.util.Log
 import android.view.View
+import android.view.ViewGroup
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
@@ -22,7 +24,10 @@ import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.source.dash.DashMediaSource
 import com.google.android.exoplayer2.source.hls.HlsMediaSource
 import com.google.android.exoplayer2.ui.PlayerView
-import com.google.android.exoplayer2.upstream.*
+import com.google.android.exoplayer2.upstream.DataSource
+import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
+import com.google.android.exoplayer2.upstream.DefaultHttpDataSource
+import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
 import com.google.gson.JsonObject
 import com.tntra.pargo.R
 import com.tntra.pargo.adapter.ContentMessageAdapter
@@ -64,6 +69,7 @@ class ContentDetailActivity : AppCompatActivity(), onClickAdapter, Player.EventL
     private var tvdesc: TextView? = null
     private var tvTitleContent: TextView? = null
     private var tvViewCount: TextView? = null
+    private var llparent: LinearLayout? = null
 
     private var timer: Timer? = null
 
@@ -71,6 +77,14 @@ class ContentDetailActivity : AppCompatActivity(), onClickAdapter, Player.EventL
     var MI_BITRATE = 1048576
     var LO_BITRATE = 524288
 
+    private val MAX_LINES_COLLAPSED = 1
+    private val INITIAL_IS_COLLAPSED = true
+
+    private val IDLE_ANIMATION_STATE = 1
+    private val EXPANDING_ANIMATION_STATE = 2
+    private val COLLAPSING_ANIMATION_STATE = 3
+    private var mCurrentAnimationState = IDLE_ANIMATION_STATE
+    private var isCollapsed = INITIAL_IS_COLLAPSED
     private var accessKey: String = "AKIAYI7XP4UNI7KFDUFZ"
     private var secreteKey: String = "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"
     private var bucket_name: String = "pargo-back-end-devlopment"
@@ -107,6 +121,7 @@ class ContentDetailActivity : AppCompatActivity(), onClickAdapter, Player.EventL
 
     private fun initView() {
 
+        llparent = findViewById(R.id.llparent)
         tvViewCount = findViewById(R.id.tvViewCount)
         tvUsername = findViewById(R.id.tvUsername)
         tvTitleContent = findViewById(R.id.tvTitleContent)
@@ -142,6 +157,37 @@ class ContentDetailActivity : AppCompatActivity(), onClickAdapter, Player.EventL
             }
         }
 
+        tvdesc?.setOnClickListener(View.OnClickListener {
+            if (if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                        isActivityTransitionRunning
+                    } else {
+                        TODO("VERSION.SDK_INT < O")
+                    }) {
+                llparent?.setLayoutTransition(llparent?.getLayoutTransition())
+            }
+            if (isCollapsed) {
+                mCurrentAnimationState = EXPANDING_ANIMATION_STATE
+                tvdesc?.setMaxLines(Int.MAX_VALUE)
+            } else {
+                mCurrentAnimationState = COLLAPSING_ANIMATION_STATE
+                tvdesc?.setMaxLines(MAX_LINES_COLLAPSED)
+                tvdesc?.post(Runnable { tvdesc?.setMaxLines(Int.MAX_VALUE) })
+            }
+            isCollapsed = !isCollapsed
+        })
+
+        if (isCollapsed) {
+            tvdesc?.setMaxLines(MAX_LINES_COLLAPSED)
+        } else {
+//            tvdesc?.setMaxLines(Int.MAX_VALUE)
+            mCurrentAnimationState = COLLAPSING_ANIMATION_STATE
+            tvdesc?.setMaxLines(MAX_LINES_COLLAPSED)
+            tvdesc?.post(Runnable { //workaround:prevent text trimming at start collapsing
+                tvdesc?.setMaxLines(Int.MAX_VALUE)
+            })
+        }
+
+        applyLayoutTransition();
         Log.e("TAGG", "initView: " + mp4Url)
         initializePlayer()
 
@@ -183,10 +229,12 @@ class ContentDetailActivity : AppCompatActivity(), onClickAdapter, Player.EventL
                         tvViewCount?.text = "" + it.content.attributes.total_visits + " " + "View"
                     } else {
                         tvViewCount?.text = "" + it.content.attributes.total_visits + " " + "Views"
-
                     }
 
-                    tvdesc?.text = "lorem ilpsum text with description lorem ilpsum text with description lorem ilpsum text with description lorem ilpsum text with description lorem ilpsum text with description lorem ilpsum text with description with description lorem ilpsum text with description lorem ilpsum text with description"
+//                    tvdesc?.text = "lorem ilpsum text with description lorem ilpsum text with description lorem ilpsum text with description lorem ilpsum text with description lorem ilpsum text with description lorem ilpsum text with"
+
+                    updateWithNewText(tvdesc?.text?.toString()!!)
+//                    addReadMore("lorem ilpsum text with description lorem ilpsum text with description lorem ilpsum text with description lorem ilpsum text with description lorem ilpsum text with description lorem ilpsum text with ", tvdesc!!)
                 }
             }
         })
@@ -370,10 +418,10 @@ class ContentDetailActivity : AppCompatActivity(), onClickAdapter, Player.EventL
     }
 
     private fun likeApi() {
-        Common.showLoader(this)
+//        Common.showLoader(this)
         contentViewModel?.likeUnLikeApi(prefManager?.getAccessToken()!!, id.toInt())
         contentViewModel?.getLikeUnLike()?.observe(this, Observer {
-            Common.hideLoader()
+//            Common.hideLoader()
             if (it != null) {
                 if (it.success) {
                     Toast.makeText(this, "You " + it.message, Toast.LENGTH_SHORT).show()
@@ -392,5 +440,73 @@ class ContentDetailActivity : AppCompatActivity(), onClickAdapter, Player.EventL
         } catch (e: Exception) {
             e.printStackTrace()
         }
+    }
+
+
+    private fun updateWithNewText(text: String) {
+        tvdesc?.setText(text)
+        tvdesc?.getViewTreeObserver()?.addOnGlobalLayoutListener(object : OnGlobalLayoutListener {
+            override fun onGlobalLayout() {
+                if (isTextUnlimited()) {
+                    if (canBeCollapsed()) {
+                        tvdesc?.setClickable(false)
+                        tvdesc?.setEllipsize(null)
+                    } else {
+                        tvdesc?.setClickable(true)
+                        tvdesc?.setEllipsize(TextUtils.TruncateAt.END)
+                    }
+                } else {
+                    if (isTrimmedWithLimitLines()) {
+                        tvdesc?.setClickable(false)
+                        tvdesc?.setEllipsize(null)
+                    } else {
+                        tvdesc?.setClickable(true)
+                        tvdesc?.setEllipsize(TextUtils.TruncateAt.END)
+                    }
+                }
+                tvdesc?.getViewTreeObserver()?.removeOnGlobalLayoutListener(this)
+            }
+        })
+    }
+
+    private fun isTextUnlimited(): Boolean {
+        return tvdesc?.getMaxLines()!! === Int.MAX_VALUE
+    }
+
+    private fun canBeCollapsed(): Boolean {
+        return tvdesc?.getLineCount()!! <= MAX_LINES_COLLAPSED
+    }
+
+    private fun isTrimmedWithLimitLines(): Boolean {
+        return tvdesc?.getLineCount()!! <= tvdesc?.getMaxLines()!!
+    }
+
+    private fun applyLayoutTransition() {
+        val transition = LayoutTransition()
+        transition.setDuration(300)
+        transition.enableTransitionType(LayoutTransition.CHANGING)
+        llparent?.setLayoutTransition(transition)
+        transition.addTransitionListener(object : LayoutTransition.TransitionListener {
+            override fun startTransition(transition: LayoutTransition,
+                                         container: ViewGroup, view: View, transitionType: Int) {
+                //todo
+            }
+
+            override fun endTransition(transition: LayoutTransition,
+                                       container: ViewGroup, view: View, transitionType: Int) {
+                if (COLLAPSING_ANIMATION_STATE === mCurrentAnimationState) {
+                    tvdesc?.setMaxLines(MAX_LINES_COLLAPSED)
+                }
+                mCurrentAnimationState = IDLE_ANIMATION_STATE
+            }
+        })
+    }
+
+    private fun isIdle(): Boolean {
+        return mCurrentAnimationState === IDLE_ANIMATION_STATE
+    }
+
+    private fun isRunning(): Boolean {
+        return !isIdle()
     }
 }

@@ -52,8 +52,7 @@ import com.tntra.pargo.activity.LoginActivity
 import com.tntra.pargo.model.collabroom.CollabRoomCreateModel
 import com.tntra.pargo.model.comments.list.CommentsListingModel
 import com.tntra.pargo.model.content_list.ContentListModel
-import com.tntra.pargo.model.followers.FollowerListModel
-import com.tntra.pargo.model.followers.FollowerModel
+import com.tntra.pargo.model.followers.FollowersListModel
 import com.tntra.pargo.model.login.OtpModel
 import com.tntra.pargo.model.login_response.UserLoginModel
 import com.tntra.pargo.model.treading_content.TreadingContentModel
@@ -413,7 +412,7 @@ class Common {
 
                     "FollowerModel" -> {
                         val FollowerModel =
-                                gson.fromJson(jsonObject.toString(), FollowerModel::class.java)
+                                gson.fromJson(jsonObject.toString(), FollowersListModel::class.java)
                         return FollowerModel
                     }
 
@@ -429,10 +428,10 @@ class Common {
                         return CommentsListingModel
                     }
 
-                    "FollowerListModel" -> {
-                        val FollowerListModel =
-                                gson.fromJson(jsonObject.toString(), FollowerListModel::class.java)
-                        return FollowerListModel
+                    "FollowersListModel" -> {
+                        val FollowersListModel =
+                                gson.fromJson(jsonObject.toString(), FollowersListModel::class.java)
+                        return FollowersListModel
                     }
                     "CollabRoomCreateModel" -> {
                         val CollabRoomCreateModel =

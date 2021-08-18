@@ -9,8 +9,7 @@ import com.tntra.pargo.model.CommonResponseModel
 import com.tntra.pargo.model.collab_req.CollabRequestModel
 import com.tntra.pargo.model.collabroom.CollabRoomCreateModel
 import com.tntra.pargo.model.collabsession.CollabSessionModel
-import com.tntra.pargo.model.followers.FollowerListModel
-import com.tntra.pargo.model.followers.FollowerModel
+import com.tntra.pargo.model.followers.FollowersListModel
 import com.tntra.pargo.networkApi.login.CollabApi
 
 import org.json.JSONObject
@@ -130,14 +129,14 @@ class CollabSessionRepository {
             userId: Int,
             page: Int,
             type: String
-    ): MutableLiveData<FollowerListModel> {
-        val loginData = MutableLiveData<FollowerListModel>()
+    ): MutableLiveData<FollowersListModel> {
+        val loginData = MutableLiveData<FollowersListModel>()
         collabApi.followersList(
                 authorizationToke, userId, page, type
-        ).enqueue(object : Callback<FollowerListModel> {
+        ).enqueue(object : Callback<FollowersListModel> {
             override fun onResponse(
-                    call: Call<FollowerListModel>,
-                    response: Response<FollowerListModel>
+                    call: Call<FollowersListModel>,
+                    response: Response<FollowersListModel>
             ) {
                 if (response.isSuccessful) {
                     loginData.value = response.body()
@@ -146,12 +145,12 @@ class CollabSessionRepository {
                         val responce = response.errorBody()?.string()
                         val jsonObjectError = JSONObject(responce)
 
-                        val FollowerListModel: FollowerListModel =
-                                Common.getErrorModel(jsonObjectError, "FollowerListModel") as FollowerListModel
+                        val FollowersListModel: FollowersListModel =
+                                Common.getErrorModel(jsonObjectError, "FollowersListModel") as FollowersListModel
                         //recoveryData.setValue(recoveryPasswordModel)
 
 
-                        loginData.value = FollowerListModel
+                        loginData.value = FollowersListModel
 
                     } catch (e: IOException) {
                         e.printStackTrace()
@@ -162,7 +161,7 @@ class CollabSessionRepository {
                 }
             }
 
-            override fun onFailure(call: Call<FollowerListModel>, t: Throwable) {
+            override fun onFailure(call: Call<FollowersListModel>, t: Throwable) {
 
                 t.printStackTrace()
             }

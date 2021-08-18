@@ -10,8 +10,7 @@ import com.tntra.pargo.model.collab_req.CollabRequestModel
 import com.tntra.pargo.model.collabroom.CollabRoomCreateModel
 
 import com.tntra.pargo.model.collabsession.CollabSessionModel
-import com.tntra.pargo.model.followers.FollowerListModel
-import com.tntra.pargo.model.followers.FollowerModel
+import com.tntra.pargo.model.followers.FollowersListModel
 import com.tntra.pargo.model.login.OtpModel
 import com.tntra.pargo.model.login_response.UserLoginModel
 import com.tntra.pargo.repository.CollabSessionRepository
@@ -24,7 +23,7 @@ class CollabSessionviewModel : ViewModel() {
     var collabsessionModel: MutableLiveData<CollabSessionModel>? = null
     var commonResponseModel: MutableLiveData<CommonResponseModel>? = null
     var collabRequestModel: MutableLiveData<CollabRequestModel>? = null
-    var followersModel: MutableLiveData<FollowerListModel>? = null
+    var followersModel: MutableLiveData<FollowersListModel>? = null
     var collabRoomCreateModel: MutableLiveData<CollabRoomCreateModel>? = null
 
     //    var uploadImageModel: MutableLiveData<UploadImageModel>? = null
@@ -92,7 +91,7 @@ class CollabSessionviewModel : ViewModel() {
         followersModel = collabSessionRepository?.followersListApi(authorizationToke,userId,page,type)
     }
 
-    fun getFollowers(): LiveData<FollowerListModel>? {
+    fun getFollowers(): LiveData<FollowersListModel>? {
         return followersModel
     }
 

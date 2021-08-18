@@ -12,8 +12,6 @@ import com.tntra.pargo.R
 import com.tntra.pargo.common.Common
 import com.tntra.pargo.common.onClickAdapter
 import com.tntra.pargo.model.followers.Follow
-import com.tntra.pargo.model.followers.FollowerListModel
-import com.tntra.pargo.model.followers.FollowerModel
 import de.hdodenhof.circleimageview.CircleImageView
 
 class FollowersListAdapter(var list: ArrayList<Follow>,
@@ -35,17 +33,14 @@ class FollowersListAdapter(var list: ArrayList<Follow>,
             holder.view.visibility = View.VISIBLE
         }
 
-
         holder.btnSelect.isChecked = list[position].isChecked
 
         holder.tvFollowerName.text = list[position].attributes.name
-        holder.tvpassion.text = "Singer"
+        holder.tvpassion.text = list[position].attributes.genres[0].name
 
         holder.btnSelect.setOnClickListener {
-
             list[position].isChecked = !list[position].isChecked
             holder.btnSelect.isChecked = list[position].isChecked
-
         }
 
         try {
@@ -53,7 +48,6 @@ class FollowersListAdapter(var list: ArrayList<Follow>,
         } catch (e: Exception) {
             e.printStackTrace()
         }
-
     }
 
     override fun getItemCount(): Int {

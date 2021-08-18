@@ -24,7 +24,6 @@ import com.tntra.pargo.adapter.FollowersListAdapter
 import com.tntra.pargo.common.PrefManager
 import com.tntra.pargo.common.onClickAdapter
 import com.tntra.pargo.model.followers.Follow
-import com.tntra.pargo.model.followers.FollowerModel
 import com.tntra.pargo.viewmodel.collab.CollabSessionviewModel
 
 class CollabStudioDetailActivity : AppCompatActivity(), onClickAdapter, View.OnClickListener {

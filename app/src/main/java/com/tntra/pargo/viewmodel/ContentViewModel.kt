@@ -73,21 +73,22 @@ class ContentViewModel : ViewModel() {
 
     fun commentList(
             authorizationToke: String,
-            id: Int
+            id: Int,
+            page: Int
     ) {
         contentRepository = ContentRepository().getInstance()
         commentsListingModel = contentRepository?.commentListApi(
-                authorizationToke, id
+                authorizationToke, id, page
         )
     }
 
     fun commentShow(
             authorizationToke: String,
-            id: Int
+            id: Int, page: Int
     ) {
         contentRepository = ContentRepository().getInstance()
         commentsListingModel = contentRepository?.commentListApi(
-                authorizationToke, id
+                authorizationToke, id, page
         )
     }
 

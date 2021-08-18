@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.NestedScrollView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -77,6 +78,7 @@ class ContentDetailActivity : AppCompatActivity(), onClickAdapter, Player.EventL
     private var llparent: LinearLayout? = null
 
     private var timer: Timer? = null
+    private var isDataFinishComment: Boolean = false
 
     var HI_BITRATE = 2097152
     var MI_BITRATE = 1048576
@@ -118,7 +120,8 @@ class ContentDetailActivity : AppCompatActivity(), onClickAdapter, Player.EventL
 
     var emojiPopup: EmojiPopup? = null
     var rootView: RelativeLayout? = null
-    var tvReadMore: TextView? = null
+    var containNestedScoll: NestedScrollView? = null
+    var commentPage = 1
 
     @SuppressLint("RestrictedApi")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -130,7 +133,7 @@ class ContentDetailActivity : AppCompatActivity(), onClickAdapter, Player.EventL
     }
 
     private fun initView() {
-        tvReadMore = findViewById(R.id.tvReadMore)
+        containNestedScoll = findViewById(R.id.containNestedScoll)
         edtComment = findViewById(R.id.etEmoji)
         rootView = findViewById(R.id.rootView)
         emojiPopup = EmojiPopup.Builder.fromRootView(rootView).build(edtComment!!)
@@ -209,7 +212,7 @@ class ContentDetailActivity : AppCompatActivity(), onClickAdapter, Player.EventL
         Log.e("TAGG", "initView: " + mp4Url)
         initializePlayer()
 
-        listComment()
+        listComment(true)
 
         showContent()
 
@@ -224,6 +227,19 @@ class ContentDetailActivity : AppCompatActivity(), onClickAdapter, Player.EventL
 //                }, 60 * 1000
 //        )
 //        addComment()
+
+        containNestedScoll?.viewTreeObserver
+                ?.addOnScrollChangedListener {
+                    if (containNestedScoll?.getChildAt(0)?.bottom!! <= containNestedScoll?.height!! + containNestedScoll?.scrollY!!) {
+                        //scroll view is at bottom
+                        Log.e("TAG", "initView: at bottom")
+                        if (!isDataFinishComment) {
+                            commentPage += 1
+                            listComment(false)
+                        }
+                    }
+                }
+
     }
 
     private fun showContent() {
@@ -247,6 +263,14 @@ class ContentDetailActivity : AppCompatActivity(), onClickAdapter, Player.EventL
                         tvViewCount?.text = "" + it.content.attributes.total_visits + " " + "View"
                     } else {
                         tvViewCount?.text = "" + it.content.attributes.total_visits + " " + "Views"
+                    }
+
+                    if (it.content.attributes.liked) {
+                        ivLiked?.visibility = View.VISIBLE
+                        ivLike?.visibility = View.GONE
+                    } else {
+                        ivLiked?.visibility = View.GONE
+                        ivLike?.visibility = View.VISIBLE
                     }
 
 //                    tvdesc?.text = "lorem ilpsum text with description lorem ilpsum text with description lorem ilpsum text with description lorem ilpsum text with description lorem ilpsum text with description lorem ilpsum text with"
@@ -276,19 +300,28 @@ class ContentDetailActivity : AppCompatActivity(), onClickAdapter, Player.EventL
         })
     }
 
-    private fun listComment() {
-        Common.showLoader(this)
-        contentViewModel?.commentList(prefManager?.getAccessToken()!!, id.toInt())
+    private fun listComment(isClear: Boolean) {
+//        Common.showLoader(this)
+        contentViewModel?.commentList(prefManager?.getAccessToken()!!, id.toInt(), commentPage)
         contentViewModel?.getCommentsList()?.observe(this, Observer {
-            Common.hideLoader()
+//            Common.hideLoader()
             if (it != null) {
                 if (it.success) {
                     Log.e("TAG", "addComment: " + it.message)
 
-                    commentsList?.clear()
+                    if (isClear) {
+                        commentsList?.clear()
+                    }
                     commentsList?.addAll(it.comments)
                     commentAdapter?.notifyDataSetChanged()
 
+                    if (it.comments.size == 0) {
+                        isDataFinishComment = true
+                    }
+
+                    Log.e("TAG", "listComment: scroll" )
+                    containNestedScoll?.fullScroll(View.FOCUS_DOWN)
+                    commentsRecycView?.smoothScrollToPosition(commentsList?.size!!)
                 } else {
                     try {
                         if (it.message != null) {
@@ -322,7 +355,8 @@ class ContentDetailActivity : AppCompatActivity(), onClickAdapter, Player.EventL
                     Log.e("TAG", "addComment: " + it.message)
                     edtComment?.setText("")
                     Common.hideKeyboard(this)
-                    listComment()
+                    commentPage = 1
+                    listComment(true)
                 } else {
                     try {
                         if (it.message != null) {

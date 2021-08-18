@@ -170,11 +170,12 @@ class ContentRepository {
 
     fun commentListApi(
             authorizationToke: String,
-            id: Int
+            id: Int,
+            page: Int
     ): MutableLiveData<CommentsListingModel> {
         val loginData = MutableLiveData<CommentsListingModel>()
         contentApi?.commentList(
-                authorizationToke, id
+                authorizationToke, id, page
         )?.enqueue(object : Callback<CommentsListingModel> {
             override fun onResponse(
                     call: Call<CommentsListingModel>,

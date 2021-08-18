@@ -38,7 +38,8 @@ interface ContentApi {
     @GET("api/v1/contents/{id}/comments")
     fun commentList(
             @Header("Authorization") Authorization: String,
-            @Path("id") id: Int
+            @Path("id") id: Int,
+            @Query("page") page:Int
     ): Call<CommentsListingModel>
 
     @GET("api/v1/contents")

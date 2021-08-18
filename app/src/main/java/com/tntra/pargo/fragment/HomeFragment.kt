@@ -1,8 +1,6 @@
 package com.tntra.pargo.fragment
 
-import android.R.attr.data
 import android.annotation.SuppressLint
-import android.net.Uri
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.util.Log
@@ -17,13 +15,10 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.media2.exoplayer.external.ExoPlayerFactory
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.viewpager.widget.ViewPager
-import com.facebook.share.internal.ShareConstants.CONTENT_URL
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.exoplayer2.ui.PlayerView
-import com.google.android.exoplayer2.util.Util
 import com.google.android.material.tabs.TabLayout
 import com.google.gson.Gson
 import com.tbuonomo.viewpagerdotsindicator.DotsIndicator
@@ -44,7 +39,6 @@ import com.tntra.pargo.viewmodel.generes.GeneresViewModel
 import java.util.*
 import kotlin.collections.ArrayList
 
-
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
@@ -60,8 +54,6 @@ class HomeFragment : Fragment(), onClickAdapter {
     var contentRecycView: RecyclerView? = null
     private var treadingContentAdapter: TreadingContentAdapter? = null
     var exploreGeneresRecycView: RecyclerView? = null
-    var eventAdapter: EventAdapter? = null
-
     var treadingContentPage = 1
     var isDataFinishTreading = false
 
@@ -69,12 +61,8 @@ class HomeFragment : Fragment(), onClickAdapter {
     var exploreGeneresAdapter: ExploreGeneresAdapter? = null
 
     // creating a variable for exoplayer
-    var exoPlayer: androidx.media2.exoplayer.external.SimpleExoPlayer? = null
     var treadingContentList: ArrayList<Content>? = ArrayList()
     var liveEventList: ArrayList<String>? = ArrayList()
-
-    // url of video which we are loading.
-    var videoURL = "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
 
     private var param1: String? = null
     private var param2: String? = null
@@ -82,10 +70,11 @@ class HomeFragment : Fragment(), onClickAdapter {
     private var view_pager: HeightWrappingViewPager? = null
     private var tab_layout: TabLayout? = null
     private var dots_indicator: DotsIndicator? = null
-    var dot: ArrayList<TextView>? = ArrayList()
     var timer: Timer? = null
     private var tvNoContentFound: TextView? = null
     private var nestedScrollHomePage: NestedScrollView? = null
+    private var homeSwipe_refresh_layout: SwipeRefreshLayout? = null
+    private var pagerAdapter:ViewPagerAdapter?=null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -110,22 +99,19 @@ class HomeFragment : Fragment(), onClickAdapter {
     }
 
     private fun initView(view: View) {
+        homeSwipe_refresh_layout = view.findViewById(R.id.homeSwipe_refresh_layout)
         nestedScrollHomePage = view.findViewById(R.id.nestedScrollHomePage)
         tvNoContentFound = view.findViewById(R.id.tvNoContentFound)
         dots_indicator = view.findViewById(R.id.dots_indicator)
         tab_layout = view.findViewById(R.id.tab_layout)
         view_pager = view.findViewById(R.id.view_pager)
-        val adapter = ViewPagerAdapter(getChildFragmentManager())
+        pagerAdapter = ViewPagerAdapter(getChildFragmentManager())
         // add the fragments
-
-        getShowTopContentApi(adapter)
-        val count = 5
 
         exoPlayerView = view.findViewById(R.id.idExoPlayerVIew);
         eventRecycView = view.findViewById(R.id.eventRecycView);
         contentRecycView = view.findViewById(R.id.contentRecycView);
         exploreGeneresRecycView = view.findViewById(R.id.exploreGeneresRecycView);
-
 
         tab_layout?.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
@@ -166,6 +152,7 @@ class HomeFragment : Fragment(), onClickAdapter {
         treadingContentAdapter = context?.let { TreadingContentAdapter(treadingContentList, it, this) }
         contentRecycView?.adapter = treadingContentAdapter
 
+        getShowTopContentApi(pagerAdapter!!)
         getTreadingContentApiList(true)
         getGeneresList()
 
@@ -180,6 +167,21 @@ class HomeFragment : Fragment(), onClickAdapter {
                         }
                     }
                 }
+
+        homeSwipe_refresh_layout?.setOnRefreshListener(object : SwipeRefreshLayout.OnRefreshListener {
+            override fun onRefresh() {
+                this@HomeFragment.onRefresh()
+            }
+        })
+    }
+
+    private fun onRefresh() {
+        getShowTopContentApi(pagerAdapter!!)
+        getTreadingContentApiList(true)
+        getGeneresList()
+
+        homeSwipe_refresh_layout?.post(Runnable { homeSwipe_refresh_layout?.isRefreshing = false })
+
     }
 
     @SuppressLint("FragmentLiveDataObserve")
@@ -191,6 +193,7 @@ class HomeFragment : Fragment(), onClickAdapter {
             Common.hideLoader()
             if (it != null) {
                 if (it.success) {
+
                     for (i in 0 until it.contents.size) {
                         val gson = Gson()
                         val Json = gson.toJson(it.contents.get(i))

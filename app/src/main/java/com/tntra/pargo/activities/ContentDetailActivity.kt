@@ -57,6 +57,7 @@ class ContentDetailActivity : AppCompatActivity(), onClickAdapter, Player.EventL
     private var exoplayerView: PlayerView? = null
     private var progressBar: ProgressBar? = null
     private var ivLike: ImageView? = null
+    private var ivLiked: ImageView? = null
     private var isLiked: Boolean = false
 
     private var video_link: String = ""
@@ -117,6 +118,7 @@ class ContentDetailActivity : AppCompatActivity(), onClickAdapter, Player.EventL
 
     var emojiPopup: EmojiPopup? = null
     var rootView: RelativeLayout? = null
+    var tvReadMore: TextView? = null
 
     @SuppressLint("RestrictedApi")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -128,6 +130,7 @@ class ContentDetailActivity : AppCompatActivity(), onClickAdapter, Player.EventL
     }
 
     private fun initView() {
+        tvReadMore = findViewById(R.id.tvReadMore)
         edtComment = findViewById(R.id.etEmoji)
         rootView = findViewById(R.id.rootView)
         emojiPopup = EmojiPopup.Builder.fromRootView(rootView).build(edtComment!!)
@@ -143,6 +146,7 @@ class ContentDetailActivity : AppCompatActivity(), onClickAdapter, Player.EventL
         ivBack = findViewById(R.id.ivBack)
         tvTitle = findViewById(R.id.tvTitle)
         ivLike = findViewById(R.id.ivLike)
+        ivLiked = findViewById(R.id.ivLiked)
         progressBar = findViewById(R.id.progressBar)
         exoplayerView = findViewById(R.id.exoplayerView)
         commentsRecycView = findViewById(R.id.commentsRecycView)
@@ -155,6 +159,7 @@ class ContentDetailActivity : AppCompatActivity(), onClickAdapter, Player.EventL
 
 
         ivLike?.setOnClickListener(this)
+        ivLiked?.setOnClickListener(this)
         ivBack?.setOnClickListener(this)
         btnSend?.setOnClickListener(this)
         ivEmoji?.setOnClickListener(this)
@@ -170,7 +175,7 @@ class ContentDetailActivity : AppCompatActivity(), onClickAdapter, Player.EventL
             }
         }
 
-        tvdesc?.setOnClickListener(View.OnClickListener {
+        tvdesc?.setOnClickListener {
             if (if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
                         isActivityTransitionRunning
                     } else {
@@ -187,7 +192,7 @@ class ContentDetailActivity : AppCompatActivity(), onClickAdapter, Player.EventL
                 tvdesc?.post(Runnable { tvdesc?.setMaxLines(Int.MAX_VALUE) })
             }
             isCollapsed = !isCollapsed
-        })
+        }
 
         if (isCollapsed) {
             tvdesc?.setMaxLines(MAX_LINES_COLLAPSED)
@@ -418,8 +423,7 @@ class ContentDetailActivity : AppCompatActivity(), onClickAdapter, Player.EventL
     override fun onClick(v: View?) {
         val id = v?.id
         when (id) {
-            R.id.ivLike -> {
-
+            R.id.ivLike, R.id.ivLiked -> {
                 likeApi()
             }
             R.id.ivBack -> {
@@ -438,7 +442,6 @@ class ContentDetailActivity : AppCompatActivity(), onClickAdapter, Player.EventL
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
-
             }
         }
     }
@@ -450,6 +453,13 @@ class ContentDetailActivity : AppCompatActivity(), onClickAdapter, Player.EventL
 //            Common.hideLoader()
             if (it != null) {
                 if (it.success) {
+                    if (it.message.equals("Liked", ignoreCase = true)) {
+                        ivLiked?.visibility = View.VISIBLE
+                        ivLike?.visibility = View.GONE
+                    } else {
+                        ivLiked?.visibility = View.GONE
+                        ivLike?.visibility = View.VISIBLE
+                    }
                     Toast.makeText(this, "You " + it.message, Toast.LENGTH_SHORT).show()
                 }
             }

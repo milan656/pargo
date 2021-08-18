@@ -47,6 +47,7 @@
                     android:orientation="vertical">
 
                     <com.tntra.pargo.custom.NormalEditText
+                        android:id="@+id/edtCollabName"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/layout_bg_corner"
@@ -56,6 +57,7 @@
                         android:textColorHint="@color/light_gray_text_color" />
 
                     <com.tntra.pargo.custom.NormalEditText
+                        android:id="@+id/edtCollabDescription"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/twenty_dp"

@@ -7,8 +7,10 @@ import com.google.gson.JsonObject
 import com.jkadvantagandbadsha.model.login.UserModel
 import com.tntra.pargo.model.CommonResponseModel
 import com.tntra.pargo.model.collab_req.CollabRequestModel
-import com.tntra.pargo.model.collabroom.CollabRoomModel
+import com.tntra.pargo.model.collabroom.CollabRoomCreateModel
+
 import com.tntra.pargo.model.collabsession.CollabSessionModel
+import com.tntra.pargo.model.followers.FollowerListModel
 import com.tntra.pargo.model.followers.FollowerModel
 import com.tntra.pargo.model.login.OtpModel
 import com.tntra.pargo.model.login_response.UserLoginModel
@@ -22,8 +24,8 @@ class CollabSessionviewModel : ViewModel() {
     var collabsessionModel: MutableLiveData<CollabSessionModel>? = null
     var commonResponseModel: MutableLiveData<CommonResponseModel>? = null
     var collabRequestModel: MutableLiveData<CollabRequestModel>? = null
-    var followersModel: MutableLiveData<FollowerModel>? = null
-    var collabRoomListModel: MutableLiveData<CollabRoomModel>? = null
+    var followersModel: MutableLiveData<FollowerListModel>? = null
+    var collabRoomCreateModel: MutableLiveData<CollabRoomCreateModel>? = null
 
     //    var uploadImageModel: MutableLiveData<UploadImageModel>? = null
     var otpModel: MutableLiveData<OtpModel>? = null
@@ -83,21 +85,23 @@ class CollabSessionviewModel : ViewModel() {
         return commonResponseModel!!
     }
 
-    fun callApiFollowerslist(authorizationToke: String) {
+    fun callApiFollowerslist(authorizationToke: String,userId: Int,
+                             page: Int,
+                             type: String) {
         collabSessionRepository = CollabSessionRepository().getInstance()
-        followersModel = collabSessionRepository?.followersListApi(authorizationToke)
+        followersModel = collabSessionRepository?.followersListApi(authorizationToke,userId,page,type)
     }
 
-    fun getFollowers(): LiveData<FollowerModel>? {
+    fun getFollowers(): LiveData<FollowerListModel>? {
         return followersModel
     }
 
-    fun callApiRoomList(authorizationToke: String) {
+    fun callApiCollabRoomCreate(authorizationToke: String,jsonObject: JsonObject) {
         collabSessionRepository = CollabSessionRepository().getInstance()
-        collabRoomListModel = collabSessionRepository?.callApiCollabRoom(authorizationToke)
+        collabRoomCreateModel = collabSessionRepository?.callApiCollabRoom(authorizationToke,jsonObject)
     }
 
-    fun getCollabRoom(): LiveData<CollabRoomModel>? {
-        return collabRoomListModel
+    fun getCollabRoomCreated(): LiveData<CollabRoomCreateModel>? {
+        return collabRoomCreateModel
     }
 }

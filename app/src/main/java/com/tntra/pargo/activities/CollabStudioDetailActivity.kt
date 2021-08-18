@@ -23,6 +23,7 @@ import com.tntra.pargo.R
 import com.tntra.pargo.adapter.FollowersListAdapter
 import com.tntra.pargo.common.PrefManager
 import com.tntra.pargo.common.onClickAdapter
+import com.tntra.pargo.model.followers.Follow
 import com.tntra.pargo.model.followers.FollowerModel
 import com.tntra.pargo.viewmodel.collab.CollabSessionviewModel
 
@@ -30,7 +31,7 @@ class CollabStudioDetailActivity : AppCompatActivity(), onClickAdapter, View.OnC
 
     private var followersListAdapter: FollowersListAdapter? = null
     private var followersRecycView: RecyclerView? = null
-    private var followersList: ArrayList<com.tntra.pargo.model.followers.FollowerModel>? = ArrayList()
+    private var followersList: ArrayList<Follow>? = ArrayList()
     private var btnSubmit: Button? = null
 
     private var llmainContent: LinearLayout? = null
@@ -38,12 +39,19 @@ class CollabStudioDetailActivity : AppCompatActivity(), onClickAdapter, View.OnC
     private var tabs: TabLayout? = null
     private var prefManager: PrefManager? = null
     private lateinit var collabSessionviewModel: CollabSessionviewModel
+    private var collabType: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_collab_studio_detail)
         collabSessionviewModel = ViewModelProviders.of(this).get(CollabSessionviewModel::class.java)
         prefManager = PrefManager(this)
+
+        if (intent != null) {
+            if (intent.hasExtra("collabType")) {
+                collabType = intent.getStringExtra("collabType")
+            }
+        }
         initView()
     }
 
@@ -76,32 +84,36 @@ class CollabStudioDetailActivity : AppCompatActivity(), onClickAdapter, View.OnC
 
 //        getFollowers()
 
-        for (i in 1..6) {
-            if (i == 0) {
-                followersList?.add(FollowerModel(null, "John Due", true, false, "John Due","passion"))
-            } else if (i == 1) {
-                followersList?.add(FollowerModel(null, "Shreya Ghoshal", true, false, "Shreya Ghoshal","passion"))
-            } else if (i == 2) {
-                followersList?.add(FollowerModel(null, "Sonu nigam", true, false, "Sonu nigam","passion"))
-            } else {
-                followersList?.add(FollowerModel(null, "Darek Shepard", true, false, "Darek Shepard","passion"))
-            }
-        }
+        /* for (i in 1..6) {
+             if (i == 0) {
+                 followersList?.add(FollowerModel(null, "John Due", true, false, "John Due","passion"))
+             } else if (i == 1) {
+                 followersList?.add(FollowerModel(null, "Shreya Ghoshal", true, false, "Shreya Ghoshal","passion"))
+             } else if (i == 2) {
+                 followersList?.add(FollowerModel(null, "Sonu nigam", true, false, "Sonu nigam","passion"))
+             } else {
+                 followersList?.add(FollowerModel(null, "Darek Shepard", true, false, "Darek Shepard","passion"))
+             }
+         }*/
+
+        getFollowersApi()
         followersListAdapter = FollowersListAdapter(followersList!!, this, this)
         followersRecycView?.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         followersRecycView?.adapter = followersListAdapter
     }
 
-//    private fun getFollowers() {
-//        collabSessionviewModel.callApiFollowerslist(prefManager?.getAccessToken()!!)
-//        collabSessionviewModel.getFollowers()?.observe(this, Observer {
-//            if (it!=null){
-//                if (it.success){
-//
-//                }
-//            }
-//        })
-//    }
+    private fun getFollowersApi() {
+        collabSessionviewModel.callApiFollowerslist(prefManager?.getAccessToken()!!, prefManager?.getUserId()!!, 1, "followings")
+        collabSessionviewModel.getFollowers()?.observe(this, Observer {
+            if (it != null) {
+                if (it.success) {
+                    followersList?.clear()
+                    followersList?.addAll(it.follows)
+                    followersListAdapter?.notifyDataSetChanged()
+                }
+            }
+        })
+    }
 
     private fun setupViewPager(viewPager: ViewPager) {
         val adapter = ViewPagerAdapter(supportFragmentManager)
@@ -119,16 +131,20 @@ class CollabStudioDetailActivity : AppCompatActivity(), onClickAdapter, View.OnC
         when (id) {
             R.id.btnSubmit -> {
                 val mainJson = JsonObject()
-                val json = JsonArray()
+                val arr = JsonArray();
+                var json: JsonObject? = null
                 if (followersListAdapter?.getSelected()?.size!! > 0) {
                     val stringBuilder = StringBuilder()
                     for (i in 0 until followersListAdapter?.getSelected()?.size!!) {
-                        stringBuilder.append(followersListAdapter?.getSelected()?.get(i)?.name)
-                        json.add(followersListAdapter?.getSelected()?.get(i)?.name)
+                        stringBuilder.append(followersListAdapter?.getSelected()?.get(i)?.attributes?.name)
+                        json = JsonObject()
+                        json.addProperty("name", followersListAdapter?.getSelected()?.get(i)?.attributes?.name)
+                        json.addProperty("id", followersListAdapter?.getSelected()?.get(i)?.id)
+                        arr.add(json)
                     }
 
-                    Log.e("TAGG", "onClick: " + stringBuilder.toString())
-                    mainJson.add("followers", json)
+                    mainJson.add("followers", arr)
+                    Log.e("TAGG", "onClick: " + mainJson)
 
                     if (followersListAdapter?.getSelected()?.size!! > 4) {
                         Toast.makeText(this, "You can select maximum 4 ", Toast.LENGTH_SHORT).show()
@@ -136,6 +152,7 @@ class CollabStudioDetailActivity : AppCompatActivity(), onClickAdapter, View.OnC
                     }
                     val intent = Intent(this, SendRequestActivity::class.java)
                     intent.putExtra("followers", mainJson.toString())
+                    intent.putExtra("collabType", collabType)
                     startActivity(intent)
 //                    showToast(stringBuilder.toString().trim { it <= ' ' })
                 } else {

@@ -49,8 +49,10 @@ import com.google.gson.GsonBuilder
 import com.jkadvantagandbadsha.model.login.UserModel
 import com.tntra.pargo.R
 import com.tntra.pargo.activity.LoginActivity
+import com.tntra.pargo.model.collabroom.CollabRoomCreateModel
 import com.tntra.pargo.model.comments.list.CommentsListingModel
 import com.tntra.pargo.model.content_list.ContentListModel
+import com.tntra.pargo.model.followers.FollowerListModel
 import com.tntra.pargo.model.followers.FollowerModel
 import com.tntra.pargo.model.login.OtpModel
 import com.tntra.pargo.model.login_response.UserLoginModel
@@ -425,6 +427,17 @@ class Common {
                         val CommentsListingModel =
                                 gson.fromJson(jsonObject.toString(), CommentsListingModel::class.java)
                         return CommentsListingModel
+                    }
+
+                    "FollowerListModel" -> {
+                        val FollowerListModel =
+                                gson.fromJson(jsonObject.toString(), FollowerListModel::class.java)
+                        return FollowerListModel
+                    }
+                    "CollabRoomCreateModel" -> {
+                        val CollabRoomCreateModel =
+                                gson.fromJson(jsonObject.toString(), CollabRoomCreateModel::class.java)
+                        return CollabRoomCreateModel
                     }
 
 

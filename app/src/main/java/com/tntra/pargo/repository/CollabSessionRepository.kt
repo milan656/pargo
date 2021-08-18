@@ -7,8 +7,9 @@ import com.tntra.pargo.common.Common
 import com.tntra.pargo.common.RetrofitCommonClass
 import com.tntra.pargo.model.CommonResponseModel
 import com.tntra.pargo.model.collab_req.CollabRequestModel
-import com.tntra.pargo.model.collabroom.CollabRoomModel
+import com.tntra.pargo.model.collabroom.CollabRoomCreateModel
 import com.tntra.pargo.model.collabsession.CollabSessionModel
+import com.tntra.pargo.model.followers.FollowerListModel
 import com.tntra.pargo.model.followers.FollowerModel
 import com.tntra.pargo.networkApi.login.CollabApi
 
@@ -125,16 +126,18 @@ class CollabSessionRepository {
     }
 
     fun followersListApi(
-            authorizationToke: String
-
-    ): MutableLiveData<FollowerModel> {
-        val loginData = MutableLiveData<FollowerModel>()
+            authorizationToke: String,
+            userId: Int,
+            page: Int,
+            type: String
+    ): MutableLiveData<FollowerListModel> {
+        val loginData = MutableLiveData<FollowerListModel>()
         collabApi.followersList(
-                authorizationToke
-        ).enqueue(object : Callback<FollowerModel> {
+                authorizationToke, userId, page, type
+        ).enqueue(object : Callback<FollowerListModel> {
             override fun onResponse(
-                    call: Call<FollowerModel>,
-                    response: Response<FollowerModel>
+                    call: Call<FollowerListModel>,
+                    response: Response<FollowerListModel>
             ) {
                 if (response.isSuccessful) {
                     loginData.value = response.body()
@@ -143,12 +146,12 @@ class CollabSessionRepository {
                         val responce = response.errorBody()?.string()
                         val jsonObjectError = JSONObject(responce)
 
-                        val FollowerModel: FollowerModel =
-                                Common.getErrorModel(jsonObjectError, "FollowerModel") as FollowerModel
+                        val FollowerListModel: FollowerListModel =
+                                Common.getErrorModel(jsonObjectError, "FollowerListModel") as FollowerListModel
                         //recoveryData.setValue(recoveryPasswordModel)
 
 
-                        loginData.value = FollowerModel
+                        loginData.value = FollowerListModel
 
                     } catch (e: IOException) {
                         e.printStackTrace()
@@ -159,7 +162,7 @@ class CollabSessionRepository {
                 }
             }
 
-            override fun onFailure(call: Call<FollowerModel>, t: Throwable) {
+            override fun onFailure(call: Call<FollowerListModel>, t: Throwable) {
 
                 t.printStackTrace()
             }
@@ -168,16 +171,17 @@ class CollabSessionRepository {
     }
 
     fun callApiCollabRoom(
-            authorizationToke: String
+            authorizationToke: String,
+            jsonObject: JsonObject
 
-    ): MutableLiveData<CollabRoomModel> {
-        val loginData = MutableLiveData<CollabRoomModel>()
-        collabApi.collabRoomList(
-                authorizationToke
-        ).enqueue(object : Callback<CollabRoomModel> {
+    ): MutableLiveData<CollabRoomCreateModel> {
+        val loginData = MutableLiveData<CollabRoomCreateModel>()
+        collabApi.createCollabroom(
+                authorizationToke, jsonObject
+        ).enqueue(object : Callback<CollabRoomCreateModel> {
             override fun onResponse(
-                    call: Call<CollabRoomModel>,
-                    response: Response<CollabRoomModel>
+                    call: Call<CollabRoomCreateModel>,
+                    response: Response<CollabRoomCreateModel>
             ) {
                 if (response.isSuccessful) {
                     loginData.value = response.body()
@@ -186,12 +190,12 @@ class CollabSessionRepository {
                         val responce = response.errorBody()?.string()
                         val jsonObjectError = JSONObject(responce)
 
-                        val CollabRoomModel: CollabRoomModel =
-                                Common.getErrorModel(jsonObjectError, "CollabRoomModel") as CollabRoomModel
+                        val CollabRoomCreateModel: CollabRoomCreateModel =
+                                Common.getErrorModel(jsonObjectError, "CollabRoomCreateModel") as CollabRoomCreateModel
                         //recoveryData.setValue(recoveryPasswordModel)
 
 
-                        loginData.value = CollabRoomModel
+                        loginData.value = CollabRoomCreateModel
 
                     } catch (e: IOException) {
                         e.printStackTrace()
@@ -202,7 +206,7 @@ class CollabSessionRepository {
                 }
             }
 
-            override fun onFailure(call: Call<CollabRoomModel>, t: Throwable) {
+            override fun onFailure(call: Call<CollabRoomCreateModel>, t: Throwable) {
 
                 t.printStackTrace()
             }

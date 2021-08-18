@@ -63,6 +63,7 @@
             android:textStyle="bold" />
 
         <com.tntra.pargo.custom.UnderlineTextView
+            android:id="@+id/tvLiveStream"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/three_dp"
@@ -72,6 +73,7 @@
             android:textStyle="bold" />
 
         <com.tntra.pargo.custom.UnderlineTextView
+            android:id="@+id/tvJugalBandhi"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/three_dp"

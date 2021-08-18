@@ -17,12 +17,10 @@
         <include layout="@layout/common_toolbar_main" />
 
         <LinearLayout
-
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/eighteen_dp"
             android:orientation="vertical">
-
 
             <com.tntra.pargo.custom.NormalTextView
                 android:layout_width="match_parent"
@@ -41,7 +39,6 @@
                 android:textSize="@dimen/twelve_sp"
                 android:textStyle="bold" />
 
-
             <com.tntra.pargo.custom.NormalEditText
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
@@ -50,7 +47,8 @@
                 android:hint="Search for creator or aficinado"
                 android:padding="@dimen/ten_dp"
                 android:textColorHint="@color/dark_gray_text_color"
-                android:textSize="@dimen/fourteen_sp" />
+                android:textSize="@dimen/fourteen_sp"
+                android:visibility="gone" />
 
             <LinearLayout
                 android:id="@+id/ll_tab"

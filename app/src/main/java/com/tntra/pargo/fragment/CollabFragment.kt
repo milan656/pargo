@@ -21,6 +21,7 @@ import androidx.cardview.widget.CardView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -30,7 +31,9 @@ import com.tntra.pargo.activities.GoLiveScreenActivity
 import com.tntra.pargo.activities.VideoUploadActivity
 import com.tntra.pargo.adapter.RequestListAdapter
 import com.tntra.pargo.common.Common
+import com.tntra.pargo.common.PrefManager
 import com.tntra.pargo.common.onClickAdapter
+import com.tntra.pargo.viewmodel.collab.CollabSessionviewModel
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
@@ -39,7 +42,8 @@ class CollabFragment : Fragment(), onClickAdapter, View.OnClickListener {
 
     private var param1: String? = null
     private var param2: String? = null
-
+    private lateinit var collabSessionviewModel: CollabSessionviewModel
+    private var prefManager: PrefManager? = null
     private var requestAceptedRecycView: RecyclerView? = null
     private var requestListAdapter: RequestListAdapter? = null
     private var requestList: ArrayList<String>? = ArrayList()
@@ -59,6 +63,8 @@ class CollabFragment : Fragment(), onClickAdapter, View.OnClickListener {
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_collab, container, false)
+        collabSessionviewModel = ViewModelProviders.of(this).get(CollabSessionviewModel::class.java)
+        prefManager = context?.let { PrefManager(it) }
         initView(view)
         return view
     }

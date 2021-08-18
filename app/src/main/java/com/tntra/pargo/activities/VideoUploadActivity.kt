@@ -507,7 +507,6 @@ class VideoUploadActivity : AppCompatActivity(), View.OnClickListener {
                             if (post_type.equals("video")) {
                                 bmThumbnail = ThumbnailUtils.createVideoThumbnail(imagePath?.path!!, MediaStore.Video.Thumbnails.MINI_KIND)!!
                             } else {
-
                                 try {
                                     bmThumbnail = Common.coverpicture(imagePath?.path)
                                 } catch (e: java.lang.Exception) {
@@ -517,8 +516,10 @@ class VideoUploadActivity : AppCompatActivity(), View.OnClickListener {
 
                             try {
                                 ivVidoFile?.setImageBitmap(bmThumbnail)
-                                ivCoverpicView?.setImageBitmap(bmThumbnail)
-                                imagefileUri_ = Common.getImageUriFromBitmap(this, bmThumbnail!!)
+                                if (bmThumbnail != null) {
+                                    ivCoverpicView?.setImageBitmap(bmThumbnail)
+                                    imagefileUri_ = Common.getImageUriFromBitmap(this, bmThumbnail)
+                                }
                                 ivVidoFile?.visibility = View.VISIBLE
                                 ivAudioFile?.visibility = View.GONE
                             } catch (e: Exception) {
@@ -528,7 +529,6 @@ class VideoUploadActivity : AppCompatActivity(), View.OnClickListener {
                                     ivVidoFile?.visibility = View.GONE
                                     ivAudioFile?.visibility = View.VISIBLE
                                 }
-                                ivCoverpicView?.setImageResource(R.mipmap.ic_no_image)
                             }
 
                             ivVidoIcon?.visibility = View.VISIBLE

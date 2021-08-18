@@ -10,8 +10,9 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.tntra.pargo.R
 import com.tntra.pargo.common.onClickAdapter
+import com.tntra.pargo.model.SelectedFollowrs
 
-class SelectedFollowersAdapter(var list: ArrayList<String>,
+class SelectedFollowersAdapter(var list: ArrayList<SelectedFollowrs>,
                                var context: Context,
                                var onpositionClick: onClickAdapter?) : RecyclerView.Adapter<SelectedFollowersAdapter.Viewholder>() {
     private val positionClick: onClickAdapter = onpositionClick!!
@@ -23,7 +24,7 @@ class SelectedFollowersAdapter(var list: ArrayList<String>,
 
     override fun onBindViewHolder(holder: SelectedFollowersAdapter.Viewholder, position: Int) {
 
-        holder.tvName.text = list[position]
+        holder.tvName.text = list[position].name
 
         holder.ivRemove.setOnClickListener {
             onpositionClick?.onPositionClick(position, 4)

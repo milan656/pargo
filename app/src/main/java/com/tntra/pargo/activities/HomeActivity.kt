@@ -53,6 +53,7 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener, onClickAdapter {
     private var ivMessageTab: ImageView? = null
     private var ivProfileTab: ImageView? = null
     private var ivDrawer: ImageView? = null
+    private var type: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,6 +73,15 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener, onClickAdapter {
         )
 
         callApiToSaveToken()
+
+        if (intent != null) {
+            if (intent.hasExtra("type")) {
+                type = intent.getStringExtra("type")!!
+                if (type.equals("join_collab")) {
+                    ivMessageTab?.performClick()
+                }
+            }
+        }
     }
 
     private fun callApiToSaveToken() {
@@ -135,17 +145,6 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener, onClickAdapter {
 
 //        callApiContentList()
 //        callApiCollabRooms()
-    }
-
-    private fun callApiCollabRooms() {
-        collabSessionviewModel.callApiRoomList(prefManager?.getAccessToken()!!)
-        collabSessionviewModel.getCollabRoom()?.observe(this, Observer {
-            if (it != null) {
-                if (it.success) {
-                    Log.e("TAGG", "callApiCollabRooms: " + it.collab_rooms)
-                }
-            }
-        })
     }
 
 

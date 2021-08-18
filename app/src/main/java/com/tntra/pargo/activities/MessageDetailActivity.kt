@@ -29,6 +29,7 @@ class MessageDetailActivity : AppCompatActivity(), View.OnClickListener {
 
 
         try {
+
             mSocket = IO.socket(this.URL)
 
         } catch (URISyntaxException: Exception) {

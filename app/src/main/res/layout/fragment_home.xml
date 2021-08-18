@@ -1,243 +1,247 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/nestedScrollHomePage"
+    android:id="@+id/homeSwipe_refresh_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/nestedScrollHomePage"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/sixteen_dp"
-            android:layout_marginTop="@dimen/sixteen_dp"
-            android:layout_marginEnd="@dimen/sixteen_dp"
-            android:text="Latest Creators"
-            android:textColor="@color/text_color"
-            android:textSize="@dimen/sixteen_sp"
-            android:textStyle="bold" />
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <com.tntra.pargo.custom.HeightWrappingViewPager
-                android:id="@+id/view_pager"
+            <TextView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginStart="@dimen/twelve_dp"
-                android:layout_marginTop="@dimen/ten_dp"
-                android:layout_marginEnd="@dimen/twelve_dp" />
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/sixteen_dp"
+                android:layout_marginTop="@dimen/sixteen_dp"
+                android:layout_marginEnd="@dimen/sixteen_dp"
+                android:text="Latest Creators"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/sixteen_sp"
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="@dimen/eight_dp"
-                android:gravity="center"
-                android:orientation="horizontal">
+                android:orientation="vertical">
 
-                <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
-                    android:id="@+id/dots_indicator"
-                    android:layout_width="wrap_content"
+                <com.tntra.pargo.custom.HeightWrappingViewPager
+                    android:id="@+id/view_pager"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_marginStart="@dimen/twelve_dp"
+                    android:layout_marginTop="@dimen/ten_dp"
+                    android:layout_marginEnd="@dimen/twelve_dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    app:dotsColor="@color/black"
-                    app:dotsCornerRadius="8dp"
-                    app:dotsSize="16dp"
-                    app:dotsSpacing="6dp"
-                    app:dotsWidthFactor="2.5"
-                    app:progressMode="false"
-                    app:selectedDotColor="@color/red" />
+                    android:layout_marginTop="@dimen/eight_dp"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
+                        android:id="@+id/dots_indicator"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        app:dotsColor="@color/black"
+                        app:dotsCornerRadius="8dp"
+                        app:dotsSize="16dp"
+                        app:dotsSpacing="6dp"
+                        app:dotsWidthFactor="2.5"
+                        app:progressMode="false"
+                        app:selectedDotColor="@color/red" />
+                </LinearLayout>
             </LinearLayout>
+
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tab_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/twelve_dp"
+                android:layout_marginTop="@dimen/ten_dp"
+                android:layout_marginEnd="@dimen/twelve_dp"
+                android:visibility="gone"
+                app:tabBackground="@drawable/tab_selector"
+                app:tabGravity="center"
+                app:tabIndicatorHeight="0dp" />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/fourteeen_dp"
+                android:layout_marginTop="@dimen/twenty_dp"
+                android:layout_marginEnd="@dimen/fourteeen_dp"
+                android:layout_marginBottom="@dimen/fourteeen_dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Live Events"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/fourteen_sp"
+                    android:textStyle="bold" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/eventRecycView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/six_dp"
+                    android:background="@color/transparent" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/fourteeen_dp"
+                android:layout_marginTop="@dimen/twenty_dp"
+                android:layout_marginEnd="@dimen/fourteeen_dp"
+                android:layout_marginBottom="@dimen/fourteeen_dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Explore Generes"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/fourteen_sp"
+                    android:textStyle="bold" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/exploreGeneresRecycView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/six_dp"
+                    android:nestedScrollingEnabled="false"
+                    app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/fourteeen_dp"
+                android:layout_marginTop="@dimen/twenty_dp"
+                android:layout_marginEnd="@dimen/fourteeen_dp"
+                android:layout_marginBottom="@dimen/fourteeen_dp"
+                android:orientation="vertical">
+
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Treading Content"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/fourteen_sp"
+                    android:textStyle="bold" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/contentRecycView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:nestedScrollingEnabled="false"
+                    app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+                <com.tntra.pargo.custom.NormalNoDataTextView
+                    android:id="@+id/tvNoContentFound"
+                    android:layout_width="match_parent"
+                    android:layout_height="70dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="No treading contents found"
+                    android:textColor="@color/light_gray_text_color"
+                    android:textSize="@dimen/twelve_sp"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+
         </LinearLayout>
 
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/tab_layout"
-            android:layout_width="match_parent"
+        <!--<Button
+            android:id="@+id/btnCreateSession"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/twelve_dp"
-            android:layout_marginTop="@dimen/ten_dp"
-            android:layout_marginEnd="@dimen/twelve_dp"
-            android:visibility="gone"
-            app:tabBackground="@drawable/tab_selector"
-            app:tabGravity="center"
-            app:tabIndicatorHeight="0dp" />
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/sixteen_dp"
+            android:padding="@dimen/ten_dp"
+            android:text="Create Session"
+            android:textColor="@color/black"
+            android:textSize="@dimen/sixteen_sp" />
 
-
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
+        <Button
+            android:id="@+id/btnAcceptRejectRequest"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/fourteeen_dp"
-            android:layout_marginTop="@dimen/twenty_dp"
-            android:layout_marginEnd="@dimen/fourteeen_dp"
-            android:layout_marginBottom="@dimen/fourteeen_dp"
-            android:orientation="vertical">
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/sixteen_dp"
+            android:padding="@dimen/ten_dp"
+            android:text="Collab Accept Reject Request"
+            android:textColor="@color/black"
+            android:textSize="@dimen/sixteen_sp" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Live Events"
-                android:textColor="@color/text_color"
-                android:textSize="@dimen/fourteen_sp"
-                android:textStyle="bold" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/eventRecycView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/six_dp"
-                android:background="@color/transparent" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
+        <Button
+            android:id="@+id/btnCreateRequest"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/fourteeen_dp"
-            android:layout_marginTop="@dimen/twenty_dp"
-            android:layout_marginEnd="@dimen/fourteeen_dp"
-            android:layout_marginBottom="@dimen/fourteeen_dp"
-            android:orientation="vertical">
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/sixteen_dp"
+            android:padding="@dimen/ten_dp"
+            android:text="Create Collab Request"
+            android:textColor="@color/black"
+            android:textSize="@dimen/sixteen_sp" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Explore Generes"
-                android:textColor="@color/text_color"
-                android:textSize="@dimen/fourteen_sp"
-                android:textStyle="bold" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/exploreGeneresRecycView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/six_dp"
-                android:nestedScrollingEnabled="false"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
+        <Button
+            android:id="@+id/btnLogout"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/fourteeen_dp"
-            android:layout_marginTop="@dimen/twenty_dp"
-            android:layout_marginEnd="@dimen/fourteeen_dp"
-            android:layout_marginBottom="@dimen/fourteeen_dp"
-            android:orientation="vertical">
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/sixteen_dp"
+            android:padding="@dimen/ten_dp"
+            android:text="Logout"
+            android:textColor="@color/black"
+            android:textSize="@dimen/sixteen_sp" />
 
+        <Button
+            android:id="@+id/btnContentList"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/sixteen_dp"
+            android:padding="@dimen/ten_dp"
+            android:text="Content_List"
+            android:textColor="@color/black"
+            android:textSize="@dimen/sixteen_sp" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Treading Content"
-                android:textColor="@color/text_color"
-                android:textSize="@dimen/fourteen_sp"
-                android:textStyle="bold" />
+        <Button
+            android:id="@+id/btnContentShow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/sixteen_dp"
+            android:padding="@dimen/ten_dp"
+            android:text="Content show"
+            android:textColor="@color/black"
+            android:textSize="@dimen/sixteen_sp" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/contentRecycView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:nestedScrollingEnabled="false"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+        <Button
+            android:id="@+id/btnLikeUnlike"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/sixteen_dp"
+            android:padding="@dimen/ten_dp"
+            android:text="Like / UnLike"
+            android:textColor="@color/black"
+            android:textSize="@dimen/sixteen_sp" />-->
 
-            <com.tntra.pargo.custom.NormalNoDataTextView
-                android:id="@+id/tvNoContentFound"
-                android:layout_width="match_parent"
-                android:layout_height="70dp"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:text="No treading contents found"
-                android:textColor="@color/light_gray_text_color"
-                android:textSize="@dimen/twelve_sp"
-                android:visibility="gone" />
-        </LinearLayout>
-
-
-    </LinearLayout>
-    <!--<Button
-        android:id="@+id/btnCreateSession"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="@dimen/sixteen_dp"
-        android:padding="@dimen/ten_dp"
-        android:text="Create Session"
-        android:textColor="@color/black"
-        android:textSize="@dimen/sixteen_sp" />
-
-    <Button
-        android:id="@+id/btnAcceptRejectRequest"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="@dimen/sixteen_dp"
-        android:padding="@dimen/ten_dp"
-        android:text="Collab Accept Reject Request"
-        android:textColor="@color/black"
-        android:textSize="@dimen/sixteen_sp" />
-
-    <Button
-        android:id="@+id/btnCreateRequest"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="@dimen/sixteen_dp"
-        android:padding="@dimen/ten_dp"
-        android:text="Create Collab Request"
-        android:textColor="@color/black"
-        android:textSize="@dimen/sixteen_sp" />
-
-    <Button
-        android:id="@+id/btnLogout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="@dimen/sixteen_dp"
-        android:padding="@dimen/ten_dp"
-        android:text="Logout"
-        android:textColor="@color/black"
-        android:textSize="@dimen/sixteen_sp" />
-
-    <Button
-        android:id="@+id/btnContentList"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="@dimen/sixteen_dp"
-        android:padding="@dimen/ten_dp"
-        android:text="Content_List"
-        android:textColor="@color/black"
-        android:textSize="@dimen/sixteen_sp" />
-
-    <Button
-        android:id="@+id/btnContentShow"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="@dimen/sixteen_dp"
-        android:padding="@dimen/ten_dp"
-        android:text="Content show"
-        android:textColor="@color/black"
-        android:textSize="@dimen/sixteen_sp" />
-
-    <Button
-        android:id="@+id/btnLikeUnlike"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="@dimen/sixteen_dp"
-        android:padding="@dimen/ten_dp"
-        android:text="Like / UnLike"
-        android:textColor="@color/black"
-        android:textSize="@dimen/sixteen_sp" />-->
-
-
-</androidx.core.widget.NestedScrollView>
+    </androidx.core.widget.NestedScrollView>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

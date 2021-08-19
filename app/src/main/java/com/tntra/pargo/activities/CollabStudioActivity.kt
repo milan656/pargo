@@ -12,6 +12,7 @@ class CollabStudioActivity : AppCompatActivity(), View.OnClickListener {
     private var tvPodcast: TextView? = null
     private var tvLiveStream: TextView? = null
     private var tvJugalBandhi: TextView? = null
+    private var tvMusicComposition: TextView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,30 +24,36 @@ class CollabStudioActivity : AppCompatActivity(), View.OnClickListener {
     private fun initView() {
         tvPodcast = findViewById(R.id.tvPodcast)
         tvJugalBandhi = findViewById(R.id.tvJugalBandhi)
+        tvMusicComposition = findViewById(R.id.tvMusicComposition)
         tvLiveStream = findViewById(R.id.tvLiveStream)
+
         tvPodcast?.setOnClickListener(this)
         tvJugalBandhi?.setOnClickListener(this)
         tvLiveStream?.setOnClickListener(this)
+        tvMusicComposition?.setOnClickListener(this)
     }
 
     override fun onClick(v: View?) {
         val id = v?.id
+        val intent = Intent(this, CollabStudioDetailActivity::class.java)
         when (id) {
             R.id.tvPodcast -> {
-                val intent = Intent(this, CollabStudioDetailActivity::class.java)
                 intent.putExtra("collabType", "podcast")
                 startActivity(intent)
             }
             R.id.tvLiveStream -> {
-                val intent = Intent(this, CollabStudioDetailActivity::class.java)
-                intent.putExtra("collabType", "livestream")
+                intent.putExtra("collabType", "live_stream")
                 startActivity(intent)
             }
             R.id.tvJugalBandhi -> {
-                val intent = Intent(this, CollabStudioDetailActivity::class.java)
-                intent.putExtra("collabType", "jugalbandhi")
+                intent.putExtra("collabType", "jugal_bandi")
                 startActivity(intent)
             }
+            R.id.tvMusicComposition -> {
+                intent.putExtra("collabType", "music_composition")
+                startActivity(intent)
+            }
+
         }
     }
 

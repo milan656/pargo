@@ -7,6 +7,7 @@ import com.tntra.pargo.model.collabroom.CollabRoomCreateModel
 import com.tntra.pargo.model.collabsession.CollabSessionModel
 import com.tntra.pargo.model.followers.FollowersListModel
 import com.tntra.pargo.model.login_response.UserLoginModel
+import com.tntra.pargo.model.notification.NotificationListModel
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -38,9 +39,14 @@ interface CollabApi {
             @Body jsonObject: JsonObject
     ): Call<CollabRoomCreateModel>
 
-    @PUT("api/v1/collab_requests/{id}")
+    @GET("api/v1/notifications")
+    fun notificationList(
+            @Header("Authorization") Authorization: String,
+    ): Call<NotificationListModel>
+
+    @PUT("api/v1/members/{id}")
     fun collabAcceptReject(
-//            @Header("Authorization") Authorization: String,
+            @Header("Authorization") Authorization: String,
             @Body jsonObject: JsonObject,
             @Path("id") id: Int,
     ): Call<CommonResponseModel>

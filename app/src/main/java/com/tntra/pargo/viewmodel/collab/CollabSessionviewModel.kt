@@ -13,6 +13,7 @@ import com.tntra.pargo.model.collabsession.CollabSessionModel
 import com.tntra.pargo.model.followers.FollowersListModel
 import com.tntra.pargo.model.login.OtpModel
 import com.tntra.pargo.model.login_response.UserLoginModel
+import com.tntra.pargo.model.notification.NotificationListModel
 import com.tntra.pargo.repository.CollabSessionRepository
 import com.tntra.pargo.repository.LoginRepository
 import org.json.JSONObject
@@ -25,6 +26,7 @@ class CollabSessionviewModel : ViewModel() {
     var collabRequestModel: MutableLiveData<CollabRequestModel>? = null
     var followersModel: MutableLiveData<FollowersListModel>? = null
     var collabRoomCreateModel: MutableLiveData<CollabRoomCreateModel>? = null
+    var notificationListModel: MutableLiveData<NotificationListModel>? = null
 
     //    var uploadImageModel: MutableLiveData<UploadImageModel>? = null
     var otpModel: MutableLiveData<OtpModel>? = null
@@ -84,23 +86,32 @@ class CollabSessionviewModel : ViewModel() {
         return commonResponseModel!!
     }
 
-    fun callApiFollowerslist(authorizationToke: String,userId: Int,
+    fun callApiFollowerslist(authorizationToke: String, userId: Int,
                              page: Int,
                              type: String) {
         collabSessionRepository = CollabSessionRepository().getInstance()
-        followersModel = collabSessionRepository?.followersListApi(authorizationToke,userId,page,type)
+        followersModel = collabSessionRepository?.followersListApi(authorizationToke, userId, page, type)
     }
 
     fun getFollowers(): LiveData<FollowersListModel>? {
         return followersModel
     }
 
-    fun callApiCollabRoomCreate(authorizationToke: String,jsonObject: JsonObject) {
+    fun callApiCollabRoomCreate(authorizationToke: String, jsonObject: JsonObject) {
         collabSessionRepository = CollabSessionRepository().getInstance()
-        collabRoomCreateModel = collabSessionRepository?.callApiCollabRoom(authorizationToke,jsonObject)
+        collabRoomCreateModel = collabSessionRepository?.callApiCollabRoom(authorizationToke, jsonObject)
     }
 
     fun getCollabRoomCreated(): LiveData<CollabRoomCreateModel>? {
         return collabRoomCreateModel
+    }
+
+    fun callApiNotificationlist(authorizationToke: String) {
+        collabSessionRepository = CollabSessionRepository().getInstance()
+        notificationListModel = collabSessionRepository?.callApiNotificationList(authorizationToke)
+    }
+
+    fun getNotificationList(): LiveData<NotificationListModel> {
+        return notificationListModel!!
     }
 }

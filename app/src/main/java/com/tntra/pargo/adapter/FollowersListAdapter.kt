@@ -10,16 +10,20 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.tntra.pargo.R
 import com.tntra.pargo.common.Common
+import com.tntra.pargo.common.OnBottomReachedListener
 import com.tntra.pargo.common.onClickAdapter
 import com.tntra.pargo.model.followers.Follow
 import de.hdodenhof.circleimageview.CircleImageView
 
 class FollowersListAdapter(var list: ArrayList<Follow>,
                            var context: Context,
-                           var onpositionClick: onClickAdapter?
+                           var onpositionClick: onClickAdapter?,
+                           var onBottomReached: OnBottomReachedListener?
 ) : RecyclerView.Adapter<FollowersListAdapter.Viewholder>() {
 
     private val positionClick: onClickAdapter = onpositionClick!!
+    private val onBottomReachedListener: OnBottomReachedListener = onBottomReached!!
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Viewholder {
         val view = LayoutInflater.from(context).inflate(R.layout.followers_list_adapter_design, parent, false)
         return Viewholder(view)
@@ -47,6 +51,10 @@ class FollowersListAdapter(var list: ArrayList<Follow>,
             Glide.with(context).load(Common.url + list.get(position).attributes.profile_img_path).into(holder.ivFollowerImg)
         } catch (e: Exception) {
             e.printStackTrace()
+        }
+
+        if (list.size - 1 == position) {
+            onBottomReachedListener.onBottomReached(position)
         }
     }
 

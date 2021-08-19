@@ -28,7 +28,6 @@ import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 
-
 class SendRequestActivity : AppCompatActivity(), View.OnClickListener, onClickAdapter {
 
     private lateinit var collabSessionviewModel: CollabSessionviewModel
@@ -208,7 +207,6 @@ class SendRequestActivity : AppCompatActivity(), View.OnClickListener, onClickAd
             builder?.dismiss()
         }
         builder.setView(root)
-
         builder.window!!.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
         builder.show()
     }

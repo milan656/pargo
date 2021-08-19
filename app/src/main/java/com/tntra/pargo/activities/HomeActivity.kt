@@ -99,7 +99,7 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener, onClickAdapter {
                         Log.i("token", "+++" + token)
 
 
-//                        addFCMToken(token)
+                        addFCMToken(token)
 
                     })
 
@@ -240,25 +240,7 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener, onClickAdapter {
     }
 
 
-    private fun callApiAcceptRejectReq() {
-        Common.showLoader(this)
-        val main = JsonObject()
-        val session = JsonObject()
-        session.addProperty("status", "rejected")
-        main.add("collab_request", session)
 
-        Log.e("TAG", "callApiAcceptRejectReq: " + main.toString())
-
-        collabSessionviewModel.collabAcceptReject(prefManager?.getAccessToken()!!, main, 5)
-        collabSessionviewModel.getCollabAcceptReject()?.observe(this, Observer {
-            Common.hideLoader()
-            if (it.success) {
-                Common.showDialogue(this, "collab Accept Reject Request", "" + it, false, false)
-            } else {
-                Common.showDialogue(this, "Oops!", it.message, false, false)
-            }
-        })
-    }
 
     private fun callApicreateRequest() {
         Common.showLoader(this)

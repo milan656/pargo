@@ -10,6 +10,7 @@ import com.tntra.pargo.model.collab_req.CollabRequestModel
 import com.tntra.pargo.model.collabroom.CollabRoomCreateModel
 import com.tntra.pargo.model.collabsession.CollabSessionModel
 import com.tntra.pargo.model.followers.FollowersListModel
+import com.tntra.pargo.model.notification.NotificationListModel
 import com.tntra.pargo.networkApi.login.CollabApi
 
 import org.json.JSONObject
@@ -213,6 +214,48 @@ class CollabSessionRepository {
         return loginData
     }
 
+    fun callApiNotificationList(
+            authorizationToke: String,
+    ): MutableLiveData<NotificationListModel> {
+        val loginData = MutableLiveData<NotificationListModel>()
+        collabApi.notificationList(
+                authorizationToke
+        ).enqueue(object : Callback<NotificationListModel> {
+            override fun onResponse(
+                    call: Call<NotificationListModel>,
+                    response: Response<NotificationListModel>
+            ) {
+                if (response.isSuccessful) {
+                    loginData.value = response.body()
+                } else {
+                    try {
+                        val responce = response.errorBody()?.string()
+                        val jsonObjectError = JSONObject(responce)
+
+                        val NotificationListModel: NotificationListModel =
+                                Common.getErrorModel(jsonObjectError, "NotificationListModel") as NotificationListModel
+                        //recoveryData.setValue(recoveryPasswordModel)
+
+
+                        loginData.value = NotificationListModel
+
+                    } catch (e: IOException) {
+                        e.printStackTrace()
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+
+                }
+            }
+
+            override fun onFailure(call: Call<NotificationListModel>, t: Throwable) {
+
+                t.printStackTrace()
+            }
+        })
+        return loginData
+    }
+
     fun collabAcceptReject(
             authorizationToke: String,
             jsonObject: JsonObject,
@@ -220,7 +263,7 @@ class CollabSessionRepository {
     ): MutableLiveData<CommonResponseModel> {
         val loginData = MutableLiveData<CommonResponseModel>()
         collabApi.collabAcceptReject(
-                /*authorizationToke,*/ jsonObject, id
+                authorizationToke, jsonObject, id
         ).enqueue(object : Callback<CommonResponseModel> {
             override fun onResponse(
                     call: Call<CommonResponseModel>,

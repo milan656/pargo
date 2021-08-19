@@ -21,12 +21,14 @@ import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.tntra.pargo.R
 import com.tntra.pargo.adapter.FollowersListAdapter
+import com.tntra.pargo.common.Common
+import com.tntra.pargo.common.OnBottomReachedListener
 import com.tntra.pargo.common.PrefManager
 import com.tntra.pargo.common.onClickAdapter
 import com.tntra.pargo.model.followers.Follow
 import com.tntra.pargo.viewmodel.collab.CollabSessionviewModel
 
-class CollabStudioDetailActivity : AppCompatActivity(), onClickAdapter, View.OnClickListener {
+class CollabStudioDetailActivity : AppCompatActivity(), onClickAdapter, View.OnClickListener, OnBottomReachedListener {
 
     private var followersListAdapter: FollowersListAdapter? = null
     private var followersRecycView: RecyclerView? = null
@@ -40,6 +42,11 @@ class CollabStudioDetailActivity : AppCompatActivity(), onClickAdapter, View.OnC
     private lateinit var collabSessionviewModel: CollabSessionviewModel
     private var collabType: String = ""
 
+    private var listType: String = ""
+    private var isdataFinish = false
+    private var followersPage = 1
+    private var followingsPage = 1
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_collab_studio_detail)
@@ -48,9 +55,11 @@ class CollabStudioDetailActivity : AppCompatActivity(), onClickAdapter, View.OnC
 
         if (intent != null) {
             if (intent.hasExtra("collabType")) {
-                collabType = intent.getStringExtra("collabType")
+                collabType = intent.getStringExtra("collabType")!!
             }
         }
+
+        listType = "followers"
         initView()
     }
 
@@ -68,7 +77,17 @@ class CollabStudioDetailActivity : AppCompatActivity(), onClickAdapter, View.OnC
         tabs?.setupWithViewPager(viewPager)
         tabs?.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
-
+                if (tab?.text?.toString().equals("Following")) {
+                    listType = "followings"
+                    isdataFinish = false
+                    followingsPage = 1
+                    getFollowersApi(true)
+                } else {
+                    listType = "followers"
+                    isdataFinish = false
+                    followersPage = 1
+                    getFollowersApi(true)
+                }
             }
 
             override fun onTabUnselected(tab: TabLayout.Tab?) {
@@ -81,32 +100,30 @@ class CollabStudioDetailActivity : AppCompatActivity(), onClickAdapter, View.OnC
 
         })
 
-//        getFollowers()
-
-        /* for (i in 1..6) {
-             if (i == 0) {
-                 followersList?.add(FollowerModel(null, "John Due", true, false, "John Due","passion"))
-             } else if (i == 1) {
-                 followersList?.add(FollowerModel(null, "Shreya Ghoshal", true, false, "Shreya Ghoshal","passion"))
-             } else if (i == 2) {
-                 followersList?.add(FollowerModel(null, "Sonu nigam", true, false, "Sonu nigam","passion"))
-             } else {
-                 followersList?.add(FollowerModel(null, "Darek Shepard", true, false, "Darek Shepard","passion"))
-             }
-         }*/
-
-        getFollowersApi()
-        followersListAdapter = FollowersListAdapter(followersList!!, this, this)
+        getFollowersApi(true)
+        followersListAdapter = FollowersListAdapter(followersList!!, this, this, this)
         followersRecycView?.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         followersRecycView?.adapter = followersListAdapter
+        followersListAdapter?.onBottomReached = this
     }
 
-    private fun getFollowersApi() {
-        collabSessionviewModel.callApiFollowerslist(prefManager?.getAccessToken()!!, prefManager?.getUserId()!!, 1, "followings")
+    private fun getFollowersApi(isClear: Boolean) {
+
+        Common.showLoader(this)
+        if (listType.equals("followings")) {
+            collabSessionviewModel.callApiFollowerslist(prefManager?.getAccessToken()!!, prefManager?.getUserId()!!, followingsPage, listType)
+        } else {
+            collabSessionviewModel.callApiFollowerslist(prefManager?.getAccessToken()!!, prefManager?.getUserId()!!, followersPage, listType)
+        }
+
         collabSessionviewModel.getFollowers()?.observe(this, Observer {
+            Common.hideLoader()
             if (it != null) {
                 if (it.success) {
-                    followersList?.clear()
+                    if (isClear) {
+                        followersList?.clear()
+                    }
+                    isdataFinish = it.follows.size == 0
                     followersList?.addAll(it.follows)
                     followersListAdapter?.notifyDataSetChanged()
                 }
@@ -183,6 +200,22 @@ class CollabStudioDetailActivity : AppCompatActivity(), onClickAdapter, View.OnC
 
         override fun getPageTitle(position: Int): CharSequence {
             return mFragmentTitleList[position]
+        }
+    }
+
+    override fun onBottomReached(position: Int) {
+
+        Log.e("TAGbott", "onBottomReached: " + followersList?.get(position)?.attributes?.name)
+        Log.e("TAGbott", "onBottomReached: " + position)
+        if (position >= 9) {
+            if (!isdataFinish) {
+                if (listType.equals("followings")) {
+                    followingsPage += 1
+                } else {
+                    followersPage += 1
+                }
+                getFollowersApi(false)
+            }
         }
     }
 }

@@ -1,8 +1,16 @@
 package com.tntra.pargo.activities
 
+import android.app.Activity
+import android.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
+import android.view.WindowManager
+import android.widget.Button
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,17 +23,19 @@ import com.tntra.pargo.common.Common
 import com.tntra.pargo.common.PrefManager
 import com.tntra.pargo.common.onClickAdapter
 import com.tntra.pargo.model.DashboardModel
+import com.tntra.pargo.model.notification.Notification
 import com.tntra.pargo.viewmodel.collab.CollabSessionviewModel
 import java.text.SimpleDateFormat
 
 class NotificationActivity : AppCompatActivity(), onClickAdapter {
 
     private var mAdapter: LeadHistoryAdapter? = null
-    var historyDataList: ArrayList<DashboardModel> = ArrayList()
+    var historyDataList: ArrayList<Notification> = ArrayList()
     var simpleDateFormat: SimpleDateFormat? = null
     private var recyclerView: RecyclerView? = null
-    private var prefManager: PrefManager? = null
     private lateinit var collabSessionviewModel: CollabSessionviewModel
+    private var prefManager: PrefManager? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,9 +62,9 @@ class NotificationActivity : AppCompatActivity(), onClickAdapter {
 
     private fun setData() {
 
-        for (i in 0..11) {
+        /*for (i in 0..11) {
 
-            var dashboardModel: DashboardModel? = null
+            var dashboardModel: Notification? = null
             var dateString: String? = ""
             if (i == 0 || i == 1 || i == 2) {
                 dateString = "2021-08-03"
@@ -70,31 +80,66 @@ class NotificationActivity : AppCompatActivity(), onClickAdapter {
 
             if (i == 0) {
                 dateString = "2021-08-03"
-                dashboardModel = DashboardModel(
-                        "Neha karkae", "Sent you a request to collab", dateString, "uuid", "it.data.get(i).date_formated",
-                        1, 2, 3, 4, startDate,
+                dashboardModel = Notification(
+                        null, "", "", "Neha karkae", "Sent you a request to collab", dateString, "uuid", "it.data.get(i).date_formated",
+                        startDate,
                         startDate, false
                 )
             } else if (i == 3) {
                 dateString = "2021-08-22"
-                dashboardModel = DashboardModel(
-                        "John Due", "Starting following you", dateString, "uuid", "it.data.get(i).date_formated",
-                        1, 2, 3, 4, startDate,
+                dashboardModel = Notification(
+                        null, "", "", "John Due", "Starting following you", dateString, "uuid", "it.data.get(i).date_formated",
+                        startDate,
                         startDate, true
                 )
             } else {
                 dateString = "2021-09-01"
-                dashboardModel = DashboardModel(
-                        "Jane Doe", "Accepted your invite", dateString, "uuid", "it.data.get(i).date_formated",
-                        1, 2, 3, 4, startDate,
+                dashboardModel = Notification(
+                        null, "", "", "Jane Doe", "Accepted your invite", dateString, "uuid", "it.data.get(i).date_formated",
+                        startDate,
                         startDate, true
                 )
             }
 
             historyDataList.add(dashboardModel)
-        }
+        }*/
 
-        mAdapter?.notifyDataSetChanged()
+        collabSessionviewModel.callApiNotificationlist(prefManager?.getAccessToken()!!)
+        collabSessionviewModel.getNotificationList().observe(this, {
+            if (it != null) {
+                if (it.success) {
+                    historyDataList.clear()
+
+                    for (i in it.notifications.indices) {
+
+                        var dateString: String? = ""
+                        if (i == 0 || i == 1 || i == 2) {
+                            dateString = "2021-08-03"
+                        } else if (i == 3 || i == 4) {
+                            dateString = "2021-08-22"
+                        } else {
+                            dateString = "2021-09-01"
+                        }
+                        val sdf = SimpleDateFormat("yyyy-MM-dd")
+                        val date = sdf.parse(dateString)
+
+                        val startDate = date.time
+                        Log.e("TAGNo", "setData: " + it.notifications.get(i).attributes)
+                        Log.e("TAGNo", "setData: " + it.notifications.get(i).id)
+                        Log.e("TAGNo", "setData: " + it.notifications.get(i).type)
+                        dateString = "2021-08-03"
+
+                        val dashboardModel = Notification(
+                                it.notifications.get(i).attributes, it.notifications.get(i).id, it.notifications.get(i).attributes.data.type, "Neha karkae", "Sent you a request to collab", dateString!!, "uuid", "it.data.get(i).date_formated",
+                                startDate,
+                                startDate, false
+                        )
+                        historyDataList.add(dashboardModel)
+                    }
+                    mAdapter?.notifyDataSetChanged()
+                }
+            }
+        })
     }
 
     override fun onPositionClick(variable: Int, check: Int) {
@@ -113,7 +158,7 @@ class NotificationActivity : AppCompatActivity(), onClickAdapter {
         val main = JsonObject()
         val session = JsonObject()
         session.addProperty("status", status)
-        main.add("collab_request", session)
+        main.add("member", session)
 
         Log.e("TAG", "callApiAcceptRejectReq: " + main.toString())
 
@@ -121,10 +166,46 @@ class NotificationActivity : AppCompatActivity(), onClickAdapter {
         collabSessionviewModel.getCollabAcceptReject()?.observe(this, Observer {
             Common.hideLoader()
             if (it.success) {
-                Common.showDialogue(this, "collab Accept Reject Request", "" + it, false, false)
+                showDialogue(this, "Collab Request Status", "Collab request updated successfully", false, false)
             } else {
-                Common.showDialogue(this, "Oops!", it.message, false, false)
+                Common.showDialogue(this, "Oops!", it.errors, false, false)
             }
         })
+    }
+
+    fun showDialogue(
+            activity: Activity,
+            title: String,
+            message: String,
+            isBackPressed: Boolean,
+            isnavigate: Boolean
+    ) {
+        val builder = AlertDialog.Builder(activity).create()
+        builder.setCancelable(false)
+        val width = LinearLayout.LayoutParams.MATCH_PARENT
+        val height = LinearLayout.LayoutParams.WRAP_CONTENT
+        builder?.window?.setLayout(width, height)
+        builder.getWindow()?.setBackgroundDrawableResource(android.R.color.transparent)
+
+        val root = LayoutInflater.from(activity).inflate(R.layout.common_dialogue_layout, null)
+
+        val btnYes = root.findViewById<Button>(R.id.btnOk)
+        val ivClose = root.findViewById<ImageView>(R.id.ivClose)
+        val tv_message = root.findViewById<TextView>(R.id.tv_message)
+        val tvTitleText = root.findViewById<TextView>(R.id.tvTitleText)
+        tvTitleText?.text = title
+        tv_message.text = message
+        btnYes.setOnClickListener {
+            builder.dismiss()
+            setData()
+        }
+
+        ivClose.setOnClickListener {
+            builder?.dismiss()
+        }
+        builder.setView(root)
+
+        builder.window!!.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
+        builder.show()
     }
 }

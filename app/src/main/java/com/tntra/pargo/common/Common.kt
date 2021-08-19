@@ -55,6 +55,7 @@ import com.tntra.pargo.model.content_list.ContentListModel
 import com.tntra.pargo.model.followers.FollowersListModel
 import com.tntra.pargo.model.login.OtpModel
 import com.tntra.pargo.model.login_response.UserLoginModel
+import com.tntra.pargo.model.notification.NotificationListModel
 import com.tntra.pargo.model.treading_content.TreadingContentModel
 import okhttp3.ResponseBody
 import org.json.JSONArray
@@ -437,6 +438,11 @@ class Common {
                         val CollabRoomCreateModel =
                                 gson.fromJson(jsonObject.toString(), CollabRoomCreateModel::class.java)
                         return CollabRoomCreateModel
+                    }
+                    "NotificationListModel" -> {
+                        val NotificationListModel =
+                                gson.fromJson(jsonObject.toString(), NotificationListModel::class.java)
+                        return NotificationListModel
                     }
 
 
@@ -1254,7 +1260,7 @@ class Common {
             return null
         }
 
-        fun getImageUriFromBitmap(context: Context, bitmap: Bitmap): Uri{
+        fun getImageUriFromBitmap(context: Context, bitmap: Bitmap): Uri {
             val bytes = ByteArrayOutputStream()
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
             val path = MediaStore.Images.Media.insertImage(context.contentResolver, bitmap, "Title", null)
@@ -1285,28 +1291,28 @@ class Common {
             }
         }
 
-       /* private fun bitmapToFile(bitmap: Bitmap, context: Context): Uri {
-            // Get the context wrapper
-            val wrapper = ContextWrapper(context)
+        /* private fun bitmapToFile(bitmap: Bitmap, context: Context): Uri {
+             // Get the context wrapper
+             val wrapper = ContextWrapper(context)
 
-            // Initialize a new file instance to save bitmap object
-            var file = wrapper.getDir("Images", Context.MODE_PRIVATE)
-            file = File(file, "${UUID.randomUUID()}.jpg")
+             // Initialize a new file instance to save bitmap object
+             var file = wrapper.getDir("Images", Context.MODE_PRIVATE)
+             file = File(file, "${UUID.randomUUID()}.jpg")
 
-            try {
-                // Compress the bitmap and save in jpg format
-                val stream: OutputStream = FileOutputStream(file)
-                Log.e("TAGG", "bitmapToFile: " + file.name + " " + file.path)
-//                bitmap.compress(Bitmap.CompressFormat.JPEG,100,stream)
-                stream.flush()
-                stream.close()
-            } catch (e: IOException) {
-                e.printStackTrace()
-            }
+             try {
+                 // Compress the bitmap and save in jpg format
+                 val stream: OutputStream = FileOutputStream(file)
+                 Log.e("TAGG", "bitmapToFile: " + file.name + " " + file.path)
+ //                bitmap.compress(Bitmap.CompressFormat.JPEG,100,stream)
+                 stream.flush()
+                 stream.close()
+             } catch (e: IOException) {
+                 e.printStackTrace()
+             }
 
-            // Return the saved bitmap uri
-            return Uri.parse(file.absolutePath)
-        }*/
+             // Return the saved bitmap uri
+             return Uri.parse(file.absolutePath)
+         }*/
 
         fun getFilePathFromURI(context: Context?, contentUri: Uri?): String? {
             //copy file and send new file path

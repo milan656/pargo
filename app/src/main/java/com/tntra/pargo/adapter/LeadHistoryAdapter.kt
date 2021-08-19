@@ -15,19 +15,20 @@ import com.tntra.pargo.R
 import com.tntra.pargo.common.OnBottomReachedListener
 import com.tntra.pargo.common.onClickAdapter
 import com.tntra.pargo.model.DashboardModel
+import com.tntra.pargo.model.notification.Notification
 import java.text.SimpleDateFormat
 import java.util.*
 
 @SuppressLint("SimpleDateFormat")
 class LeadHistoryAdapter(
-        private val mActivity: Context, dataset: List<DashboardModel>,
+        private val mActivity: Context, dataset: List<Notification>,
         onPositionClick: onClickAdapter
 ) :
         RecyclerView.Adapter<LeadHistoryAdapter.ViewHolder>(),
         StickyHeaderAdapter<LeadHistoryAdapter.HeaderHolder?> {
     private val mContext: Context
     private val mInflater: LayoutInflater
-    private val mDataset: List<DashboardModel>
+    private val mDataset: List<Notification>
     private val mDateFormat: SimpleDateFormat
     private val mDateFormatTime: SimpleDateFormat
     private var mToday = ""
@@ -45,13 +46,12 @@ class LeadHistoryAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
         Log.e("getdatee00", "" + mDataset.get(position))
-        val item: DashboardModel = mDataset[position]
+        val item: Notification = mDataset[position]
 
+        holder.tvMessage?.text = item.attributes.body
+        holder.tvgroupName?.text = item.attributes.title
 
-        holder.tvMessage?.text = mDataset.get(position).fullAddress
-        holder.tvgroupName?.text = mDataset.get(position).addressTitle
-
-        if (mDataset.get(position).requestAccepted) {
+        if (!item.attributes.data.type.equals("new_collab_request")) {
             holder.llfooter?.visibility = View.GONE
         } else {
             holder.llfooter?.visibility = View.VISIBLE
@@ -73,7 +73,7 @@ class LeadHistoryAdapter(
         var headerId = 0L
         try {
             if (mDataset != null && mDataset.size > 0) {
-                val item: DashboardModel = mDataset[position]
+                val item: Notification = mDataset[position]
                 headerId = mDateFormat.parse(mDateFormat.format(Date(item.createdAt))).time
             }
         } catch (ex: Exception) {
@@ -116,7 +116,7 @@ class LeadHistoryAdapter(
     }
 
     override fun onBindHeaderViewHolder(p0: HeaderHolder?, p1: Int) {
-        val item: DashboardModel = mDataset[p1]
+        val item: Notification = mDataset[p1]
 
         p0?.timestamp?.text = mDateFormat.format(Date(item.createdAt)).toString()
         Log.e("gettimedate", "" + mDataset.get(p1))

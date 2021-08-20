@@ -22,7 +22,6 @@ import com.tntra.pargo.adapter.LeadHistoryAdapter
 import com.tntra.pargo.common.Common
 import com.tntra.pargo.common.PrefManager
 import com.tntra.pargo.common.onClickAdapter
-import com.tntra.pargo.model.DashboardModel
 import com.tntra.pargo.model.notification.Notification
 import com.tntra.pargo.viewmodel.collab.CollabSessionviewModel
 import java.text.SimpleDateFormat
@@ -112,22 +111,20 @@ class NotificationActivity : AppCompatActivity(), onClickAdapter {
 
                     for (i in it.notifications.indices) {
 
-                        var dateString: String? = ""
-                        if (i == 0 || i == 1 || i == 2) {
+                        val dateString: String = it.notifications.get(i).attributes.created_at
+                        /*if (i == 0 || i == 1 || i == 2) {
                             dateString = "2021-08-03"
                         } else if (i == 3 || i == 4) {
                             dateString = "2021-08-22"
                         } else {
                             dateString = "2021-09-01"
-                        }
-                        val sdf = SimpleDateFormat("yyyy-MM-dd")
-                        val date = sdf.parse(dateString)
+                        }*/
+//                        val sdf = SimpleDateFormat("yyyy-MM-dd")
+//                        val date = sdf.parse(dateString)
 
-                        val startDate = date.time
-                        Log.e("TAGNo", "setData: " + it.notifications.get(i).attributes)
-                        Log.e("TAGNo", "setData: " + it.notifications.get(i).id)
-                        Log.e("TAGNo", "setData: " + it.notifications.get(i).type)
-                        dateString = "2021-08-03"
+                        val date = Common.datefrom(dateString)
+                        val startDate = 0L
+                        Log.e("TAGNo", "setData: " + date)
 
                         val dashboardModel = Notification(
                                 it.notifications.get(i).attributes, it.notifications.get(i).id, it.notifications.get(i).attributes.data.type, "Neha karkae", "Sent you a request to collab", dateString!!, "uuid", "it.data.get(i).date_formated",
@@ -146,14 +143,14 @@ class NotificationActivity : AppCompatActivity(), onClickAdapter {
 
         if (check == 0) {
 //            accept
-            callApiAcceptRejectReq("accepted")
+            callApiAcceptRejectReq("accepted", variable)
         } else {
 //            reject
-            callApiAcceptRejectReq("rejected")
+            callApiAcceptRejectReq("rejected", variable)
         }
     }
 
-    private fun callApiAcceptRejectReq(status: String) {
+    private fun callApiAcceptRejectReq(status: String, variable: Int) {
         Common.showLoader(this)
         val main = JsonObject()
         val session = JsonObject()
@@ -162,7 +159,7 @@ class NotificationActivity : AppCompatActivity(), onClickAdapter {
 
         Log.e("TAG", "callApiAcceptRejectReq: " + main.toString())
 
-        collabSessionviewModel.collabAcceptReject(prefManager?.getAccessToken()!!, main, prefManager?.getUserId()!!)
+        collabSessionviewModel.collabAcceptReject(prefManager?.getAccessToken()!!, main, historyDataList.get(variable).attributes.data.member_id)
         collabSessionviewModel.getCollabAcceptReject()?.observe(this, Observer {
             Common.hideLoader()
             if (it.success) {

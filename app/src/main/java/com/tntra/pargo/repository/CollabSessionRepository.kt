@@ -6,6 +6,7 @@ import com.jkadvantagandbadsha.model.login.UserModel
 import com.tntra.pargo.common.Common
 import com.tntra.pargo.common.RetrofitCommonClass
 import com.tntra.pargo.model.CommonResponseModel
+import com.tntra.pargo.model.collabRoomList.CollabRoomListModel
 import com.tntra.pargo.model.collab_req.CollabRequestModel
 import com.tntra.pargo.model.collabroom.CollabRoomCreateModel
 import com.tntra.pargo.model.collabsession.CollabSessionModel
@@ -249,6 +250,48 @@ class CollabSessionRepository {
             }
 
             override fun onFailure(call: Call<NotificationListModel>, t: Throwable) {
+
+                t.printStackTrace()
+            }
+        })
+        return loginData
+    }
+
+    fun callApiCollabRoomList(
+            authorizationToke: String,
+    ): MutableLiveData<CollabRoomListModel> {
+        val loginData = MutableLiveData<CollabRoomListModel>()
+        collabApi.collabRoomList(
+                authorizationToke
+        ).enqueue(object : Callback<CollabRoomListModel> {
+            override fun onResponse(
+                    call: Call<CollabRoomListModel>,
+                    response: Response<CollabRoomListModel>
+            ) {
+                if (response.isSuccessful) {
+                    loginData.value = response.body()
+                } else {
+                    try {
+                        val responce = response.errorBody()?.string()
+                        val jsonObjectError = JSONObject(responce)
+
+                        val CollabRoomListModel: CollabRoomListModel =
+                                Common.getErrorModel(jsonObjectError, "CollabRoomListModel") as CollabRoomListModel
+                        //recoveryData.setValue(recoveryPasswordModel)
+
+
+                        loginData.value = CollabRoomListModel
+
+                    } catch (e: IOException) {
+                        e.printStackTrace()
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+
+                }
+            }
+
+            override fun onFailure(call: Call<CollabRoomListModel>, t: Throwable) {
 
                 t.printStackTrace()
             }

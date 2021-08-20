@@ -59,12 +59,14 @@
 
 
             <LinearLayout
+                android:id="@+id/llparent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/sixteen_dp"
                 android:orientation="vertical">
 
                 <com.tntra.pargo.custom.NormalTextView
+                    android:id="@+id/tvdesc"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textMultiLine|textCapSentences"

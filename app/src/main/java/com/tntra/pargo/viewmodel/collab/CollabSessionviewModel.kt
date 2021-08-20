@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.google.gson.JsonObject
 import com.jkadvantagandbadsha.model.login.UserModel
 import com.tntra.pargo.model.CommonResponseModel
+import com.tntra.pargo.model.collabRoomList.CollabRoomListModel
 import com.tntra.pargo.model.collab_req.CollabRequestModel
 import com.tntra.pargo.model.collabroom.CollabRoomCreateModel
 
@@ -27,6 +28,7 @@ class CollabSessionviewModel : ViewModel() {
     var followersModel: MutableLiveData<FollowersListModel>? = null
     var collabRoomCreateModel: MutableLiveData<CollabRoomCreateModel>? = null
     var notificationListModel: MutableLiveData<NotificationListModel>? = null
+    var collabRoomListModel: MutableLiveData<CollabRoomListModel>? = null
 
     //    var uploadImageModel: MutableLiveData<UploadImageModel>? = null
     var otpModel: MutableLiveData<OtpModel>? = null
@@ -113,5 +115,14 @@ class CollabSessionviewModel : ViewModel() {
 
     fun getNotificationList(): LiveData<NotificationListModel> {
         return notificationListModel!!
+    }
+
+    fun callApiCollabRoomList(authorizationToke: String) {
+        collabSessionRepository = CollabSessionRepository().getInstance()
+        collabRoomListModel = collabSessionRepository?.callApiCollabRoomList(authorizationToke)
+    }
+
+    fun getCollabRoomList(): LiveData<CollabRoomListModel> {
+        return collabRoomListModel!!
     }
 }

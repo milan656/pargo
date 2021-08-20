@@ -96,6 +96,10 @@ class SendRequestActivity : AppCompatActivity(), View.OnClickListener, onClickAd
         when (id) {
             R.id.tvSendReq -> {
 
+                if (receiver_ids?.size == 0) {
+                    Toast.makeText(this, "Please select follower / followings", Toast.LENGTH_SHORT).show()
+                    return
+                }
                 if (edtCollabName?.text?.toString()?.isEmpty()!!) {
                     Toast.makeText(this, "Please enter collab name", Toast.LENGTH_SHORT).show()
                     return
@@ -104,7 +108,8 @@ class SendRequestActivity : AppCompatActivity(), View.OnClickListener, onClickAd
                     Toast.makeText(this, "Please enter collab description", Toast.LENGTH_SHORT).show()
                     return
                 }
-                createCollabRoomApi()
+
+//                createCollabRoomApi()
 
             }
             R.id.ivBack -> {

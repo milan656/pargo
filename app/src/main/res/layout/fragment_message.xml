@@ -14,7 +14,6 @@
         <com.tntra.pargo.custom.NormalEditText
             android:layout_width="match_parent"
             android:layout_height="45dp"
-            android:layout_marginTop="@dimen/twenty_four_dp"
             android:background="@drawable/layout_bg_corner"
             android:hint="Search"
             android:padding="@dimen/ten_dp"
@@ -23,7 +22,7 @@
             android:textSize="@dimen/fourteen_sp" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/followersRecycView"
+            android:id="@+id/messageRecycView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </LinearLayout>

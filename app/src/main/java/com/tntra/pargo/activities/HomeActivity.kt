@@ -81,6 +81,11 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener, onClickAdapter {
                     ivMessageTab?.performClick()
                 }
             }
+            if (intent.hasExtra("isFromNotification")) {
+                if (intent.getStringExtra("isFromNotification")?.equals("notification")!!) {
+                    ivNotification?.performClick()
+                }
+            }
         }
     }
 
@@ -238,8 +243,6 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener, onClickAdapter {
             }
         })
     }
-
-
 
 
     private fun callApicreateRequest() {

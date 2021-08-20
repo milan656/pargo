@@ -10,8 +10,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.tntra.pargo.R
 import com.tntra.pargo.common.onClickAdapter
 import com.tntra.pargo.model.FollowerModel
+import com.tntra.pargo.model.collabRoomList.CollabRoom
 
-class MessageListAdapter(var list: ArrayList<String>,
+class MessageListAdapter(var list: ArrayList<CollabRoom>,
                          var context: Context,
                          var onpositionClick: onClickAdapter?
 ) : RecyclerView.Adapter<MessageListAdapter.Viewholder>() {
@@ -30,11 +31,16 @@ class MessageListAdapter(var list: ArrayList<String>,
             holder.view.visibility = View.VISIBLE
         }
 
-        holder.tvname.text = list[position]
+        holder.tvname.text = list[position].attributes.name
+        if (list[position].attributes.collab_room_type != null) {
+            holder.tvCollabRoomDesc.text = list[position].attributes.collab_room_type
+        }else{
+            holder.tvCollabRoomDesc.text = ""
+        }
 
         holder.llcontent.setOnClickListener {
 
-            onpositionClick?.onPositionClick(position,5)
+            onpositionClick?.onPositionClick(position, 5)
         }
 
     }
@@ -47,6 +53,7 @@ class MessageListAdapter(var list: ArrayList<String>,
 
         var view = itemView.findViewById(R.id.view) as View
         var tvname = itemView.findViewById(R.id.tvname) as TextView
+        var tvCollabRoomDesc = itemView.findViewById(R.id.tvCollabRoomDesc) as TextView
         var btnSelect = itemView.findViewById(R.id.btnSelect) as TextView
         var llcontent = itemView.findViewById(R.id.llcontent) as LinearLayout
 

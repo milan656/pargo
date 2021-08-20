@@ -26,6 +26,7 @@ import com.tntra.pargo.common.OnBottomReachedListener
 import com.tntra.pargo.common.PrefManager
 import com.tntra.pargo.common.onClickAdapter
 import com.tntra.pargo.model.followers.Follow
+import com.tntra.pargo.model.followers.FollowSelected
 import com.tntra.pargo.viewmodel.collab.CollabSessionviewModel
 
 class CollabStudioDetailActivity : AppCompatActivity(), onClickAdapter, View.OnClickListener, OnBottomReachedListener {
@@ -46,6 +47,9 @@ class CollabStudioDetailActivity : AppCompatActivity(), onClickAdapter, View.OnC
     private var isdataFinish = false
     private var followersPage = 1
     private var followingsPage = 1
+
+    private var followersCkeckedList: ArrayList<Follow>? = ArrayList()
+    private var followingsCkeckedList: ArrayList<Follow>? = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,6 +81,8 @@ class CollabStudioDetailActivity : AppCompatActivity(), onClickAdapter, View.OnC
         tabs?.setupWithViewPager(viewPager)
         tabs?.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
+
+                addSelectedList()
                 if (tab?.text?.toString().equals("Following")) {
                     listType = "followings"
                     isdataFinish = false
@@ -109,12 +115,14 @@ class CollabStudioDetailActivity : AppCompatActivity(), onClickAdapter, View.OnC
 
     private fun getFollowersApi(isClear: Boolean) {
 
+
         Common.showLoader(this)
         if (listType.equals("followings")) {
             collabSessionviewModel.callApiFollowerslist(prefManager?.getAccessToken()!!, prefManager?.getUserId()!!, followingsPage, listType)
         } else {
             collabSessionviewModel.callApiFollowerslist(prefManager?.getAccessToken()!!, prefManager?.getUserId()!!, followersPage, listType)
         }
+
 
         collabSessionviewModel.getFollowers()?.observe(this, Observer {
             Common.hideLoader()
@@ -125,10 +133,46 @@ class CollabStudioDetailActivity : AppCompatActivity(), onClickAdapter, View.OnC
                     }
                     isdataFinish = it.follows.size == 0
                     followersList?.addAll(it.follows)
+
+                    if (listType.equals("followings")) {
+                        if (followingsCkeckedList?.size!! > 0) {
+
+
+                        }
+                    } else {
+                        if (followersCkeckedList?.size!! > 0) {
+                            Log.e("TAGGK1", "getFollowersApi: " + followersCkeckedList)
+                        }
+                    }
                     followersListAdapter?.notifyDataSetChanged()
                 }
             }
         })
+    }
+
+    fun addSelectedList() {
+        try {
+            if (followersListAdapter?.getSelected() != null) {
+                if (followersListAdapter?.getSelected()?.size!! > 0) {
+                    for (i in 0 until followersListAdapter?.getSelected()?.size!!) {
+                        if (listType.equals("followings")) {
+                            followersListAdapter?.getSelected()?.get(i)?.isChecked = true
+                            followingsCkeckedList?.add(Follow(followersListAdapter?.getSelected()?.get(i)?.attributes!!, followersListAdapter?.getSelected()?.get(i)?.id!!,
+                                    followersListAdapter?.getSelected()?.get(i)?.type!!, followersListAdapter?.getSelected()?.get(i)?.isChecked!!))
+                        } else {
+                            followersListAdapter?.getSelected()?.get(i)?.isChecked = true
+                            followersCkeckedList?.add(Follow(followersListAdapter?.getSelected()?.get(i)?.attributes!!, followersListAdapter?.getSelected()?.get(i)?.id!!,
+                                    followersListAdapter?.getSelected()?.get(i)?.type!!, followersListAdapter?.getSelected()?.get(i)?.isChecked!!))
+                        }
+                    }
+                }
+            }
+
+            Log.e("TAGGk", "getFollowersApi: " + followersCkeckedList?.size)
+            Log.e("TAGGk", "getFollowersApi: " + followingsCkeckedList?.size)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     private fun setupViewPager(viewPager: ViewPager) {
@@ -156,6 +200,7 @@ class CollabStudioDetailActivity : AppCompatActivity(), onClickAdapter, View.OnC
                         json = JsonObject()
                         json.addProperty("name", followersListAdapter?.getSelected()?.get(i)?.attributes?.name)
                         json.addProperty("id", followersListAdapter?.getSelected()?.get(i)?.id)
+
                         arr.add(json)
                     }
 

@@ -80,7 +80,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         val m = (Date().time / 1000L % Int.MAX_VALUE).toInt()
         var intent: Intent? = null
         intent = Intent(this, HomeActivity::class.java)
-//        intent.putExtra("isFromNotification", "profile")
+        intent.putExtra("isFromNotification", "notification")
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         val pendingIntent = PendingIntent.getActivity(

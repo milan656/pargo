@@ -1,34 +1,37 @@
 package com.tntra.pargo.fragment
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.tntra.pargo.R
 import com.tntra.pargo.activities.MessageDetailActivity
 import com.tntra.pargo.adapter.FollowersListAdapter
 import com.tntra.pargo.adapter.MessageListAdapter
+import com.tntra.pargo.common.Common
+import com.tntra.pargo.common.PrefManager
 import com.tntra.pargo.common.onClickAdapter
 import com.tntra.pargo.model.FollowerModel
+import com.tntra.pargo.model.collabRoomList.CollabRoom
+import com.tntra.pargo.viewmodel.collab.CollabSessionviewModel
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [MessageFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class MessageFragment : Fragment(), onClickAdapter, View.OnClickListener {
-    private var followersListAdapter: MessageListAdapter? = null
-    private var followersRecycView: RecyclerView? = null
-    private var followersList: ArrayList<String>? = ArrayList()
+    private var messageListAdapter: MessageListAdapter? = null
+    private var messageRecyclerView: RecyclerView? = null
+    private var roomList: ArrayList<CollabRoom>? = ArrayList()
+    private var collabSessionviewModel: CollabSessionviewModel? = null
+    private var prefManager: PrefManager? = null
 
     // TODO: Rename and change types of parameters
     private var param1: String? = null
@@ -45,13 +48,15 @@ class MessageFragment : Fragment(), onClickAdapter, View.OnClickListener {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_message, container, false)
+        collabSessionviewModel = ViewModelProviders.of(this).get(CollabSessionviewModel::class.java)
+        prefManager = context?.let { PrefManager(it) }
         initView(view)
         return view
     }
 
     private fun initView(view: View?) {
-        followersRecycView = view?.findViewById(R.id.followersRecycView)
-        for (i in 0..6) {
+        messageRecyclerView = view?.findViewById(R.id.messageRecycView)
+        /*for (i in 0..6) {
             if (i == 0) {
                 followersList?.add("Collab name 1")
             } else if (i == 1) {
@@ -59,23 +64,33 @@ class MessageFragment : Fragment(), onClickAdapter, View.OnClickListener {
             } else {
                 followersList?.add("Collab name" + i)
             }
+        }*/
+        messageListAdapter = context?.let { MessageListAdapter(roomList!!, it, this) }
+        messageRecyclerView?.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
+        messageRecyclerView?.adapter = messageListAdapter
 
-        }
-        followersListAdapter = context?.let { MessageListAdapter(followersList!!, it, this) }
-        followersRecycView?.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
-        followersRecycView?.adapter = followersListAdapter
+        getCollabRoomList()
+    }
+
+    @SuppressLint("FragmentLiveDataObserve")
+    private fun getCollabRoomList() {
+        context?.let { Common.showLoader(it) }
+        collabSessionviewModel?.callApiCollabRoomList(prefManager?.getAccessToken()!!)
+        collabSessionviewModel?.getCollabRoomList()?.observe(this, Observer {
+            Common.hideLoader()
+            if (it != null) {
+                if (it.success) {
+                    roomList?.clear()
+                    roomList?.addAll(it.collab_rooms)
+                    Log.e("TAGF", "getCollabRoomList: " + roomList?.size)
+                    messageListAdapter?.notifyDataSetChanged()
+                }
+            }
+        })
     }
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment MessageFragment.
-         */
-        // TODO: Rename and change types and number of parameters
+
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
                 MessageFragment().apply {
@@ -90,7 +105,7 @@ class MessageFragment : Fragment(), onClickAdapter, View.OnClickListener {
 
         if (check == 5) {
             val intent = Intent(context, MessageDetailActivity::class.java)
-            intent.putExtra("name", followersList?.get(variable))
+            intent.putExtra("name", roomList?.get(variable)?.attributes?.name)
             startActivity(intent)
         }
     }

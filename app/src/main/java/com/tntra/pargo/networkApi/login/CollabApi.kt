@@ -2,6 +2,7 @@ package com.tntra.pargo.networkApi.login
 
 import com.google.gson.JsonObject
 import com.tntra.pargo.model.CommonResponseModel
+import com.tntra.pargo.model.collabRoomList.CollabRoomListModel
 import com.tntra.pargo.model.collab_req.CollabRequestModel
 import com.tntra.pargo.model.collabroom.CollabRoomCreateModel
 import com.tntra.pargo.model.collabsession.CollabSessionModel
@@ -43,6 +44,11 @@ interface CollabApi {
     fun notificationList(
             @Header("Authorization") Authorization: String,
     ): Call<NotificationListModel>
+
+    @GET("api/v1/collab_rooms")
+    fun collabRoomList(
+            @Header("Authorization") Authorization: String,
+    ): Call<CollabRoomListModel>
 
     @PUT("api/v1/members/{id}")
     fun collabAcceptReject(

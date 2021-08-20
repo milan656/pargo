@@ -50,6 +50,12 @@ interface CollabApi {
             @Header("Authorization") Authorization: String,
     ): Call<CollabRoomListModel>
 
+    @DELETE("api/v1/notifications/{id}")
+    fun deleteNoti(
+            @Header("Authorization") Authorization: String,
+            @Path("id") id: Int
+    ): Call<CommonResponseModel>
+
     @PUT("api/v1/members/{id}")
     fun collabAcceptReject(
             @Header("Authorization") Authorization: String,

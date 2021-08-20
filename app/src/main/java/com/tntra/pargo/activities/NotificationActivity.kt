@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.WindowManager
 import android.widget.Button
 import android.widget.ImageView
@@ -34,7 +35,8 @@ class NotificationActivity : AppCompatActivity(), onClickAdapter {
     private var recyclerView: RecyclerView? = null
     private lateinit var collabSessionviewModel: CollabSessionviewModel
     private var prefManager: PrefManager? = null
-
+    private var tvNoNotification: TextView? = null
+    private var ivBack: ImageView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,6 +47,8 @@ class NotificationActivity : AppCompatActivity(), onClickAdapter {
     }
 
     private fun initView() {
+        ivBack = findViewById(R.id.ivBack)
+        tvNoNotification = findViewById(R.id.tvNoNotification)
         recyclerView = findViewById(R.id.recyclerView)
         mAdapter = LeadHistoryAdapter(this, historyDataList, this)
         val decor = StickyHeaderDecoration(mAdapter)
@@ -56,6 +60,9 @@ class NotificationActivity : AppCompatActivity(), onClickAdapter {
         recyclerView?.addItemDecoration(decor)
         mAdapter?.onclick = this
 
+        ivBack?.setOnClickListener {
+            onBackPressed()
+        }
         setData()
     }
 
@@ -111,20 +118,10 @@ class NotificationActivity : AppCompatActivity(), onClickAdapter {
 
                     for (i in it.notifications.indices) {
 
-                        val dateString: String = it.notifications.get(i).attributes.created_at
-                        /*if (i == 0 || i == 1 || i == 2) {
-                            dateString = "2021-08-03"
-                        } else if (i == 3 || i == 4) {
-                            dateString = "2021-08-22"
-                        } else {
-                            dateString = "2021-09-01"
-                        }*/
-//                        val sdf = SimpleDateFormat("yyyy-MM-dd")
-//                        val date = sdf.parse(dateString)
-
-                        val date = Common.datefrom(dateString)
-                        val startDate = 0L
-                        Log.e("TAGNo", "setData: " + date)
+                        val dateString = Common.dateFormatT(it.notifications.get(i).attributes.created_at)
+                        val sdf = SimpleDateFormat("yyyy-MM-dd")
+                        val date = sdf.parse(dateString)
+                        val startDate = date.time
 
                         val dashboardModel = Notification(
                                 it.notifications.get(i).attributes, it.notifications.get(i).id, it.notifications.get(i).attributes.data.type, "Neha karkae", "Sent you a request to collab", dateString!!, "uuid", "it.data.get(i).date_formated",
@@ -134,6 +131,12 @@ class NotificationActivity : AppCompatActivity(), onClickAdapter {
                         historyDataList.add(dashboardModel)
                     }
                     mAdapter?.notifyDataSetChanged()
+
+                    if (historyDataList.size > 0) {
+                        tvNoNotification?.visibility = View.GONE
+                    } else {
+                        tvNoNotification?.visibility = View.VISIBLE
+                    }
                 }
             }
         })
@@ -163,7 +166,8 @@ class NotificationActivity : AppCompatActivity(), onClickAdapter {
         collabSessionviewModel.getCollabAcceptReject()?.observe(this, Observer {
             Common.hideLoader()
             if (it.success) {
-                showDialogue(this, "Collab Request Status", "Collab request updated successfully", false, false)
+                showDialogue(this, "Collab Request Status", "Collab request updated successfully", false, false,
+                        historyDataList.get(variable).id)
             } else {
                 Common.showDialogue(this, "Oops!", it.errors, false, false)
             }
@@ -175,7 +179,8 @@ class NotificationActivity : AppCompatActivity(), onClickAdapter {
             title: String,
             message: String,
             isBackPressed: Boolean,
-            isnavigate: Boolean
+            isnavigate: Boolean,
+            notificationId: String
     ) {
         val builder = AlertDialog.Builder(activity).create()
         builder.setCancelable(false)
@@ -194,15 +199,27 @@ class NotificationActivity : AppCompatActivity(), onClickAdapter {
         tv_message.text = message
         btnYes.setOnClickListener {
             builder.dismiss()
-            setData()
+            deleteNotificationApi(notificationId)
         }
 
         ivClose.setOnClickListener {
             builder?.dismiss()
+            deleteNotificationApi(notificationId)
         }
         builder.setView(root)
 
         builder.window!!.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
         builder.show()
+    }
+
+    private fun deleteNotificationApi(notificationId: String) {
+        collabSessionviewModel.callApiDeleteNotification(prefManager?.getAccessToken()!!, notificationId.toInt())
+        collabSessionviewModel.getDeleteNoti().observe(this, Observer {
+            if (it != null) {
+                if (it.success) {
+                    setData()
+                }
+            }
+        })
     }
 }

@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.widget.ImageView
 import android.widget.TextView
 import com.tntra.pargo.R
 
@@ -13,6 +14,7 @@ class CollabStudioActivity : AppCompatActivity(), View.OnClickListener {
     private var tvLiveStream: TextView? = null
     private var tvJugalBandhi: TextView? = null
     private var tvMusicComposition: TextView? = null
+    private var ivBack: ImageView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,6 +24,7 @@ class CollabStudioActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun initView() {
+        ivBack = findViewById(R.id.ivBack)
         tvPodcast = findViewById(R.id.tvPodcast)
         tvJugalBandhi = findViewById(R.id.tvJugalBandhi)
         tvMusicComposition = findViewById(R.id.tvMusicComposition)
@@ -31,6 +34,7 @@ class CollabStudioActivity : AppCompatActivity(), View.OnClickListener {
         tvJugalBandhi?.setOnClickListener(this)
         tvLiveStream?.setOnClickListener(this)
         tvMusicComposition?.setOnClickListener(this)
+        ivBack?.setOnClickListener(this)
     }
 
     override fun onClick(v: View?) {
@@ -52,6 +56,9 @@ class CollabStudioActivity : AppCompatActivity(), View.OnClickListener {
             R.id.tvMusicComposition -> {
                 intent.putExtra("collabType", "music_composition")
                 startActivity(intent)
+            }
+            R.id.ivBack -> {
+                onBackPressed()
             }
 
         }

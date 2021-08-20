@@ -29,6 +29,7 @@ class CollabSessionviewModel : ViewModel() {
     var collabRoomCreateModel: MutableLiveData<CollabRoomCreateModel>? = null
     var notificationListModel: MutableLiveData<NotificationListModel>? = null
     var collabRoomListModel: MutableLiveData<CollabRoomListModel>? = null
+    var deleteNotification: MutableLiveData<CommonResponseModel>? = null
 
     //    var uploadImageModel: MutableLiveData<UploadImageModel>? = null
     var otpModel: MutableLiveData<OtpModel>? = null
@@ -124,5 +125,14 @@ class CollabSessionviewModel : ViewModel() {
 
     fun getCollabRoomList(): LiveData<CollabRoomListModel> {
         return collabRoomListModel!!
+    }
+
+    fun callApiDeleteNotification(authorizationToke: String, id: Int) {
+        collabSessionRepository = CollabSessionRepository().getInstance()
+        deleteNotification = collabSessionRepository?.callApiDeleteNoti(authorizationToke, id)
+    }
+
+    fun getDeleteNoti(): LiveData<CommonResponseModel> {
+        return deleteNotification!!
     }
 }

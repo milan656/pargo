@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/fragment_background"
     tools:context=".activities.NotificationActivity">
 
     <include layout="@layout/common_toolbar_main" />
@@ -13,18 +14,35 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/eighteen_dp"
         android:layout_marginEnd="@dimen/eighteen_dp"
+        android:layout_marginTop="@dimen/eighteen_dp"
         android:text="Latest Activity / Notifications"
         android:textColor="@color/black"
         android:textSize="@dimen/fourteen_sp"
         android:textStyle="bold" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginStart="@dimen/eighteen_dp"
-        android:layout_marginTop="@dimen/fourteen_dp"
-        android:layout_marginEnd="@dimen/eighteen_dp"
-        android:layout_marginBottom="@dimen/fourteen_dp" />
+        android:layout_height="wrap_content">
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="@dimen/eighteen_dp"
+            android:layout_marginEnd="@dimen/eighteen_dp"
+            android:layout_marginBottom="@dimen/fourteen_dp" />
+
+        <com.tntra.pargo.custom.NormalNoDataTextView
+            android:id="@+id/tvNoNotification"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:visibility="gone"
+            android:layout_centerInParent="true"
+            android:textColor="@color/light_gray_text_color"
+            android:textSize="@dimen/twelve_sp"
+            android:text="There are no any notification to display here." />
+
+    </RelativeLayout>
 </LinearLayout>

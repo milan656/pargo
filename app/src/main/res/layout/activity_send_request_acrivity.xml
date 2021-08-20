@@ -34,11 +34,27 @@
                 android:layout_marginTop="@dimen/sixteen_dp"
                 android:orientation="vertical">
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/followersRecycView"
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/fourteen_dp" />
+                    android:layout_height="wrap_content">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/followersRecycView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/fourteen_dp" />
+                    
+                    <com.tntra.pargo.custom.NormalNoDataTextView
+                        android:id="@+id/tvNoFollowers"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/twelve_sp"
+                        android:gravity="center"
+                        android:visibility="gone"
+                        android:layout_centerInParent="true"
+                        android:text="No any followers / follwonigs selected"
+                        android:textColor="@color/light_gray_text_color"/>
+                </RelativeLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -52,8 +68,8 @@
                         android:layout_height="wrap_content"
                         android:background="@drawable/layout_bg_corner"
                         android:hint="Collab Name"
-                        android:padding="@dimen/twelve_dp"
                         android:inputType="text|textCapSentences|textNoSuggestions"
+                        android:padding="@dimen/twelve_dp"
                         android:textColorHint="@color/light_gray_text_color" />
 
                     <com.tntra.pargo.custom.NormalEditText
@@ -64,8 +80,8 @@
                         android:background="@drawable/layout_bg_corner"
                         android:gravity="start"
                         android:hint="Start a message"
-                        android:minLines="8"
                         android:inputType="text|textCapSentences|textMultiLine"
+                        android:minLines="8"
                         android:padding="@dimen/twelve_dp"
                         android:textColorHint="@color/light_gray_text_color" />
 

@@ -114,7 +114,6 @@
                     android:gravity="start|center"
                     android:hint="Enter Title"
                     android:inputType="textCapSentences|textMultiLine"
-                    android:maxLines="2"
                     android:padding="@dimen/ten_dp"
                     android:textColor="@color/black"
                     android:textSize="@dimen/fourteen_sp" />

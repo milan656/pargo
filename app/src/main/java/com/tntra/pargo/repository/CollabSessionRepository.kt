@@ -299,6 +299,49 @@ class CollabSessionRepository {
         return loginData
     }
 
+    fun callApiDeleteNoti(
+            authorizationToke: String,
+            id: Int
+    ): MutableLiveData<CommonResponseModel> {
+        val loginData = MutableLiveData<CommonResponseModel>()
+        collabApi.deleteNoti(
+                authorizationToke,id
+        ).enqueue(object : Callback<CommonResponseModel> {
+            override fun onResponse(
+                    call: Call<CommonResponseModel>,
+                    response: Response<CommonResponseModel>
+            ) {
+                if (response.isSuccessful) {
+                    loginData.value = response.body()
+                } else {
+                    try {
+                        val responce = response.errorBody()?.string()
+                        val jsonObjectError = JSONObject(responce)
+
+                        val CommonResponseModel: CommonResponseModel =
+                                Common.getErrorModel(jsonObjectError, "CommonResponseModel") as CommonResponseModel
+                        //recoveryData.setValue(recoveryPasswordModel)
+
+
+                        loginData.value = CommonResponseModel
+
+                    } catch (e: IOException) {
+                        e.printStackTrace()
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+
+                }
+            }
+
+            override fun onFailure(call: Call<CommonResponseModel>, t: Throwable) {
+
+                t.printStackTrace()
+            }
+        })
+        return loginData
+    }
+
     fun collabAcceptReject(
             authorizationToke: String,
             jsonObject: JsonObject,

@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -50,6 +51,7 @@ class CollabStudioDetailActivity : AppCompatActivity(), onClickAdapter, View.OnC
 
     private var followersCkeckedList: ArrayList<Follow>? = ArrayList()
     private var followingsCkeckedList: ArrayList<Follow>? = ArrayList()
+    private var ivBack: ImageView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,10 +70,12 @@ class CollabStudioDetailActivity : AppCompatActivity(), onClickAdapter, View.OnC
     }
 
     private fun initView() {
+        ivBack = findViewById(R.id.ivBack)
         followersRecycView = findViewById(R.id.followersRecycView)
         btnSubmit = findViewById(R.id.btnSubmit)
         llmainContent = findViewById(R.id.llmainContent)
         btnSubmit?.setOnClickListener(this)
+        ivBack?.setOnClickListener(this)
 
         viewPager = findViewById(R.id.viewpager) as ViewPager
 
@@ -189,6 +193,9 @@ class CollabStudioDetailActivity : AppCompatActivity(), onClickAdapter, View.OnC
     override fun onClick(v: View?) {
         val id = v?.id
         when (id) {
+            R.id.ivBack -> {
+                onBackPressed()
+            }
             R.id.btnSubmit -> {
                 val mainJson = JsonObject()
                 val arr = JsonArray();

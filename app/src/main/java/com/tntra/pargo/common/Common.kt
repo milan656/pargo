@@ -152,6 +152,21 @@ class Common {
             return returnDate
         }
 
+        fun dateFormatT(date: String): String {
+            val input = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+            val output = SimpleDateFormat("yyyy-MM-dd")
+
+            var d: Date? = null
+            try {
+                d = input.parse(date)
+            } catch (e: ParseException) {
+                e.printStackTrace()
+            }
+            val formatted = output.format(d)
+            Log.i("DATE", "" + formatted)
+            return formatted
+        }
+
         fun hideKeyboard(activity: Activity) {
             val imm = activity.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
             //Find the currently focused view, so we can grab the correct window token from it.
@@ -590,7 +605,6 @@ class Common {
             }
             return null
         }
-
 
 
         private fun showDialogueForWarning(

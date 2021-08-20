@@ -43,12 +43,14 @@ class SendRequestActivity : AppCompatActivity(), View.OnClickListener, onClickAd
     private var edtCollabDescription: EditText? = null
     private var edtCollabName: EditText? = null
     private var collabType: String = ""
+    private var tvNoFollowers: TextView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_send_request_acrivity)
         collabSessionviewModel = ViewModelProviders.of(this).get(CollabSessionviewModel::class.java)
         prefManager = this.let { PrefManager(it) }
+        tvNoFollowers = findViewById(R.id.tvNoFollowers)
         try {
             if (intent != null) {
 
@@ -69,6 +71,12 @@ class SendRequestActivity : AppCompatActivity(), View.OnClickListener, onClickAd
                     followersList?.add(SelectedFollowrs(arr.getJSONObject(i).getString("name"),
                             arr.getJSONObject(i).getString("id")))
                     receiver_ids?.add(arr.getJSONObject(i).getString("id").toInt())
+
+                    if (receiver_ids?.size == 0) {
+                        tvNoFollowers?.visibility = View.VISIBLE
+                    } else {
+                        tvNoFollowers?.visibility = View.GONE
+                    }
                 }
 
             }
@@ -79,9 +87,9 @@ class SendRequestActivity : AppCompatActivity(), View.OnClickListener, onClickAd
     }
 
     private fun initView() {
+        ivBack = findViewById(R.id.ivBack)
         edtCollabDescription = findViewById(R.id.edtCollabDescription)
         edtCollabName = findViewById(R.id.edtCollabName)
-        ivBack = findViewById(R.id.ivBack)
         tvSendReq = findViewById(R.id.tvSendReq)
         followersRecycView = findViewById(R.id.followersRecycView)
         tvSendReq?.setOnClickListener(this)
@@ -94,8 +102,8 @@ class SendRequestActivity : AppCompatActivity(), View.OnClickListener, onClickAd
     override fun onClick(v: View?) {
         val id = v?.id
         when (id) {
-            R.id.tvSendReq -> {
 
+            R.id.tvSendReq -> {
                 if (receiver_ids?.size == 0) {
                     Toast.makeText(this, "Please select follower / followings", Toast.LENGTH_SHORT).show()
                     return
@@ -108,8 +116,7 @@ class SendRequestActivity : AppCompatActivity(), View.OnClickListener, onClickAd
                     Toast.makeText(this, "Please enter collab description", Toast.LENGTH_SHORT).show()
                     return
                 }
-
-//                createCollabRoomApi()
+                createCollabRoomApi()
 
             }
             R.id.ivBack -> {
@@ -162,7 +169,14 @@ class SendRequestActivity : AppCompatActivity(), View.OnClickListener, onClickAd
             Log.e("TAGG0", "onPositionClick: " + followersList)
             if (followersList?.size!! > 0) {
                 followersList?.removeAt(variable)
+                receiver_ids?.removeAt(variable)
             }
+            if (receiver_ids?.size == 0) {
+                tvNoFollowers?.visibility = View.VISIBLE
+            } else {
+                tvNoFollowers?.visibility = View.GONE
+            }
+
             Log.e("TAGG1", "onPositionClick: " + followersList)
             selectedFollowersAdapter?.notifyDataSetChanged()
 

@@ -33,11 +33,11 @@
             android:src="@drawable/ic_notifications"/>
 
         <ImageView
-            android:id="@+id/ivDrawer"
+            android:id="@+id/ivLogout"
             android:layout_width="50dp"
             android:layout_height="match_parent"
             android:padding="@dimen/ten_dp"
-            android:src="@drawable/ic_drawer"/>
+            android:src="@drawable/log_out"/>
 
     </LinearLayout>
 

@@ -52,7 +52,7 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener, onClickAdapter {
     private var ivCollabTab: ImageView? = null
     private var ivMessageTab: ImageView? = null
     private var ivProfileTab: ImageView? = null
-    private var ivDrawer: ImageView? = null
+    private var ivLogout: ImageView? = null
     private var type: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -132,7 +132,7 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener, onClickAdapter {
     }
 
     private fun initView() {
-        ivDrawer = findViewById(R.id.ivDrawer)
+        ivLogout = findViewById(R.id.ivLogout)
         ivNotification = findViewById(R.id.ivNotification)
         ivHomeTab = findViewById(R.id.ivHomeTab)
         ivCollabTab = findViewById(R.id.ivCollabTab)
@@ -146,7 +146,7 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener, onClickAdapter {
         ivMessageTab?.setOnClickListener(this)
         ivSearchTab?.setOnClickListener(this)
         ivCollabTab?.setOnClickListener(this)
-        ivDrawer?.setOnClickListener(this)
+        ivLogout?.setOnClickListener(this)
 
 //        callApiContentList()
 //        callApiCollabRooms()
@@ -195,7 +195,9 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener, onClickAdapter {
                         containerViewId = R.id.mainContent
                 )
             }
-            R.id.ivDrawer -> {
+            R.id.ivLogout -> {
+
+                showDialogue(this, "Logout", "Are you want to logout from app ?", true)
 //                val intent = Intent(this, ContentDetailActivity::class.java)
 //                startActivity(intent)
             }
@@ -312,14 +314,12 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener, onClickAdapter {
         tv_message.text = message
         btnYes.setOnClickListener {
             builder.dismiss()
-
             if (islogout) {
                 callLogoutApi()
             }
         }
 
         btnNo.setOnClickListener {
-
             builder.dismiss()
         }
 
@@ -339,13 +339,12 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener, onClickAdapter {
             Common.hideLoader()
             if (it != null) {
                 if (it.success) {
-
-                    showDialogue(this, "Logout", it.message, true)
-
+                    finishAffinity()
+                    val intent = Intent(this, LoginActivity::class.java)
+                    prefManager?.clearAll()
+                    startActivity(intent)
                 } else {
                     Common.hideLoader()
-//                    if (it.error != null && it.error.get(0).message != null) {
-//                    }
                     showDialogue(this, "Oops!", it.message, false)
                 }
             }

@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:682945198057:android:7dea6a0b1aac7182e7bd78",
         "android_client_info": {
-          "package_name": "com.tntra.pargo22"
+          "package_name": "com.tntra.pargo2"
         }
       },
       "oauth_client": [
@@ -17,7 +17,7 @@
           "client_id": "682945198057-sj5vpb0qoive85f1gtek3uigo8fu5074.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.tntra.pargo22",
+            "package_name": "com.tntra.pargo2",
             "certificate_hash": "ac413c4085fc44fb95c289f4f4ee0dbc05187fff"
           }
         },
@@ -42,7 +42,7 @@
               "client_id": "682945198057-cc6sto1tmsbvhfkb77ct5m5jmfoclrji.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.tntra.pargo22"
+                "bundle_id": "com.tntra.pargo2"
               }
             }
           ]

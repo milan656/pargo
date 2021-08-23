@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.tntra.pargo">
+    package="com.tntra.pargo2">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
@@ -113,7 +113,7 @@ Set color used with incoming notification messages. This is used when no color i
 
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="com.tntra.pargo.android.fileprovider"
+            android:authorities="com.tntra.pargo2.android.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data

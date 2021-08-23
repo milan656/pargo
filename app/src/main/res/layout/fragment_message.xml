@@ -11,7 +11,7 @@
         android:layout_margin="@dimen/eighteen_dp"
         android:orientation="vertical">
 
-        <com.tntra.pargo.custom.NormalEditText
+        <com.tntra.pargo2.custom.NormalEditText
             android:layout_width="match_parent"
             android:layout_height="45dp"
             android:background="@drawable/layout_bg_corner"

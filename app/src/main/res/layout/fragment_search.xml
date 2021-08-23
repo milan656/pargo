@@ -19,7 +19,7 @@
             android:layout_marginBottom="@dimen/fourteeen_dp"
             android:orientation="vertical">
 
-            <com.tntra.pargo.custom.NormalEditText
+            <com.tntra.pargo2.custom.NormalEditText
                 android:id="@+id/edtsearch"
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
@@ -59,7 +59,7 @@
                     android:layout_marginTop="@dimen/ten_dp" />
             </LinearLayout>
 
-            <com.tntra.pargo.custom.NormalNoDataTextView
+            <com.tntra.pargo2.custom.NormalNoDataTextView
                 android:id="@+id/tvNoCreators"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -99,7 +99,7 @@
                     android:layout_marginTop="@dimen/ten_dp" />
             </LinearLayout>
 
-            <com.tntra.pargo.custom.NormalNoDataTextView
+            <com.tntra.pargo2.custom.NormalNoDataTextView
                 android:id="@+id/tvNoGeners"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

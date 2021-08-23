@@ -30,7 +30,7 @@
 
 
 
-                <com.tntra.pargo.custom.BoldTextView
+                <com.tntra.pargo2.custom.BoldTextView
                     android:id="@+id/tvGenersName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -72,7 +72,7 @@
 
                 </LinearLayout>
 
-                <com.tntra.pargo.custom.NormalNoDataTextView
+                <com.tntra.pargo2.custom.NormalNoDataTextView
                     android:id="@+id/tvNoCreatorGeners"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -92,7 +92,7 @@
                 android:layout_marginEnd="@dimen/sixteen_dp"
                 android:orientation="vertical">
 
-                <com.tntra.pargo.custom.BoldTextView
+                <com.tntra.pargo2.custom.BoldTextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Content"

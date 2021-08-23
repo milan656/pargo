@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <com.tntra.pargo.custom.NormalTextView
+            <com.tntra.pargo2.custom.NormalTextView
                 android:id="@+id/tvRecordOption"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
@@ -33,7 +33,7 @@
                 android:layout_height="1dp"
                 android:background="@color/light_gray_for_button" />
 
-            <com.tntra.pargo.custom.NormalTextView
+            <com.tntra.pargo2.custom.NormalTextView
                 android:id="@+id/tvGallaryOption"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
@@ -57,7 +57,7 @@
         app:cardElevation="@dimen/two_dp"
         app:cardUseCompatPadding="true">
 
-        <com.tntra.pargo.custom.NormalTextView
+        <com.tntra.pargo2.custom.NormalTextView
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_gravity="center"

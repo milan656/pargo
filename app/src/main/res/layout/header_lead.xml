@@ -7,7 +7,7 @@
     android:gravity="start|center"
     android:orientation="horizontal">
 
-    <com.tntra.pargo.custom.BoldTextView
+    <com.tntra.pargo2.custom.BoldTextView
         android:id="@+id/timestamp"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"

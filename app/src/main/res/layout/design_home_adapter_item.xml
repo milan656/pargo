@@ -51,7 +51,7 @@
                     android:inputType="textCapSentences|textMultiLine"
                     android:textStyle="bold" />
 
-                <com.tntra.pargo.custom.NormalTextView
+                <com.tntra.pargo2.custom.NormalTextView
                     android:id="@+id/tvMessage"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -73,7 +73,7 @@
         android:gravity="end"
         android:orientation="horizontal">
 
-        <com.tntra.pargo.custom.BoldTextView
+        <com.tntra.pargo2.custom.BoldTextView
             android:id="@+id/tvRejectReq"
             android:layout_width="80dp"
             android:layout_height="40dp"
@@ -86,7 +86,7 @@
             android:textSize="@dimen/fourteen_sp"
             android:textStyle="bold" />
 
-        <com.tntra.pargo.custom.BoldTextView
+        <com.tntra.pargo2.custom.BoldTextView
             android:id="@+id/tvAcceptReq"
             android:layout_width="80dp"
             android:layout_height="40dp"

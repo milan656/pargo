@@ -12,14 +12,14 @@
         android:layout_margin="@dimen/sixteen_dp"
         android:orientation="vertical">
 
-        <com.tntra.pargo.custom.NormalTextView
+        <com.tntra.pargo2.custom.NormalTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Collab name 1"
             android:textColor="@color/text_color"
             android:textSize="@dimen/fourteen_sp" />
 
-        <com.tntra.pargo.custom.NormalTextView
+        <com.tntra.pargo2.custom.NormalTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Podcast"
@@ -35,7 +35,7 @@
         android:gravity="end"
         android:orientation="vertical">
 
-        <com.tntra.pargo.custom.NormalTextView
+        <com.tntra.pargo2.custom.NormalTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
@@ -45,7 +45,7 @@
             android:textSize="@dimen/fourteen_sp"
             android:textStyle="bold" />
 
-        <com.tntra.pargo.custom.NormalTextView
+        <com.tntra.pargo2.custom.NormalTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="end"

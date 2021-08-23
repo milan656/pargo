@@ -17,7 +17,7 @@
             android:src="@color/light_gray"
             android:alpha="0.4"/>
 
-        <com.tntra.pargo.custom.NormalTextView
+        <com.tntra.pargo2.custom.NormalTextView
             android:id="@+id/tvCreatorName"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

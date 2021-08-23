@@ -22,7 +22,7 @@
             android:layout_margin="@dimen/eighteen_dp"
             android:orientation="vertical">
 
-            <com.tntra.pargo.custom.NormalTextView
+            <com.tntra.pargo2.custom.NormalTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="What do you want to collaborate with?"
@@ -30,7 +30,7 @@
                 android:textSize="@dimen/sixteen_sp"
                 android:textStyle="bold" />
 
-            <com.tntra.pargo.custom.NormalTextView
+            <com.tntra.pargo2.custom.NormalTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/four_dp"
@@ -39,7 +39,7 @@
                 android:textSize="@dimen/twelve_sp"
                 android:textStyle="bold" />
 
-            <com.tntra.pargo.custom.NormalEditText
+            <com.tntra.pargo2.custom.NormalEditText
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
                 android:layout_marginTop="@dimen/twenty_four_dp"

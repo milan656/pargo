@@ -44,7 +44,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/fourteen_dp" />
                     
-                    <com.tntra.pargo.custom.NormalNoDataTextView
+                    <com.tntra.pargo2.custom.NormalNoDataTextView
                         android:id="@+id/tvNoFollowers"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -62,7 +62,7 @@
                     android:layout_marginTop="@dimen/thirty_dp"
                     android:orientation="vertical">
 
-                    <com.tntra.pargo.custom.NormalEditText
+                    <com.tntra.pargo2.custom.NormalEditText
                         android:id="@+id/edtCollabName"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -72,7 +72,7 @@
                         android:padding="@dimen/twelve_dp"
                         android:textColorHint="@color/light_gray_text_color" />
 
-                    <com.tntra.pargo.custom.NormalEditText
+                    <com.tntra.pargo2.custom.NormalEditText
                         android:id="@+id/edtCollabDescription"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -85,7 +85,7 @@
                         android:padding="@dimen/twelve_dp"
                         android:textColorHint="@color/light_gray_text_color" />
 
-                    <com.tntra.pargo.custom.BoldTextView
+                    <com.tntra.pargo2.custom.BoldTextView
                         android:id="@+id/tvSendReq"
                         android:layout_width="wrap_content"
                         android:layout_height="50dp"

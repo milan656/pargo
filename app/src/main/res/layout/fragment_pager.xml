@@ -32,7 +32,7 @@
                 android:textSize="@dimen/thirty_six_sp"
                 android:textStyle="bold" />
 
-            <com.tntra.pargo.custom.NormalTextView
+            <com.tntra.pargo2.custom.NormalTextView
                 android:id="@+id/tvPassion"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -75,7 +75,7 @@
                         android:src="@drawable/video_icon"
                         android:visibility="visible" />
 
-                    <com.tntra.pargo.custom.BoldTextView
+                    <com.tntra.pargo2.custom.BoldTextView
                         android:id="@+id/tvFileTime"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

@@ -1,4 +1,4 @@
-package com.tntra.pargo.test;
+package com.tntra.pargo2.test;
 
 import android.content.Context;
 

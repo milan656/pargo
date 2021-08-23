@@ -68,7 +68,7 @@
                             android:layout_height="40dp"
                             android:src="@drawable/nature" />
 
-                        <com.tntra.pargo.custom.NormalTextView
+                        <com.tntra.pargo2.custom.NormalTextView
                             android:id="@+id/tvUsername"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -86,7 +86,7 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
 
-                        <com.tntra.pargo.custom.BoldTextView
+                        <com.tntra.pargo2.custom.BoldTextView
                             android:id="@+id/tvTitleContent"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -104,7 +104,7 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
 
-                        <com.tntra.pargo.custom.NormalTextView
+                        <com.tntra.pargo2.custom.NormalTextView
                             android:id="@+id/tvdesc"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -121,7 +121,7 @@
                         android:layout_marginTop="@dimen/ten_dp"
                         android:orientation="horizontal">
 
-                        <com.tntra.pargo.custom.BoldTextView
+                        <com.tntra.pargo2.custom.BoldTextView
                             android:id="@+id/tvViewCount"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"

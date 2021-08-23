@@ -71,7 +71,7 @@
                             android:src="@drawable/video_icon"
                             android:visibility="gone" />
 
-                        <com.tntra.pargo.custom.BoldTextView
+                        <com.tntra.pargo2.custom.BoldTextView
                             android:id="@+id/tvFileTime"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -84,7 +84,7 @@
                             android:visibility="gone" />
                     </LinearLayout>
 
-                    <com.tntra.pargo.custom.NormalTextView
+                    <com.tntra.pargo2.custom.NormalTextView
                         android:id="@+id/tvSelectfile"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -95,7 +95,7 @@
                         android:visibility="gone" />
                 </androidx.cardview.widget.CardView>
 
-                <com.tntra.pargo.custom.BoldTextView
+                <com.tntra.pargo2.custom.BoldTextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/eighteen_dp"
@@ -104,7 +104,7 @@
                     android:textSize="@dimen/fourteen_sp"
                     android:textStyle="bold" />
 
-                <com.tntra.pargo.custom.NormalEditText
+                <com.tntra.pargo2.custom.NormalEditText
                     android:id="@+id/edtTitleVideo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -118,7 +118,7 @@
                     android:textColor="@color/black"
                     android:textSize="@dimen/fourteen_sp" />
 
-                <com.tntra.pargo.custom.BoldTextView
+                <com.tntra.pargo2.custom.BoldTextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/eighteen_dp"
@@ -127,7 +127,7 @@
                     android:textSize="@dimen/fourteen_sp"
                     android:textStyle="bold" />
 
-                <com.tntra.pargo.custom.NormalEditText
+                <com.tntra.pargo2.custom.NormalEditText
                     android:id="@+id/edtDesc"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -142,7 +142,7 @@
                     android:textColor="@color/black"
                     android:textSize="@dimen/fourteen_sp" />
 
-                <com.tntra.pargo.custom.BoldTextView
+                <com.tntra.pargo2.custom.BoldTextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/eighteen_dp"
@@ -166,7 +166,7 @@
                         android:layout_height="40dp" />
                 </LinearLayout>
 
-                <com.tntra.pargo.custom.BoldTextView
+                <com.tntra.pargo2.custom.BoldTextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/eighteen_dp"
@@ -193,7 +193,7 @@
                         android:src="@mipmap/ic_no_image" />
                 </androidx.cardview.widget.CardView>
 
-                <com.tntra.pargo.custom.BoldTextView
+                <com.tntra.pargo2.custom.BoldTextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/eighteen_dp"

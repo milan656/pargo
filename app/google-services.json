@@ -1,42 +1,49 @@
 {
   "project_info": {
-    "project_number": "749548846198",
-    "project_id": "my-project-pargo",
-    "storage_bucket": "my-project-pargo.appspot.com"
+    "project_number": "682945198057",
+    "project_id": "pargo-3c62e",
+    "storage_bucket": "pargo-3c62e.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:749548846198:android:25941f76a5197e587d3357",
+        "mobilesdk_app_id": "1:682945198057:android:7dea6a0b1aac7182e7bd78",
         "android_client_info": {
-          "package_name": "com.tntra.pargo"
+          "package_name": "com.tntra.pargo22"
         }
       },
       "oauth_client": [
         {
-          "client_id": "749548846198-s67sklgsi7128o8df5o27nngus184f9d.apps.googleusercontent.com",
+          "client_id": "682945198057-sj5vpb0qoive85f1gtek3uigo8fu5074.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.tntra.pargo",
+            "package_name": "com.tntra.pargo22",
             "certificate_hash": "ac413c4085fc44fb95c289f4f4ee0dbc05187fff"
           }
         },
         {
-          "client_id": "749548846198-5gtnsspidec0u5ktr82ffjjvluis3ovo.apps.googleusercontent.com",
+          "client_id": "682945198057-89qjdud0ng69gpvr2vgp5frgptmtlj9s.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCTz7OYDRPSeYPqKb6Deej97eNOiD0X9kw"
+          "current_key": "AIzaSyBe1j6FAcKIp8R3zR88QiopM8fTsUlFrI0"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "749548846198-5gtnsspidec0u5ktr82ffjjvluis3ovo.apps.googleusercontent.com",
+              "client_id": "682945198057-89qjdud0ng69gpvr2vgp5frgptmtlj9s.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "682945198057-cc6sto1tmsbvhfkb77ct5m5jmfoclrji.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.tntra.pargo22"
+              }
             }
           ]
         }

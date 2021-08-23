@@ -11,7 +11,7 @@ android {
     compileSdkVersion 29
 
     defaultConfig {
-        applicationId "com.tntra.pargo"
+        applicationId "com.tntra.pargo2"
         minSdkVersion 16 // JELLY_BEAN
         targetSdkVersion 29
         versionCode 10
@@ -172,10 +172,10 @@ dependencies {
 //    implementation ('com.amazonaws:aws-android-sdk-mobile-client:2.19.3@aar') { transitive = true }
 
     implementation 'com.tbuonomo.andrui:viewpagerdotsindicator:4.1.2'
-
     implementation "org.jetbrains.anko:anko:0.10.8"
+
     //Socket.io
-    implementation('io.socket:socket.io-client:1.0.0') {
+    implementation('io.socket:socket.io-client:2.0.0') {
         exclude group: 'org.json', module: 'json'
     }
 

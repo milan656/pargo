@@ -28,7 +28,7 @@
         android:orientation="vertical">
 
 
-        <com.tntra.pargo.custom.NormalTextView
+        <com.tntra.pargo2.custom.NormalTextView
             android:id="@+id/tvComment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

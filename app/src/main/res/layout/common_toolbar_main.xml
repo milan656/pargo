@@ -28,7 +28,7 @@
         android:textSize="@dimen/eighteen_sp"
         android:textStyle="bold" />
 
-    <com.tntra.pargo.custom.NormalTextView
+    <com.tntra.pargo2.custom.NormalTextView
         android:id="@+id/tvUpload"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"

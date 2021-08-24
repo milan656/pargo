@@ -25,6 +25,7 @@ import io.socket.client.Socket
 import io.socket.emitter.Emitter
 import io.socket.engineio.client.Transport
 import io.socket.engineio.client.transports.Polling
+import io.socket.engineio.client.transports.WebSocket
 import java.util.ArrayList
 
 class MessageDetailActivity : AppCompatActivity(), View.OnClickListener {
@@ -70,11 +71,12 @@ class MessageDetailActivity : AppCompatActivity(), View.OnClickListener {
             val userId = 4
             val option = IO.Options()
 //            option.query = "token=" + token + "&userId=" + userId;
-            option.query = "EIO=" + userId
-            option.forceNew = true
-            option.transports= arrayOf(Polling.NAME)
+//            option.query = "EIO=" + userId
+//            option.forceNew = true
+            option.path="/connect"
+            option.transports= arrayOf(WebSocket.NAME)
             //            option.query = "userId=$userId"
-            mSocket = IO.socket("http://291b-144-48-250-250.ngrok.io/connect",option)
+            mSocket = IO.socket("http://5986-144-48-250-250.ngrok.io",option)
             mSocket?.connect()
         } catch (e: Exception) {
             e.printStackTrace()
@@ -150,7 +152,7 @@ class MessageDetailActivity : AppCompatActivity(), View.OnClickListener {
 
         tvname?.text = name
 
-        tvdesc?.setOnClickListener {
+        /*tvdesc?.setOnClickListener {
             if (if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
                         isActivityTransitionRunning
                     } else {
@@ -167,11 +169,12 @@ class MessageDetailActivity : AppCompatActivity(), View.OnClickListener {
                 tvdesc?.post(Runnable { tvdesc?.setMaxLines(Int.MAX_VALUE) })
             }
             isCollapsed = !isCollapsed
-        }
-        applyLayoutTransition();
-        tvdesc?.text = "We are excited for your collab!\\n\\nHere some inportant information to help you set up your collab\\nLorem ipsum dolor sir miit Lorem ipsum dolor sir miit Lorem ipsum dolor sir miit...Read more"
-        updateWithNewText(tvdesc?.text?.toString()!!)
+        }*/
 
+        tvdesc?.performClick()
+        applyLayoutTransition()
+        tvdesc?.text = "We are excited for your collab!\nHere some inportant information to help you set up your collab\nLorem ipsum dolor sir miit Lorem ipsum dolor sir miit Lorem ipsum dolor sir miit..."
+        updateWithNewText(tvdesc?.text?.toString()!!)
 
         setChatAdapter()
 

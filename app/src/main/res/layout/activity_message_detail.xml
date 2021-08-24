@@ -19,7 +19,6 @@
         android:orientation="vertical"
         tools:context=".activities.CollabStudioActivity">
 
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -58,41 +57,53 @@
 
             </LinearLayout>
 
-            <androidx.cardview.widget.CardView
+            <androidx.core.widget.NestedScrollView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/sixteen_dp"
-                android:layout_marginTop="@dimen/fourteen_dp"
-                android:layout_marginEnd="@dimen/sixteen_dp"
-                app:cardCornerRadius="@dimen/five_dp"
-                app:cardElevation="@dimen/two_dp"
-                app:cardUseCompatPadding="true">
-
+                android:layout_height="wrap_content">
 
                 <LinearLayout
-                    android:id="@+id/llparent"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/sixteen_dp"
                     android:orientation="vertical">
 
-                    <com.tntra.pargo2.custom.NormalTextView
-                        android:id="@+id/tvdesc"
+                    <androidx.cardview.widget.CardView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="textMultiLine|textCapSentences"
-                        android:minLines="6"
-                        android:text="We are excited for your collab!\n\nHere some inportant information to help you set up your collab\nLorem ipsum dolor sir miit Lorem ipsum dolor sir miit Lorem ipsum dolor sir miit...Read more" />
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
+                        android:layout_marginStart="@dimen/sixteen_dp"
+                        android:layout_marginTop="@dimen/fourteen_dp"
+                        android:layout_marginEnd="@dimen/sixteen_dp"
+                        app:cardCornerRadius="@dimen/five_dp"
+                        app:cardElevation="@dimen/two_dp"
+                        app:cardUseCompatPadding="true">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/chatRecyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/sixteen_dp"
-                android:layout_marginEnd="@dimen/sixteen_dp"
-                android:layout_marginTop="@dimen/ten_dp" />
+
+                        <LinearLayout
+                            android:id="@+id/llparent"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/sixteen_dp"
+                            android:orientation="vertical">
+
+                            <com.tntra.pargo2.custom.NormalTextView
+                                android:id="@+id/tvdesc"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="textMultiLine|textCapSentences" />
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/chatRecyclerView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/sixteen_dp"
+                        android:layout_marginTop="@dimen/ten_dp"
+                        android:layout_marginEnd="@dimen/sixteen_dp"
+                        android:layout_marginBottom="@dimen/ten_dp" />
+
+                </LinearLayout>
+
+            </androidx.core.widget.NestedScrollView>
         </LinearLayout>
 
     </LinearLayout>

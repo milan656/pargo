@@ -141,11 +141,25 @@ class CollabStudioDetailActivity : AppCompatActivity(), onClickAdapter, View.OnC
                     if (listType.equals("followings")) {
                         if (followingsCkeckedList?.size!! > 0) {
 
+                            for (i in it.follows.indices) {
+                                for (j in followingsCkeckedList?.indices!!) {
+                                    if (followingsCkeckedList?.get(j)?.id == followersList?.get(i)?.id) {
+                                        it.follows.get(i).isChecked = true
+                                    }
+                                }
+                            }
 
                         }
                     } else {
                         if (followersCkeckedList?.size!! > 0) {
                             Log.e("TAGGK1", "getFollowersApi: " + followersCkeckedList)
+                            for (i in it.follows.indices) {
+                                for (j in followersCkeckedList?.indices!!) {
+                                    if (followersCkeckedList?.get(j)?.id == followersList?.get(i)?.id) {
+                                        it.follows.get(i).isChecked = true
+                                    }
+                                }
+                            }
                         }
                     }
                     followersListAdapter?.notifyDataSetChanged()
@@ -161,17 +175,23 @@ class CollabStudioDetailActivity : AppCompatActivity(), onClickAdapter, View.OnC
                     for (i in 0 until followersListAdapter?.getSelected()?.size!!) {
                         if (listType.equals("followings")) {
                             followersListAdapter?.getSelected()?.get(i)?.isChecked = true
+//                            if (!followingsCkeckedList?.contains(followersListAdapter?.getSelected()?.get(i)?.id!!)!!) {
                             followingsCkeckedList?.add(Follow(followersListAdapter?.getSelected()?.get(i)?.attributes!!, followersListAdapter?.getSelected()?.get(i)?.id!!,
                                     followersListAdapter?.getSelected()?.get(i)?.type!!, followersListAdapter?.getSelected()?.get(i)?.isChecked!!))
+//                            }
+
+                            followingsCkeckedList?.distinct()?.toList()
                         } else {
                             followersListAdapter?.getSelected()?.get(i)?.isChecked = true
+//                            if (!followersCkeckedList?.contains(followersListAdapter?.getSelected()?.get(i)?.id)!!) {
                             followersCkeckedList?.add(Follow(followersListAdapter?.getSelected()?.get(i)?.attributes!!, followersListAdapter?.getSelected()?.get(i)?.id!!,
                                     followersListAdapter?.getSelected()?.get(i)?.type!!, followersListAdapter?.getSelected()?.get(i)?.isChecked!!))
+//                            }
+                            followersCkeckedList?.distinct()?.toList()
                         }
                     }
                 }
             }
-
             Log.e("TAGGk", "getFollowersApi: " + followersCkeckedList?.size)
             Log.e("TAGGk", "getFollowersApi: " + followingsCkeckedList?.size)
         } catch (e: Exception) {
@@ -188,6 +208,10 @@ class CollabStudioDetailActivity : AppCompatActivity(), onClickAdapter, View.OnC
 
     override fun onPositionClick(variable: Int, check: Int) {
 
+        Log.e("TAGpos", "onPositionClick: " + followersList?.get(variable)?.id)
+        Log.e("TAGpos", "onPositionClick: " + followersList?.get(variable)?.isChecked)
+
+
     }
 
     override fun onClick(v: View?) {
@@ -200,6 +224,44 @@ class CollabStudioDetailActivity : AppCompatActivity(), onClickAdapter, View.OnC
                 val mainJson = JsonObject()
                 val arr = JsonArray();
                 var json: JsonObject? = null
+
+                /*  if (followingsCkeckedList?.size!! > 0) {
+
+//                    val distinct = followingsCkeckedList?.toSet()?.toList();
+                    for (i in followingsCkeckedList?.indices!!) {
+                        json = JsonObject()
+                        json.addProperty("name", followingsCkeckedList?.get(i)?.attributes?.name)
+                        json.addProperty("id", followingsCkeckedList?.get(i)?.id)
+                        arr.add(json)
+                    }
+                }
+
+                if (followersCkeckedList?.size!! > 0) {
+//                    val distinct = followersCkeckedList?.toSet()?.toList();
+                    for (i in followersCkeckedList?.indices!!) {
+                        json = JsonObject()
+                        json.addProperty("name", followersCkeckedList?.get(i)?.attributes?.name)
+                        json.addProperty("id", followersCkeckedList?.get(i)?.id)
+                        arr.add(json)
+                    }
+                }
+
+                Log.e("TAG", "onClick: " + arr)
+                mainJson.add("followers", arr)
+                Log.e("TAGG", "onClick: " + mainJson)
+
+                if (arr.size() > 4) {
+                    Toast.makeText(this, "You can select maximum 4 ", Toast.LENGTH_SHORT).show()
+                    return
+                }
+                val intent = Intent(this, SendRequestActivity::class.java)
+                intent.putExtra("followers", mainJson.toString())
+                intent.putExtra("collabType", collabType)
+                startActivity(intent)*/
+
+                Log.e("TAG", "onClick: " + followersCkeckedList)
+                Log.e("TAG", "onClick: " + followersCkeckedList?.distinctBy { it.id })
+
                 if (followersListAdapter?.getSelected()?.size!! > 0) {
                     val stringBuilder = StringBuilder()
                     for (i in 0 until followersListAdapter?.getSelected()?.size!!) {
@@ -222,10 +284,10 @@ class CollabStudioDetailActivity : AppCompatActivity(), onClickAdapter, View.OnC
                     intent.putExtra("followers", mainJson.toString())
                     intent.putExtra("collabType", collabType)
                     startActivity(intent)
-//                    showToast(stringBuilder.toString().trim { it <= ' ' })
+                    //                    showToast(stringBuilder.toString().trim { it <= ' ' })
                 } else {
                     Log.e("TAGG", "onClick: No selection")
-//                    showToast("No Selection")
+                    //                    showToast("No Selection")
                 }
 
             }

@@ -43,11 +43,11 @@
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="160dp"
+            android:layout_marginTop="@dimen/eight_dp"
+            android:visibility="gone"
             app:cardCornerRadius="@dimen/eight_dp"
             app:cardElevation="@dimen/two_dp"
-            android:visibility="gone"
-            app:cardUseCompatPadding="true"
-            android:layout_marginTop="@dimen/eight_dp">
+            app:cardUseCompatPadding="true">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -70,10 +70,10 @@
             android:id="@+id/startCollabCard"
             android:layout_width="match_parent"
             android:layout_height="160dp"
+            android:layout_marginTop="@dimen/eight_dp"
             app:cardCornerRadius="@dimen/eight_dp"
             app:cardElevation="@dimen/two_dp"
-            app:cardUseCompatPadding="true"
-            android:layout_marginTop="@dimen/eight_dp">
+            app:cardUseCompatPadding="true">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -92,23 +92,29 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/twenty_four_dp"
-            android:textStyle="bold"
-            android:text="OnGoing Collaboration"
-            android:textSize="@dimen/sixteen_sp"
-            android:textColor="@color/black"/>
+            android:orientation="vertical"
+            android:visibility="gone">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/requestAceptedRecycView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/ten_dp"
-            android:nestedScrollingEnabled="false"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/twenty_four_dp"
+                android:text="OnGoing Collaboration"
+                android:textColor="@color/black"
+                android:textSize="@dimen/sixteen_sp"
+                android:textStyle="bold" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/requestAceptedRecycView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/ten_dp"
+                android:nestedScrollingEnabled="false"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+        </LinearLayout>
     </LinearLayout>
 
 </androidx.core.widget.NestedScrollView>

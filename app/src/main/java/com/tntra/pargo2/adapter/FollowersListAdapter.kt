@@ -45,6 +45,7 @@ class FollowersListAdapter(var list: ArrayList<Follow>,
         holder.btnSelect.setOnClickListener {
             list[position].isChecked = !list[position].isChecked
             holder.btnSelect.isChecked = list[position].isChecked
+            positionClick.onPositionClick(position,6)
         }
 
         try {

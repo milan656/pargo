@@ -118,9 +118,9 @@ class CollabSessionviewModel : ViewModel() {
         return notificationListModel!!
     }
 
-    fun callApiCollabRoomList(authorizationToke: String) {
+    fun callApiCollabRoomList(authorizationToke: String,page: Int) {
         collabSessionRepository = CollabSessionRepository().getInstance()
-        collabRoomListModel = collabSessionRepository?.callApiCollabRoomList(authorizationToke)
+        collabRoomListModel = collabSessionRepository?.callApiCollabRoomList(authorizationToke,page)
     }
 
     fun getCollabRoomList(): LiveData<CollabRoomListModel> {

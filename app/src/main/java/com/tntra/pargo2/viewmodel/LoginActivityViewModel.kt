@@ -8,6 +8,7 @@ import com.jkadvantagandbadsha.model.login.UserModel
 import com.tntra.pargo2.model.CommonResponseModel
 import com.tntra.pargo2.model.login.OtpModel
 import com.tntra.pargo2.model.login_response.UserLoginModel
+import com.tntra.pargo2.model.logout.LogoutModel
 import com.tntra.pargo2.repository.LoginRepository
 
 class LoginActivityViewModel : ViewModel() {
@@ -18,7 +19,7 @@ class LoginActivityViewModel : ViewModel() {
     //    var uploadImageModel: MutableLiveData<UploadImageModel>? = null
     var otpModel: MutableLiveData<OtpModel>? = null
     var userLoginModel: MutableLiveData<UserLoginModel>? = null
-    var logout: MutableLiveData<CommonResponseModel>? = null
+    var logout: MutableLiveData<LogoutModel>? = null
     var commonResponseModel: MutableLiveData<CommonResponseModel>? = null
 
     fun getLoginData(): LiveData<UserModel>? {
@@ -67,7 +68,7 @@ class LoginActivityViewModel : ViewModel() {
         logout = loginRepository!!.logout(authorizationToke)
     }
 
-    fun getLogout(): LiveData<CommonResponseModel>? {
+    fun getLogout(): LiveData<LogoutModel>? {
         return logout
     }
 

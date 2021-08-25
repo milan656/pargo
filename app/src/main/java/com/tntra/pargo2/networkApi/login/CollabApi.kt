@@ -48,6 +48,7 @@ interface CollabApi {
     @GET("api/v1/collab_rooms")
     fun collabRoomList(
             @Header("Authorization") Authorization: String,
+            @Query("page") page: Int
     ): Call<CollabRoomListModel>
 
     @DELETE("api/v1/notifications/{id}")

@@ -86,8 +86,20 @@
         android:layout_height="50dp"
         android:layout_alignParentBottom="true"
         android:layout_margin="@dimen/ten_sp"
-        android:text="Submit"
+        android:background="@drawable/layout_bg"
+        android:text="Next"
         android:textColor="@color/black"
         android:textSize="@dimen/fourteen_sp"
         android:textStyle="bold" />
+
+    <com.tntra.pargo2.custom.NormalNoDataTextView
+        android:id="@+id/tvNoData"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:text="There are no any followers / followings display here."
+        android:textColor="@color/light_gray_text_color"
+        android:textSize="@dimen/fourteen_sp"
+        android:visibility="gone" />
 </RelativeLayout>

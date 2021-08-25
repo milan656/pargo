@@ -56,6 +56,7 @@ import com.tntra.pargo2.model.content_list.ContentListModel
 import com.tntra.pargo2.model.followers.FollowersListModel
 import com.tntra.pargo2.model.login.OtpModel
 import com.tntra.pargo2.model.login_response.UserLoginModel
+import com.tntra.pargo2.model.logout.LogoutModel
 import com.tntra.pargo2.model.notification.NotificationListModel
 import com.tntra.pargo2.model.treading_content.TreadingContentModel
 import okhttp3.ResponseBody
@@ -465,6 +466,11 @@ class Common {
                                 gson.fromJson(jsonObject.toString(), CollabRoomListModel::class.java)
                         return CollabRoomListModel
                     }
+                    "LogoutModel" -> {
+                        val LogoutModel =
+                                gson.fromJson(jsonObject.toString(), LogoutModel::class.java)
+                        return LogoutModel
+                    }
 
                     else -> {
                         return null
@@ -536,7 +542,7 @@ class Common {
                         }
                     } else {
 
-                        Log.e("getcalling", "" + isCalling)
+                        Log.e("getcalling", "" + jsonObject)
                         try {
 
                             if (!isCalling!!) {

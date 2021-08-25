@@ -4,10 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -52,6 +49,7 @@ class CollabStudioDetailActivity : AppCompatActivity(), onClickAdapter, View.OnC
     private var followersCkeckedList: ArrayList<Follow>? = ArrayList()
     private var followingsCkeckedList: ArrayList<Follow>? = ArrayList()
     private var ivBack: ImageView? = null
+    private var tvNoData: TextView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,6 +68,7 @@ class CollabStudioDetailActivity : AppCompatActivity(), onClickAdapter, View.OnC
     }
 
     private fun initView() {
+        tvNoData = findViewById(R.id.tvNoData)
         ivBack = findViewById(R.id.ivBack)
         followersRecycView = findViewById(R.id.followersRecycView)
         btnSubmit = findViewById(R.id.btnSubmit)
@@ -119,7 +118,6 @@ class CollabStudioDetailActivity : AppCompatActivity(), onClickAdapter, View.OnC
 
     private fun getFollowersApi(isClear: Boolean) {
 
-
         Common.showLoader(this)
         if (listType.equals("followings")) {
             collabSessionviewModel.callApiFollowerslist(prefManager?.getAccessToken()!!, prefManager?.getUserId()!!, followingsPage, listType)
@@ -127,9 +125,8 @@ class CollabStudioDetailActivity : AppCompatActivity(), onClickAdapter, View.OnC
             collabSessionviewModel.callApiFollowerslist(prefManager?.getAccessToken()!!, prefManager?.getUserId()!!, followersPage, listType)
         }
 
-
         collabSessionviewModel.getFollowers()?.observe(this, Observer {
-            Common.hideLoader()
+
             if (it != null) {
                 if (it.success) {
                     if (isClear) {
@@ -143,54 +140,82 @@ class CollabStudioDetailActivity : AppCompatActivity(), onClickAdapter, View.OnC
 
                             for (i in it.follows.indices) {
                                 for (j in followingsCkeckedList?.indices!!) {
-                                    if (followingsCkeckedList?.get(j)?.id == followersList?.get(i)?.id) {
-                                        it.follows.get(i).isChecked = true
+                                    try {
+                                        Log.e("TAG", "getFollowersApi: " + followersList?.get(i)?.attributes?.name + " : " + followersList?.get(i)?.id + " == " + followersCkeckedList?.get(j)?.id)
+                                        if (followingsCkeckedList?.get(j)?.id == followersList?.get(i)?.id) {
+                                            it.follows.get(i).isChecked = true
+                                        } else {
+                                            it.follows.get(i).isChecked = false
+                                        }
+                                    } catch (e: Exception) {
+                                        e.printStackTrace()
                                     }
                                 }
                             }
-
                         }
                     } else {
                         if (followersCkeckedList?.size!! > 0) {
                             Log.e("TAGGK1", "getFollowersApi: " + followersCkeckedList)
                             for (i in it.follows.indices) {
                                 for (j in followersCkeckedList?.indices!!) {
-                                    if (followersCkeckedList?.get(j)?.id == followersList?.get(i)?.id) {
-                                        it.follows.get(i).isChecked = true
+                                    try {
+                                        Log.e("TAG", "getFollowersApi: " + followersList?.get(i)?.attributes?.name + " : " + followersList?.get(i)?.id + " == " + followersCkeckedList?.get(j)?.id)
+                                        if (followersCkeckedList?.get(j)?.id == followersList?.get(i)?.id) {
+                                            it.follows.get(i).isChecked = true
+                                        } else {
+                                            it.follows.get(i).isChecked = false
+                                        }
+                                    } catch (e: Exception) {
+                                        e.printStackTrace()
                                     }
                                 }
                             }
                         }
                     }
+
+                    if (followersList?.size == 0) {
+                        tvNoData?.visibility = View.VISIBLE
+                    } else {
+                        tvNoData?.visibility = View.GONE
+                    }
                     followersListAdapter?.notifyDataSetChanged()
+                    Common.hideLoader()
+                } else {
+                    Common.hideLoader()
                 }
+            } else {
+                Common.hideLoader()
             }
         })
     }
 
     fun addSelectedList() {
         try {
-            if (followersListAdapter?.getSelected() != null) {
-                if (followersListAdapter?.getSelected()?.size!! > 0) {
-                    for (i in 0 until followersListAdapter?.getSelected()?.size!!) {
-                        if (listType.equals("followings")) {
-                            followersListAdapter?.getSelected()?.get(i)?.isChecked = true
+            if (followersListAdapter?.getSelected() != null && followersListAdapter?.getSelected()?.size!! > 0) {
+
+                if (listType.equals("followings")) {
+                    followingsCkeckedList?.clear()
+                } else {
+                    followersCkeckedList?.clear()
+                }
+                for (i in 0 until followersListAdapter?.getSelected()?.size!!) {
+                    if (listType.equals("followings")) {
+                        followersListAdapter?.getSelected()?.get(i)?.isChecked = true
 //                            if (!followingsCkeckedList?.contains(followersListAdapter?.getSelected()?.get(i)?.id!!)!!) {
-                            followingsCkeckedList?.add(Follow(followersListAdapter?.getSelected()?.get(i)?.attributes!!, followersListAdapter?.getSelected()?.get(i)?.id!!,
-                                    followersListAdapter?.getSelected()?.get(i)?.type!!, followersListAdapter?.getSelected()?.get(i)?.isChecked!!))
+                        followingsCkeckedList?.add(Follow(followersListAdapter?.getSelected()?.get(i)?.attributes!!, followersListAdapter?.getSelected()?.get(i)?.id!!,
+                                followersListAdapter?.getSelected()?.get(i)?.type!!, followersListAdapter?.getSelected()?.get(i)?.isChecked!!))
 //                            }
 
-                            followingsCkeckedList?.distinct()?.toList()
-                        } else {
-                            followersListAdapter?.getSelected()?.get(i)?.isChecked = true
+                    } else {
+                        followersListAdapter?.getSelected()?.get(i)?.isChecked = true
 //                            if (!followersCkeckedList?.contains(followersListAdapter?.getSelected()?.get(i)?.id)!!) {
-                            followersCkeckedList?.add(Follow(followersListAdapter?.getSelected()?.get(i)?.attributes!!, followersListAdapter?.getSelected()?.get(i)?.id!!,
-                                    followersListAdapter?.getSelected()?.get(i)?.type!!, followersListAdapter?.getSelected()?.get(i)?.isChecked!!))
+                        followersCkeckedList?.add(Follow(followersListAdapter?.getSelected()?.get(i)?.attributes!!, followersListAdapter?.getSelected()?.get(i)?.id!!,
+                                followersListAdapter?.getSelected()?.get(i)?.type!!, followersListAdapter?.getSelected()?.get(i)?.isChecked!!))
 //                            }
-                            followersCkeckedList?.distinct()?.toList()
-                        }
+
                     }
                 }
+
             }
             Log.e("TAGGk", "getFollowersApi: " + followersCkeckedList?.size)
             Log.e("TAGGk", "getFollowersApi: " + followingsCkeckedList?.size)
@@ -225,7 +250,7 @@ class CollabStudioDetailActivity : AppCompatActivity(), onClickAdapter, View.OnC
                 val arr = JsonArray();
                 var json: JsonObject? = null
 
-                /*  if (followingsCkeckedList?.size!! > 0) {
+                if (followingsCkeckedList?.size!! > 0) {
 
 //                    val distinct = followingsCkeckedList?.toSet()?.toList();
                     for (i in followingsCkeckedList?.indices!!) {
@@ -235,6 +260,9 @@ class CollabStudioDetailActivity : AppCompatActivity(), onClickAdapter, View.OnC
                         arr.add(json)
                     }
                 }
+
+                Log.e("TAGG", "onClick: " + followingsCkeckedList?.size)
+                Log.e("TAGG", "onClick: " + arr.size())
 
                 if (followersCkeckedList?.size!! > 0) {
 //                    val distinct = followersCkeckedList?.toSet()?.toList();
@@ -246,20 +274,26 @@ class CollabStudioDetailActivity : AppCompatActivity(), onClickAdapter, View.OnC
                     }
                 }
 
+                Log.e("TAG", "onClick: " + followersCkeckedList?.size)
                 Log.e("TAG", "onClick: " + arr)
                 mainJson.add("followers", arr)
                 Log.e("TAGG", "onClick: " + mainJson)
 
+                if (arr.size() == 0) {
+                    Toast.makeText(this, "Please select followers / followings ", Toast.LENGTH_SHORT).show()
+                    return
+                }
                 if (arr.size() > 4) {
                     Toast.makeText(this, "You can select maximum 4 ", Toast.LENGTH_SHORT).show()
                     return
                 }
+
                 val intent = Intent(this, SendRequestActivity::class.java)
                 intent.putExtra("followers", mainJson.toString())
                 intent.putExtra("collabType", collabType)
-                startActivity(intent)*/
+                startActivity(intent)
 
-                Log.e("TAG", "onClick: " + followersCkeckedList)
+                /* Log.e("TAG", "onClick: " + followersCkeckedList)
                 Log.e("TAG", "onClick: " + followersCkeckedList?.distinctBy { it.id })
 
                 if (followersListAdapter?.getSelected()?.size!! > 0) {
@@ -288,7 +322,7 @@ class CollabStudioDetailActivity : AppCompatActivity(), onClickAdapter, View.OnC
                 } else {
                     Log.e("TAGG", "onClick: No selection")
                     //                    showToast("No Selection")
-                }
+                }*/
 
             }
         }

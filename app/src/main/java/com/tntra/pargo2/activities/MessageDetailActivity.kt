@@ -13,26 +13,31 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
+import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.tntra.pargo2.R
 import com.tntra.pargo2.adapter.ChatRoomAdapter
 import com.tntra.pargo2.common.Common
+import com.tntra.pargo2.common.PrefManager
 import com.tntra.pargo2.custom.MessageType
+import com.tntra.pargo2.model.chat_users.ChatUserListModel
 import com.tntra.pargo2.model.chatmessage.Message
 import com.vanniktech.emoji.EmojiPopup
 import io.socket.client.IO
 import io.socket.client.Socket
 import io.socket.emitter.Emitter
-import io.socket.engineio.client.Transport
-import io.socket.engineio.client.transports.Polling
-import io.socket.engineio.client.transports.WebSocket
-import java.util.ArrayList
+import org.json.JSONException
+import org.json.JSONObject
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
+
 
 class MessageDetailActivity : AppCompatActivity(), View.OnClickListener {
 
     private val MAX_LINES_COLLAPSED = 2
     private val INITIAL_IS_COLLAPSED = true
-
+    var userlist: ArrayList<ChatUserListModel>? = ArrayList()
     private val IDLE_ANIMATION_STATE = 1
     private val EXPANDING_ANIMATION_STATE = 2
     private val COLLAPSING_ANIMATION_STATE = 3
@@ -43,10 +48,13 @@ class MessageDetailActivity : AppCompatActivity(), View.OnClickListener {
     private var chatRoomAdapter: ChatRoomAdapter? = null
 
     var name: String = ""
+    var invitation: String = ""
     private var llparent: LinearLayout? = null
+    private var prefManager: PrefManager? = null
     private var tvname: TextView? = null
     private var tvdesc: TextView? = null
     private var tvcount: TextView? = null
+    private var tvInvitation: TextView? = null
     private var mSocket: Socket? = null
     private val URL = "http://18.224.66.250:8081/"
 
@@ -54,8 +62,11 @@ class MessageDetailActivity : AppCompatActivity(), View.OnClickListener {
     private var etMessage: EditText? = null
     private var btnSend: ImageView? = null
     private var ivEmoji: ImageView? = null
+    private var ivBack: ImageView? = null
     private var rootView: RelativeLayout? = null
     var emojiPopup: EmojiPopup? = null
+
+    private var roomId: String = ""
 
     //    token=xDWL5egSBhFHU3Hx6w7HvrB8DfjhEUwGx8XNGbebPz3q3yBjyjcVv42V6rf5HKXkdt47hvkr4pZ5gyPW&userId=1
     val gson: Gson = Gson()
@@ -64,40 +75,30 @@ class MessageDetailActivity : AppCompatActivity(), View.OnClickListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_message_detail)
 
-        initView()
+        prefManager = PrefManager(this)
+
         try {
-            val token =
-                    "xDWL5egSBhFHU3Hx6w7HvrB8DfjhEUwGx8XNGbebPz3q3yBjyjcVv42V6rf5HKXkdt47hvkr4pZ5gyPW"
-            val userId = 4
             val option = IO.Options()
-//            option.query = "token=" + token + "&userId=" + userId;
-//            option.query = "EIO=" + userId
-//            option.forceNew = true
-            option.path="/connect"
-            option.transports= arrayOf(WebSocket.NAME)
-            //            option.query = "userId=$userId"
-            mSocket = IO.socket("http://5986-144-48-250-250.ngrok.io",option)
+            val map = HashMap<String, String>()
+            map.put("userID", "" + prefManager?.getUserId()!!)
+            map.put("username", "123")
+            option.auth = map
+            option.path = "/socket.io"
+            mSocket = IO.socket("http://141e-144-48-250-250.ngrok.io", option)
             mSocket?.connect()
         } catch (e: Exception) {
             e.printStackTrace()
         }
 
         mSocket?.on(Socket.EVENT_CONNECT, onConnect)
+        mSocket?.on("user connected", connections)
         mSocket?.on(Socket.EVENT_CONNECT_ERROR, onConnectError)
-
-        val onConnect = Emitter.Listener {
-
-            Log.e("TAGGsocket", "onCreate: ")
-            //After getting a Socket.EVENT_CONNECT which indicate socket has been connected to server,
-            //send userName and roomName so that they can join the room.
-            val json = JsonObject()
-            json.addProperty("usename", "user1")
-            json.addProperty("room", "room1")
-            val jsonData = gson.toJson(json) // Gson changes data object to Json type.
-            mSocket?.emit("subscribe", jsonData)
-
-            sendMessage()
-        }
+        mSocket?.on("private message", onNewMessage);
+        mSocket?.on("user disconnected", onDisconnect)
+        mSocket?.on("user joined", onUserJoined);
+        mSocket?.on("user left", onUserLeft);
+        mSocket?.on("typing", onTyping);
+        mSocket?.on("stop typing", onStopTyping);
 
         val onNewUser = Emitter.Listener {
             val name = it[0] as String //This pass the userName!
@@ -118,18 +119,80 @@ class MessageDetailActivity : AppCompatActivity(), View.OnClickListener {
 //            addItemToRecyclerView(chat)
         }
 
-//        mSocket?.connect()
-        //Register all the listener and callbacks here.
-//        mSocket?.on(Socket.EVENT_CONNECT, onConnect)
-//        mSocket?.on("newUserToChatRoom", onNewUser) // To know if the new user entered the room.
-//        mSocket?.on("updateChat", onUpdateChat) // To update if someone send a message to chatroom
-//        mSocket?.on("userLeftChatRoom", onUserLeft)
-
         initView()
+    }
+
+    private val onUserLeft = Emitter.Listener { args ->
+        this.runOnUiThread(Runnable {
+            val data = args[0] as JSONObject
+            Log.e("TAGleft", ": " + data)
+            val username: String
+            val numUsers: Int
+            try {
+                username = data.getString("username")
+                numUsers = data.getInt("numUsers")
+            } catch (e: JSONException) {
+                Log.e("TAG", e.message)
+                return@Runnable
+            }
+//            addLog(resources.getString(R.string.message_user_left, username))
+//            addParticipantsLog(numUsers)
+//            removeTyping(username)
+        })
+    }
+
+    private val onTyping = Emitter.Listener { args ->
+        this.runOnUiThread(Runnable {
+            val data = args[0] as JSONObject
+            val username: String
+            Log.e("TAGTyping", ": " + data)
+            username = try {
+                data.getString("username")
+
+            } catch (e: JSONException) {
+                Log.e("TAG", e.message)
+                return@Runnable
+            }
+//            addTyping(username)
+        })
+    }
+
+    private val onStopTyping = Emitter.Listener { args ->
+        this.runOnUiThread(Runnable {
+            val data = args[0] as JSONObject
+            val username: String
+            username = try {
+                data.getString("username")
+            } catch (e: JSONException) {
+                Log.e("TAG", e.message)
+                return@Runnable
+            }
+//            removeTyping(username)
+        })
+    }
+
+    private val onUserJoined = Emitter.Listener { args ->
+        this.runOnUiThread(Runnable {
+            val data = args[0] as JSONObject
+            val username: String
+            val numUsers: Int
+            try {
+                username = data.getString("username")
+                numUsers = data.getInt("numUsers")
+                Log.e("TAG", ": " + data)
+            } catch (e: JSONException) {
+                Log.e("TAG", e.message)
+                return@Runnable
+            }
+//            addLog(resources.getString(R.string.message_user_joined, username))
+//            addParticipantsLog(numUsers)
+        })
     }
 
     private fun initView() {
         rootView = findViewById(R.id.rootView)
+        tvInvitation = findViewById(R.id.tvInvitation)
+        ivBack = findViewById(R.id.ivBack)
         ivEmoji = findViewById(R.id.ivEmoji)
         btnSend = findViewById(R.id.btnSend)
         etMessage = findViewById(R.id.etMessage)
@@ -143,14 +206,21 @@ class MessageDetailActivity : AppCompatActivity(), View.OnClickListener {
         tvcount?.setOnClickListener(this)
         btnSend?.setOnClickListener(this)
         ivEmoji?.setOnClickListener(this)
+        ivBack?.setOnClickListener(this)
 
         if (intent != null) {
             if (intent.hasExtra("name")) {
                 name = intent?.getStringExtra("name")!!
             }
+            if (intent.hasExtra("invitation")) {
+                if (intent?.getStringExtra("invitation") != null) {
+                    invitation = intent?.getStringExtra("invitation")!!
+                }
+            }
         }
 
         tvname?.text = name
+        tvInvitation?.text = "" + invitation + " invitation has sent"
 
         /*tvdesc?.setOnClickListener {
             if (if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
@@ -178,7 +248,7 @@ class MessageDetailActivity : AppCompatActivity(), View.OnClickListener {
 
         setChatAdapter()
 
-        setData()
+//        setData()
     }
 
     private fun setData() {
@@ -215,8 +285,28 @@ class MessageDetailActivity : AppCompatActivity(), View.OnClickListener {
                 startActivity(intent)
             }
             R.id.btnSend -> {
-                val message = Message("Jigar", etMessage?.text?.toString()!!, "room", MessageType.CHAT_MINE.index)
-                addItemToRecyclerView(message)
+//                val message = Message("Jigar", etMessage?.text?.toString()!!, "room", MessageType.CHAT_MINE.index)
+//                addItemToRecyclerView(message)
+
+                try {
+                    val json = JsonObject()
+//                    json.addProperty("from", mSocket?.id())
+                    json.addProperty("to", roomId)
+                    json.addProperty("content", etMessage?.text?.toString())
+                    val arr = JsonArray()
+                    arr.add(json)
+                    Log.e("connect", "onClick: " + arr)
+                    mSocket?.emit("private message", arr, Emitter.Listener {
+                        Log.e("TAGHH", "onClick: "+it?.get(0)?.toString() )
+                    })
+
+                    val message = Message("Jigar", etMessage?.text?.toString()!!, "roomName", MessageType.CHAT_MINE.index)
+                    addItemToRecyclerView(message)
+                    Log.e("connectsocket", "send message" + " " + roomId)
+                } catch (e: java.lang.Exception) {
+                    e.printStackTrace()
+                    Log.e("connectsocket", ": " + e.message + " " + e.cause)
+                }
                 Common.hideKeyboard(this)
             }
             R.id.ivEmoji -> {
@@ -225,7 +315,9 @@ class MessageDetailActivity : AppCompatActivity(), View.OnClickListener {
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
-
+            }
+            R.id.ivBack -> {
+                onBackPressed()
             }
         }
     }
@@ -325,9 +417,32 @@ class MessageDetailActivity : AppCompatActivity(), View.OnClickListener {
         Log.d("TAG", "Socket Connected!")
         Log.e(
                 "connectionsocket00",
-                ": connected" + mSocket?.connected() + " "
+                ": connected" + mSocket?.connected() + " " + mSocket?.id()
         )
 
+
+    }
+
+    private val connections = Emitter.Listener {
+        runOnUiThread {
+            var count = 0
+
+            for (i in it.indices) {
+                Log.e("connectionsocket", ": " + it?.get(i)?.toString())
+
+                val json = JSONObject(it?.get(i)?.toString())
+                val userID = json.getString("userID")
+                roomId = userID
+                count = count + 1
+                name = json.getString("username")
+                userlist?.add(ChatUserListModel(json.getBoolean("connected"), json.getString("userID"), json.getString("username")))
+//                userlist?.add(json.getString("username"))
+            }
+
+            tvInvitation?.text = "$userlist joined"
+
+            Log.e("connect", ": " + roomId)
+        }
     }
 
     private val onConnectError = Emitter.Listener {
@@ -344,7 +459,41 @@ class MessageDetailActivity : AppCompatActivity(), View.OnClickListener {
         runOnUiThread {
 
             Log.e("connectionsocket00", ": " + it.iterator().toString())
+            for (i in it.indices) {
+
+                Log.e("connectionDisconnect", ": " + it?.get(i)?.toString())
+
+                for (i in userlist?.indices!!) {
+                    if (userlist?.get(i)?.userID == it?.get(i)?.toString()) {
+                        userlist?.removeAt(i)
+                    }
+                }
+            }
         }
     }
 
+    private val onNewMessage = Emitter.Listener { args ->
+        this.runOnUiThread(Runnable {
+            val data = args[0] as JSONObject
+            Log.e("getmessage", ": " + data.toString())
+            try {
+                val msg = data.getString("content")
+                val message = Message("Jigar", msg, "roomName", MessageType.CHAT_PARTNER.index)
+                addItemToRecyclerView(message)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+//            val username: String
+//            val message: String
+//            try {
+//                username = data.getString("username")
+//                message = data.getString("message")
+//            } catch (e: JSONException) {
+//                return@Runnable
+//            }
+
+            // add the message to view
+//            addMessage(username, message)
+        })
+    }
 }

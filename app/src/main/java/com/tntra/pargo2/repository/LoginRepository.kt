@@ -11,6 +11,7 @@ import com.tntra.pargo2.model.CommonResponseModel
 import com.tntra.pargo2.model.content_list.ContentListModel
 import com.tntra.pargo2.model.login.OtpModel
 import com.tntra.pargo2.model.login_response.UserLoginModel
+import com.tntra.pargo2.model.logout.LogoutModel
 import com.walkins.aapkedoorstep.networkApi.login.LoginApi
 import okhttp3.ResponseBody
 import org.json.JSONObject
@@ -237,26 +238,25 @@ class LoginRepository {
 
     fun logout(authorizationToke: String
 
-    ): MutableLiveData<CommonResponseModel> {
-        val loginData = MutableLiveData<CommonResponseModel>()
+    ): MutableLiveData<LogoutModel> {
+        val loginData = MutableLiveData<LogoutModel>()
         loginApi.logout(
                 authorizationToke,
-        ).enqueue(object : Callback<CommonResponseModel> {
+        ).enqueue(object : Callback<LogoutModel> {
             override fun onResponse(
-                    call: Call<CommonResponseModel>,
-                    response: Response<CommonResponseModel>
+                    call: Call<LogoutModel>,
+                    response: Response<LogoutModel>
             ) {
                 if (response.isSuccessful) {
                     val model = response.body()
+                    Log.e("TAGlogout", "onResponse: "+model )
                     loginData.value = model
                 } else {
                     try {
                         val responce = response.errorBody()?.string()
-
                         val jsonObjectError = JSONObject(responce)
-
-                        val userModel: CommonResponseModel =
-                                Common.getErrorModel(jsonObjectError, "CommonResponseModel") as CommonResponseModel
+                        val userModel: LogoutModel =
+                                Common.getErrorModel(jsonObjectError, "LogoutModel") as LogoutModel
                         loginData.value = userModel
                     } catch (e: IOException) {
                         e.printStackTrace()
@@ -267,7 +267,7 @@ class LoginRepository {
                 }
             }
 
-            override fun onFailure(call: Call<CommonResponseModel>, t: Throwable) {
+            override fun onFailure(call: Call<LogoutModel>, t: Throwable) {
 
             }
         })

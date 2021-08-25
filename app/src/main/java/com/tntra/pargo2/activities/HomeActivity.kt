@@ -330,6 +330,7 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener, onClickAdapter {
         loginViewModel.getLogout()?.observe(this, Observer {
             Common.hideLoader()
             if (it != null) {
+                Log.e("TAG", "callLogoutApi: " + it)
                 if (it.success) {
                     finishAffinity()
                     val intent = Intent(this, LoginActivity::class.java)

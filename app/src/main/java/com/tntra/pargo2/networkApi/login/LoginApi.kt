@@ -4,6 +4,7 @@ import com.google.gson.JsonObject
 import com.jkadvantagandbadsha.model.login.UserModel
 import com.tntra.pargo2.model.CommonResponseModel
 import com.tntra.pargo2.model.login_response.UserLoginModel
+import com.tntra.pargo2.model.logout.LogoutModel
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.*
@@ -29,7 +30,7 @@ interface LoginApi {
     ): Call<CommonResponseModel>
 
     @DELETE("api/v1/users/sign_out")
-    fun logout(@Header("Authorization") Authorization: String): Call<CommonResponseModel>
+    fun logout(@Header("Authorization") Authorization: String): Call<LogoutModel>
 
     @POST("api/v1/users/sign_in")
     fun loginUserTwo(

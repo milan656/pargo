@@ -8,16 +8,19 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.tntra.pargo2.R
+import com.tntra.pargo2.common.OnBottomReachedListener
 import com.tntra.pargo2.common.onClickAdapter
 import com.tntra.pargo2.model.FollowerModel
 import com.tntra.pargo2.model.collabRoomList.CollabRoom
 
 class MessageListAdapter(var list: ArrayList<CollabRoom>,
                          var context: Context,
-                         var onpositionClick: onClickAdapter?
+                         var onpositionClick: onClickAdapter?,
+                         var onBottomReachedListener: OnBottomReachedListener
 ) : RecyclerView.Adapter<MessageListAdapter.Viewholder>() {
 
     private val positionClick: onClickAdapter = onpositionClick!!
+    private val onbottom: OnBottomReachedListener = onBottomReachedListener
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Viewholder {
         val view = LayoutInflater.from(context).inflate(R.layout.message_list_adapter_design, parent, false)
         return Viewholder(view)
@@ -43,6 +46,9 @@ class MessageListAdapter(var list: ArrayList<CollabRoom>,
             onpositionClick?.onPositionClick(position, 5)
         }
 
+        if (list.size - 1 == position) {
+            onBottomReachedListener.onBottomReached(position)
+        }
     }
 
     override fun getItemCount(): Int {

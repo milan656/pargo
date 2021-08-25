@@ -57,6 +57,17 @@
 
             </LinearLayout>
 
+            <com.tntra.pargo2.custom.NormalTextView
+                android:id="@+id/tvInvitation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/fourteen_sp"
+                android:textColor="@color/gray"
+                android:layout_marginStart="@dimen/eighteen_dp"
+                android:layout_marginEnd="@dimen/eighteen_dp"
+                android:layout_marginTop="@dimen/ten_dp"
+                />
+
             <androidx.core.widget.NestedScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">

@@ -10,6 +10,7 @@ import com.tntra.pargo2.model.login.OtpModel
 import com.tntra.pargo2.model.login_response.UserLoginModel
 import com.tntra.pargo2.model.logout.LogoutModel
 import com.tntra.pargo2.repository.LoginRepository
+import okhttp3.ResponseBody
 
 class LoginActivityViewModel : ViewModel() {
 
@@ -19,7 +20,7 @@ class LoginActivityViewModel : ViewModel() {
     //    var uploadImageModel: MutableLiveData<UploadImageModel>? = null
     var otpModel: MutableLiveData<OtpModel>? = null
     var userLoginModel: MutableLiveData<UserLoginModel>? = null
-    var logout: MutableLiveData<LogoutModel>? = null
+    var logout: MutableLiveData<ResponseBody>? = null
     var commonResponseModel: MutableLiveData<CommonResponseModel>? = null
 
     fun getLoginData(): LiveData<UserModel>? {
@@ -65,10 +66,10 @@ class LoginActivityViewModel : ViewModel() {
 
     fun callLogout(authorizationToke: String) {
         loginRepository = LoginRepository().getInstance()
-        logout = loginRepository!!.logout(authorizationToke)
+        logout = loginRepository?.logout(authorizationToke)
     }
 
-    fun getLogout(): LiveData<LogoutModel>? {
+    fun getLogout(): LiveData<ResponseBody>? {
         return logout
     }
 

@@ -534,6 +534,11 @@ class Common {
                                         gson.fromJson(jsonObject.toString(), UserLoginModel::class.java)
                                 return UserLoginModel
                             }
+                            "LogoutModel" -> {
+                                val LogoutModel =
+                                        gson.fromJson(jsonObject.toString(), LogoutModel::class.java)
+                                return LogoutModel
+                            }
 
                             else -> {
                                 return null

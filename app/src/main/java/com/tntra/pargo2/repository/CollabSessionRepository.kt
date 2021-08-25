@@ -6,6 +6,7 @@ import com.jkadvantagandbadsha.model.login.UserModel
 import com.tntra.pargo2.common.Common
 import com.tntra.pargo2.common.RetrofitCommonClass
 import com.tntra.pargo2.model.CommonResponseModel
+import com.tntra.pargo2.model.chatapi.ChatListApiModel
 import com.tntra.pargo2.model.collabRoomList.CollabRoomListModel
 import com.tntra.pargo2.model.collab_req.CollabRequestModel
 import com.tntra.pargo2.model.collabroom.CollabRoomCreateModel
@@ -215,6 +216,95 @@ class CollabSessionRepository {
         return loginData
     }
 
+    fun callApiCollabSendMessage(
+            authorizationToke: String,
+            jsonObject: JsonObject,
+            id: Int
+
+    ): MutableLiveData<CommonResponseModel> {
+        val loginData = MutableLiveData<CommonResponseModel>()
+        collabApi.sendMessage(
+                authorizationToke, jsonObject, id
+        ).enqueue(object : Callback<CommonResponseModel> {
+            override fun onResponse(
+                    call: Call<CommonResponseModel>,
+                    response: Response<CommonResponseModel>
+            ) {
+                if (response.isSuccessful) {
+                    loginData.value = response.body()
+                } else {
+                    try {
+                        val responce = response.errorBody()?.string()
+                        val jsonObjectError = JSONObject(responce)
+
+                        val CommonResponseModel: CommonResponseModel =
+                                Common.getErrorModel(jsonObjectError, "CommonResponseModel") as CommonResponseModel
+                        //recoveryData.setValue(recoveryPasswordModel)
+
+
+                        loginData.value = CommonResponseModel
+
+                    } catch (e: IOException) {
+                        e.printStackTrace()
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+
+                }
+            }
+
+            override fun onFailure(call: Call<CommonResponseModel>, t: Throwable) {
+
+                t.printStackTrace()
+            }
+        })
+        return loginData
+    }
+
+    fun callApigetAllMessage(
+            authorizationToke: String,
+            id: Int
+
+    ): MutableLiveData<ChatListApiModel> {
+        val loginData = MutableLiveData<ChatListApiModel>()
+        collabApi.getAllMessage(
+                authorizationToke, id
+        ).enqueue(object : Callback<ChatListApiModel> {
+            override fun onResponse(
+                    call: Call<ChatListApiModel>,
+                    response: Response<ChatListApiModel>
+            ) {
+                if (response.isSuccessful) {
+                    loginData.value = response.body()
+                } else {
+                    try {
+                        val responce = response.errorBody()?.string()
+                        val jsonObjectError = JSONObject(responce)
+
+                        val ChatListApiModel: ChatListApiModel =
+                                Common.getErrorModel(jsonObjectError, "ChatListApiModel") as ChatListApiModel
+                        //recoveryData.setValue(recoveryPasswordModel)
+
+
+                        loginData.value = ChatListApiModel
+
+                    } catch (e: IOException) {
+                        e.printStackTrace()
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+
+                }
+            }
+
+            override fun onFailure(call: Call<ChatListApiModel>, t: Throwable) {
+
+                t.printStackTrace()
+            }
+        })
+        return loginData
+    }
+
     fun callApiNotificationList(
             authorizationToke: String,
     ): MutableLiveData<NotificationListModel> {
@@ -263,7 +353,7 @@ class CollabSessionRepository {
     ): MutableLiveData<CollabRoomListModel> {
         val loginData = MutableLiveData<CollabRoomListModel>()
         collabApi.collabRoomList(
-                authorizationToke,page
+                authorizationToke, page
         ).enqueue(object : Callback<CollabRoomListModel> {
             override fun onResponse(
                     call: Call<CollabRoomListModel>,
@@ -306,7 +396,7 @@ class CollabSessionRepository {
     ): MutableLiveData<CommonResponseModel> {
         val loginData = MutableLiveData<CommonResponseModel>()
         collabApi.deleteNoti(
-                authorizationToke,id
+                authorizationToke, id
         ).enqueue(object : Callback<CommonResponseModel> {
             override fun onResponse(
                     call: Call<CommonResponseModel>,

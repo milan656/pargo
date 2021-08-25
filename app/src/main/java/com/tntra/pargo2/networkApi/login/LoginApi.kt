@@ -30,7 +30,7 @@ interface LoginApi {
     ): Call<CommonResponseModel>
 
     @DELETE("api/v1/users/sign_out")
-    fun logout(@Header("Authorization") Authorization: String): Call<LogoutModel>
+    fun logout(@Header("Authorization") Authorization: String): Call<ResponseBody>
 
     @POST("api/v1/users/sign_in")
     fun loginUserTwo(

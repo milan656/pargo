@@ -28,8 +28,6 @@
                     android:layout_height="match_parent"
                     android:src="@color/light_gray" />
 
-
-
                 <com.tntra.pargo2.custom.BoldTextView
                     android:id="@+id/tvGenersName"
                     android:layout_width="match_parent"

@@ -17,19 +17,24 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.iid.FirebaseInstanceId
+import com.google.gson.GsonBuilder
 import com.google.gson.JsonObject
 import com.tntra.pargo2.R
 import com.tntra.pargo2.activities.ContentDetailActivity
 import com.tntra.pargo2.activities.NotificationActivity
-import com.tntra.pargo2.common.Common
-import com.tntra.pargo2.common.PrefManager
+import com.tntra.pargo2.common.*
 import com.tntra.pargo2.common.RetrofitCommonClass.CommonRetrofit.context
-import com.tntra.pargo2.common.onClickAdapter
-import com.tntra.pargo2.common.replaceFragmenty
 import com.tntra.pargo2.fragment.*
+import com.tntra.pargo2.model.logout.LogoutModel
 import com.tntra.pargo2.viewmodel.ContentViewModel
 import com.tntra.pargo2.viewmodel.LoginActivityViewModel
 import com.tntra.pargo2.viewmodel.collab.CollabSessionviewModel
+import com.walkins.aapkedoorstep.networkApi.login.LoginApi
+import okhttp3.ResponseBody
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import java.io.IOException
 
 class HomeActivity : AppCompatActivity(), View.OnClickListener, onClickAdapter {
 
@@ -326,12 +331,12 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener, onClickAdapter {
 
     private fun callLogoutApi() {
         Common.showLoader(this)
-        loginViewModel.callLogout(prefManager?.getAccessToken()!!)
-        loginViewModel.getLogout()?.observe(this, Observer {
-            Common.hideLoader()
-            if (it != null) {
-                Log.e("TAG", "callLogoutApi: " + it)
-                if (it.success) {
+        /* loginViewModel.callLogout(prefManager?.getAccessToken()!!)
+         loginViewModel.getLogout()?.observe(this, Observer {
+             Common.hideLoader()
+             if (it != null) {
+                 Log.e("TAG", "callLogoutApi: " + it)
+                 *//*if (it.success) {
                     finishAffinity()
                     val intent = Intent(this, LoginActivity::class.java)
                     prefManager?.clearAll()
@@ -339,7 +344,35 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener, onClickAdapter {
                 } else {
                     Common.hideLoader()
                     showDialogue(this, "Oops!", it.message, false)
+                }*//*
+            }
+        })*/
+
+        val serviceApi = RetrofitCommonClass.createService(LoginApi::class.java)
+
+        var call: Call<ResponseBody>? = null
+        call = serviceApi.logout(prefManager?.getAccessToken()!!
+        )
+        call.enqueue(object : Callback<ResponseBody> {
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                Common.hideLoader()
+                if (response.isSuccessful) {
+                    try {
+                        val prefManager = PrefManager(context)
+                        prefManager.clearAll()
+                        val intent = Intent(context, LoginActivity::class.java)
+                        intent.flags =
+                                Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        context.startActivity(intent)
+
+                    } catch (e: IOException) {
+                        e.printStackTrace()
+                    }
                 }
+            }
+
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                Log.e("getmodel00::", "" + t.message + " " + t.cause)
             }
         })
     }

@@ -10,10 +10,10 @@ import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
-import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.tntra.pargo2.R
 import com.tntra.pargo2.adapter.ChatRoomAdapter
@@ -21,11 +21,14 @@ import com.tntra.pargo2.common.Common
 import com.tntra.pargo2.common.PrefManager
 import com.tntra.pargo2.custom.MessageType
 import com.tntra.pargo2.model.chat_users.ChatUserListModel
+import com.tntra.pargo2.model.chat_users.SendChatData
 import com.tntra.pargo2.model.chatmessage.Message
+import com.tntra.pargo2.viewmodel.collab.CollabSessionviewModel
 import com.vanniktech.emoji.EmojiPopup
 import io.socket.client.IO
 import io.socket.client.Socket
 import io.socket.emitter.Emitter
+import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import java.util.*
@@ -48,6 +51,7 @@ class MessageDetailActivity : AppCompatActivity(), View.OnClickListener {
     private var chatRoomAdapter: ChatRoomAdapter? = null
 
     var name: String = ""
+    var id: String = ""
     var invitation: String = ""
     private var llparent: LinearLayout? = null
     private var prefManager: PrefManager? = null
@@ -67,6 +71,7 @@ class MessageDetailActivity : AppCompatActivity(), View.OnClickListener {
     var emojiPopup: EmojiPopup? = null
 
     private var roomId: String = ""
+    private var collabSessionviewModel: CollabSessionviewModel? = null
 
     //    token=xDWL5egSBhFHU3Hx6w7HvrB8DfjhEUwGx8XNGbebPz3q3yBjyjcVv42V6rf5HKXkdt47hvkr4pZ5gyPW&userId=1
     val gson: Gson = Gson()
@@ -75,16 +80,36 @@ class MessageDetailActivity : AppCompatActivity(), View.OnClickListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_message_detail)
 
+        collabSessionviewModel = ViewModelProviders.of(this).get(CollabSessionviewModel::class.java)
         prefManager = PrefManager(this)
-
+        if (intent != null) {
+            if (intent.hasExtra("name")) {
+                name = intent?.getStringExtra("name")!!
+            }
+            if (intent.hasExtra("invitation")) {
+                if (intent?.getStringExtra("invitation") != null) {
+                    invitation = intent?.getStringExtra("invitation")!!
+                }
+            }
+            if (intent.hasExtra("id")) {
+                if (intent.getStringExtra("id") != null) {
+                    id = intent.getStringExtra("id")!!
+                }
+            }
+        }
         try {
             val option = IO.Options()
             val map = HashMap<String, String>()
-            map.put("userID", "" + prefManager?.getUserId()!!)
-            map.put("username", "123")
+
+            if (prefManager?.getValue("sessionID") != null && !prefManager?.getValue("sessionID").equals("")) {
+                map.put("sessionID", "" + prefManager?.getValue("sessionID")!!)
+            }
+            map.put("username", "milan")
             option.auth = map
+
+            Log.e("TAG", "onCreate: " + map)
             option.path = "/socket.io"
-            mSocket = IO.socket("http://141e-144-48-250-250.ngrok.io", option)
+            mSocket = IO.socket("http://c785-144-48-250-250.ngrok.io", option)
             mSocket?.connect()
         } catch (e: Exception) {
             e.printStackTrace()
@@ -92,10 +117,16 @@ class MessageDetailActivity : AppCompatActivity(), View.OnClickListener {
 
         mSocket?.on(Socket.EVENT_CONNECT, onConnect)
         mSocket?.on("user connected", connections)
+        Log.e("TAG", "onCreate: " + listOf(mSocket?.io()).size)
+        mSocket?.on("active_users", connectedUsers)
+        mSocket?.on("online", connectedUsers)
+//        mSocket?.io()?.on("connection", connectedUsers)
+//        mSocket?.on("connection", connections)
         mSocket?.on(Socket.EVENT_CONNECT_ERROR, onConnectError)
         mSocket?.on("private message", onNewMessage);
         mSocket?.on("user disconnected", onDisconnect)
         mSocket?.on("user joined", onUserJoined);
+        mSocket?.on("sessions", onUserJoined);
         mSocket?.on("user left", onUserLeft);
         mSocket?.on("typing", onTyping);
         mSocket?.on("stop typing", onStopTyping);
@@ -120,6 +151,55 @@ class MessageDetailActivity : AppCompatActivity(), View.OnClickListener {
         }
 
         initView()
+
+        callApiSendMessage()
+
+        getAllMessage()
+    }
+
+    private fun getAllMessage() {
+        collabSessionviewModel?.callApigetAllMessage(prefManager?.getAccessToken()!!, id.toInt())
+        collabSessionviewModel?.getCollabAllMessage()?.observe(this, androidx.lifecycle.Observer {
+            if (it != null) {
+                if (it.success) {
+
+                    chatList.clear()
+
+                    for (i in it.messages.indices) {
+                        var message: Message? = null
+                        if (prefManager?.getUserId() == it.messages.get(i).attributes.user_id) {
+                            message = Message(
+                                    it.messages.get(i).attributes.user_name,
+                                    it.messages.get(i).attributes.body, it.messages.get(i).attributes.collab_room_id.toString(),
+                                    MessageType.CHAT_MINE.index)
+                        } else {
+                            message = Message(
+                                    it.messages.get(i).attributes.user_name,
+                                    it.messages.get(i).attributes.body, it.messages.get(i).attributes.collab_room_id.toString(),
+                                    MessageType.CHAT_PARTNER.index)
+                        }
+                        chatList.add(message)
+                    }
+
+                    chatRoomAdapter?.notifyDataSetChanged()
+                }
+            }
+        })
+    }
+
+    private fun callApiSendMessage() {
+//        api/v1/collab_rooms/5/chat_messages
+        val json = JsonObject()
+        json.addProperty("user_id", prefManager?.getUserId()!!)
+        json.addProperty("body", etMessage?.text?.toString()!!)
+        collabSessionviewModel?.callApiCollabSendMessage(prefManager?.getAccessToken()!!, json, id.toInt())
+        collabSessionviewModel?.getCollabSendMessage()?.observe(this, androidx.lifecycle.Observer {
+            if (it != null) {
+                if (it.success) {
+
+                }
+            }
+        })
     }
 
     private val onUserLeft = Emitter.Listener { args ->
@@ -174,12 +254,13 @@ class MessageDetailActivity : AppCompatActivity(), View.OnClickListener {
     private val onUserJoined = Emitter.Listener { args ->
         this.runOnUiThread(Runnable {
             val data = args[0] as JSONObject
+            Log.e("connect::joind", ": " + data)
             val username: String
             val numUsers: Int
             try {
                 username = data.getString("username")
                 numUsers = data.getInt("numUsers")
-                Log.e("TAG", ": " + data)
+
             } catch (e: JSONException) {
                 Log.e("TAG", e.message)
                 return@Runnable
@@ -208,16 +289,7 @@ class MessageDetailActivity : AppCompatActivity(), View.OnClickListener {
         ivEmoji?.setOnClickListener(this)
         ivBack?.setOnClickListener(this)
 
-        if (intent != null) {
-            if (intent.hasExtra("name")) {
-                name = intent?.getStringExtra("name")!!
-            }
-            if (intent.hasExtra("invitation")) {
-                if (intent?.getStringExtra("invitation") != null) {
-                    invitation = intent?.getStringExtra("invitation")!!
-                }
-            }
-        }
+
 
         tvname?.text = name
         tvInvitation?.text = "" + invitation + " invitation has sent"
@@ -248,33 +320,12 @@ class MessageDetailActivity : AppCompatActivity(), View.OnClickListener {
 
         setChatAdapter()
 
-//        setData()
-    }
-
-    private fun setData() {
-        chatList.clear()
-        for (i in 1..3) {
-            val message = Message("Dipak Makwana", "Hello,How are you? dude", "room", MessageType.CHAT_PARTNER.index)
-            chatList.add(message)
-        }
-        chatRoomAdapter?.notifyDataSetChanged()
     }
 
     private fun setChatAdapter() {
         chatRoomAdapter = ChatRoomAdapter(this, chatList)
         chatRecyclerView?.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         chatRecyclerView?.adapter = chatRoomAdapter
-    }
-
-    private fun sendMessage() {
-        val content = "content"
-        val json = JsonObject()
-        json.addProperty("username", "user")
-        val jsonData = gson.toJson(json)
-        mSocket?.emit("newMessage", jsonData)
-
-//        val message = Message(userName, content, roomName, MessageType.CHAT_MINE.index)
-//        addItemToRecyclerView(message)
     }
 
     override fun onClick(v: View?) {
@@ -285,22 +336,15 @@ class MessageDetailActivity : AppCompatActivity(), View.OnClickListener {
                 startActivity(intent)
             }
             R.id.btnSend -> {
-//                val message = Message("Jigar", etMessage?.text?.toString()!!, "room", MessageType.CHAT_MINE.index)
-//                addItemToRecyclerView(message)
-
                 try {
-                    val json = JsonObject()
-//                    json.addProperty("from", mSocket?.id())
-                    json.addProperty("to", roomId)
-                    json.addProperty("content", etMessage?.text?.toString())
-                    val arr = JsonArray()
-                    arr.add(json)
-                    Log.e("connect", "onClick: " + arr)
-                    mSocket?.emit("private message", arr, Emitter.Listener {
-                        Log.e("TAGHH", "onClick: "+it?.get(0)?.toString() )
-                    })
+                    val model = SendChatData(mSocket?.id()!!, roomId, etMessage?.text?.toString()!!)
+                    val obj = JSONObject(gson.toJson(model))
+                    val arr = JSONArray()
+                    arr.put(obj)
+                    Log.e("connect", "onClick: " + obj)
+                    mSocket?.emit("private message", obj)
 
-                    val message = Message("Jigar", etMessage?.text?.toString()!!, "roomName", MessageType.CHAT_MINE.index)
+                    val message = Message(prefManager?.getuserName()!!, etMessage?.text?.toString()!!, "roomName", MessageType.CHAT_MINE.index)
                     addItemToRecyclerView(message)
                     Log.e("connectsocket", "send message" + " " + roomId)
                 } catch (e: java.lang.Exception) {
@@ -417,10 +461,22 @@ class MessageDetailActivity : AppCompatActivity(), View.OnClickListener {
         Log.d("TAG", "Socket Connected!")
         Log.e(
                 "connectionsocket00",
-                ": connected" + mSocket?.connected() + " " + mSocket?.id()
+                ": connected::" + mSocket?.connected() + "| Socket Id::" + mSocket?.id() + " "
         )
 
+        mSocket?.on("onlineUsers") {
 
+            for (i in it?.indices!!) {
+                Log.e("connectionAll", ": " + it.get(i)?.toString())
+            }
+        }
+
+        if (prefManager?.getValue("sessionID") != null &&
+                !prefManager?.getValue("sessionID").equals("")) {
+
+        } else {
+            prefManager?.setValue("sessionID", mSocket?.id())
+        }
     }
 
     private val connections = Emitter.Listener {
@@ -439,9 +495,28 @@ class MessageDetailActivity : AppCompatActivity(), View.OnClickListener {
 //                userlist?.add(json.getString("username"))
             }
 
-            tvInvitation?.text = "$userlist joined"
+            val nameList: ArrayList<String>? = ArrayList<String>()
+
+            for (i in userlist?.indices!!) {
+                nameList?.add(userlist?.get(i)?.username!!)
+            }
+            tvInvitation?.text = "$nameList joined"
 
             Log.e("connect", ": " + roomId)
+        }
+    }
+
+    private val connectedUsers = Emitter.Listener {
+        runOnUiThread {
+            var count = 0
+
+            for (i in it.indices) {
+                Log.e("connectedsocket", ": " + it?.get(i)?.toString())
+
+
+            }
+
+
         }
     }
 
@@ -461,13 +536,19 @@ class MessageDetailActivity : AppCompatActivity(), View.OnClickListener {
             Log.e("connectionsocket00", ": " + it.iterator().toString())
             for (i in it.indices) {
 
-                Log.e("connectionDisconnect", ": " + it?.get(i)?.toString())
-
-                for (i in userlist?.indices!!) {
-                    if (userlist?.get(i)?.userID == it?.get(i)?.toString()) {
-                        userlist?.removeAt(i)
+                try {
+                    for (j in userlist?.indices!!) {
+                        Log.e("connectionDisconnect", ": " + userlist?.get(i)?.userID + " == " + it?.get(i)?.toString())
+                        if (userlist?.get(j)?.userID == it?.get(i)?.toString()) {
+                            userlist?.removeAt(j)
+                        }
                     }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    Log.e("TAG", ": " + e.message + " " + e.cause)
                 }
+
+                tvInvitation?.text = "$userlist Joined"
             }
         }
     }

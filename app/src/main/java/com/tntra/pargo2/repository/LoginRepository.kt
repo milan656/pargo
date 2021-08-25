@@ -141,10 +141,10 @@ class LoginRepository {
             authorizationToke: String,
             jsonObject: JsonObject,
 
-    ): MutableLiveData<CommonResponseModel> {
+            ): MutableLiveData<CommonResponseModel> {
         val servicedata = MutableLiveData<CommonResponseModel>()
 
-        val addEdit: Call<CommonResponseModel> = loginApi.callApiStoreFCM(authorizationToke,jsonObject)
+        val addEdit: Call<CommonResponseModel> = loginApi.callApiStoreFCM(authorizationToke, jsonObject)
 
         addEdit.enqueue(object : Callback<CommonResponseModel> {
             override fun onResponse(
@@ -208,7 +208,7 @@ class LoginRepository {
             ) {
                 if (response.isSuccessful) {
                     response.body().authorization = response.headers().get("authorization")!!
-                    Log.e("TAGG", "onResponse: "+response.body().authorization )
+                    Log.e("TAGG", "onResponse: " + response.body().authorization)
                     val model = response.body()
                     loginData.value = model
                 } else {
@@ -237,27 +237,30 @@ class LoginRepository {
     }
 
     fun logout(authorizationToke: String
-
-    ): MutableLiveData<LogoutModel> {
-        val loginData = MutableLiveData<LogoutModel>()
+    ): MutableLiveData<ResponseBody> {
+        val loginData = MutableLiveData<ResponseBody>()
         loginApi.logout(
                 authorizationToke,
-        ).enqueue(object : Callback<LogoutModel> {
+        ).enqueue(object : Callback<ResponseBody> {
             override fun onResponse(
-                    call: Call<LogoutModel>,
-                    response: Response<LogoutModel>
+                    call: Call<ResponseBody>,
+                    response: Response<ResponseBody>
             ) {
                 if (response.isSuccessful) {
-                    val model = response.body()
-                    Log.e("TAGlogout", "onResponse: "+model )
-                    loginData.value = model
+                    Log.e("TAGlogout", "onResponse: " + response)
+
+                    val resp = response.body()?.string()
+                    Log.e("TAGlogout", "onResponse: " + resp)
+                    Log.e("TAGlogout", "onResponse: " + response.raw().body())
+
+//                    loginData.value = model
                 } else {
                     try {
                         val responce = response.errorBody()?.string()
                         val jsonObjectError = JSONObject(responce)
                         val userModel: LogoutModel =
                                 Common.getErrorModel(jsonObjectError, "LogoutModel") as LogoutModel
-                        loginData.value = userModel
+//                        loginData.value = userModel
                     } catch (e: IOException) {
                         e.printStackTrace()
                     } catch (e: Exception) {
@@ -267,7 +270,7 @@ class LoginRepository {
                 }
             }
 
-            override fun onFailure(call: Call<LogoutModel>, t: Throwable) {
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
 
             }
         })

@@ -59,6 +59,7 @@ class ChatRoomAdapter(val context: Context, val chatList: ArrayList<Message>) : 
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val messageData = chatList[position]
+        Log.e("TAG", "onBindViewHolder: "+messageData )
         val userName = messageData.userName;
         val content = messageData.messageContent;
         val viewType = messageData.viewType;
@@ -67,6 +68,7 @@ class ChatRoomAdapter(val context: Context, val chatList: ArrayList<Message>) : 
         when (viewType) {
 
             CHAT_MINE -> {
+                holder.userName.setText(userName)
                 holder.message.setText(content)
             }
             CHAT_PARTNER -> {
@@ -86,7 +88,7 @@ class ChatRoomAdapter(val context: Context, val chatList: ArrayList<Message>) : 
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val userName = itemView.findViewById<TextView>(R.id.username)
+        val userName = itemView.findViewById<TextView>(R.id.tvUsername)
         val message = itemView.findViewById<TextView>(R.id.message)
         val text = itemView.findViewById<TextView>(R.id.text)
     }

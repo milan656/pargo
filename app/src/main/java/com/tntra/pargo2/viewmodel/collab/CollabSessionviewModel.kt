@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.google.gson.JsonObject
 import com.jkadvantagandbadsha.model.login.UserModel
 import com.tntra.pargo2.model.CommonResponseModel
+import com.tntra.pargo2.model.chatapi.ChatListApiModel
 import com.tntra.pargo2.model.collabRoomList.CollabRoomListModel
 import com.tntra.pargo2.model.collab_req.CollabRequestModel
 import com.tntra.pargo2.model.collabroom.CollabRoomCreateModel
@@ -24,6 +25,7 @@ class CollabSessionviewModel : ViewModel() {
     private var collabSessionRepository: CollabSessionRepository? = null
     var collabsessionModel: MutableLiveData<CollabSessionModel>? = null
     var commonResponseModel: MutableLiveData<CommonResponseModel>? = null
+    var chatListApiModel: MutableLiveData<ChatListApiModel>? = null
     var collabRequestModel: MutableLiveData<CollabRequestModel>? = null
     var followersModel: MutableLiveData<FollowersListModel>? = null
     var collabRoomCreateModel: MutableLiveData<CollabRoomCreateModel>? = null
@@ -109,6 +111,24 @@ class CollabSessionviewModel : ViewModel() {
         return collabRoomCreateModel
     }
 
+    fun callApiCollabSendMessage(authorizationToke: String, jsonObject: JsonObject, id: Int) {
+        collabSessionRepository = CollabSessionRepository().getInstance()
+        commonResponseModel = collabSessionRepository?.callApiCollabSendMessage(authorizationToke, jsonObject, id)
+    }
+
+    fun callApigetAllMessage(authorizationToke: String, id: Int) {
+        collabSessionRepository = CollabSessionRepository().getInstance()
+        chatListApiModel = collabSessionRepository?.callApigetAllMessage(authorizationToke, id)
+    }
+
+    fun getCollabSendMessage(): LiveData<CommonResponseModel>? {
+        return commonResponseModel
+    }
+
+    fun getCollabAllMessage(): LiveData<ChatListApiModel>? {
+        return chatListApiModel!!
+    }
+
     fun callApiNotificationlist(authorizationToke: String) {
         collabSessionRepository = CollabSessionRepository().getInstance()
         notificationListModel = collabSessionRepository?.callApiNotificationList(authorizationToke)
@@ -118,9 +138,9 @@ class CollabSessionviewModel : ViewModel() {
         return notificationListModel!!
     }
 
-    fun callApiCollabRoomList(authorizationToke: String,page: Int) {
+    fun callApiCollabRoomList(authorizationToke: String, page: Int) {
         collabSessionRepository = CollabSessionRepository().getInstance()
-        collabRoomListModel = collabSessionRepository?.callApiCollabRoomList(authorizationToke,page)
+        collabRoomListModel = collabSessionRepository?.callApiCollabRoomList(authorizationToke, page)
     }
 
     fun getCollabRoomList(): LiveData<CollabRoomListModel> {

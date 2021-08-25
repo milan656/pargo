@@ -122,8 +122,10 @@ class MessageFragment : Fragment(), onClickAdapter, View.OnClickListener, OnBott
             intent.putExtra("name", roomList?.get(variable)?.attributes?.name)
             if (roomList?.get(variable)?.attributes?.members != null &&
                     roomList?.get(variable)?.attributes?.members?.size!! > 0) {
-                intent.putExtra("invitation", ""+roomList?.get(variable)?.attributes?.members?.size)
+                intent.putExtra("invitation", "" + roomList?.get(variable)?.attributes?.members?.size)
             }
+            intent.putExtra("id", roomList?.get(variable)?.id)
+
             startActivity(intent)
         }
     }

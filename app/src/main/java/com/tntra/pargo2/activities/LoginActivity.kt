@@ -142,6 +142,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
                     Log.e("TAG", "userLogin: " + it.authorization)
                     prefManager.setAccessToken(it.authorization)
                     prefManager.setUserId(it.user.id.toInt())
+                    prefManager.setUserName(it.user.attributes.profile.name)
                     prefManager.isLogin(true)
                     if (it.user.attributes.roles[0].name.equals("Creator")) {
                         prefManager.isCreator(true)

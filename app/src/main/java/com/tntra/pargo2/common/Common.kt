@@ -16,9 +16,8 @@ import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.content.res.Resources
 import android.database.Cursor
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.Matrix
+import android.graphics.*
+import android.graphics.drawable.BitmapDrawable
 import android.media.MediaMetadataRetriever
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
@@ -864,6 +863,25 @@ class Common {
 
             builder.window!!.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
             builder.show()
+        }
+
+        fun writeOnDrawable(context: Context, text: String?,
+                            width: Int, height: Int): Bitmap? {
+            val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+            val canvas = Canvas(bitmap)
+
+            val paint = Paint()
+            paint.color = Color.BLACK
+            paint.style = Paint.Style.FILL
+            canvas.drawPaint(paint)
+
+            paint.color = Color.WHITE
+            paint.isAntiAlias = true
+            paint.textSize = 14f
+            paint.textAlign = Paint.Align.CENTER
+            canvas.drawText(text!!, width / 2f, height / 2f, paint)
+
+            return bitmap
         }
 
         fun coverpicture(path: String?): Bitmap? {

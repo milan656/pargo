@@ -143,6 +143,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
                     prefManager.setAccessToken(it.authorization)
                     prefManager.setUserId(it.user.id.toInt())
                     prefManager.setUserName(it.user.attributes.profile.name)
+                    prefManager.setImageUrl(Common.url + it.user.attributes.profile_img_path)
                     prefManager.isLogin(true)
                     if (it.user.attributes.roles[0].name.equals("Creator")) {
                         prefManager.isCreator(true)

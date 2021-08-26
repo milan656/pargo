@@ -40,8 +40,11 @@ class FollowersListAdapter(var list: ArrayList<Follow>,
         holder.btnSelect.isChecked = list[position].isChecked
 
         holder.tvFollowerName.text = list[position].attributes.name
-        holder.tvpassion.text = list[position].attributes.genres[0].name
 
+        if (list.get(position).attributes.genres!=null &&
+                list.get(position).attributes.genres?.size!=0) {
+            holder.tvpassion.text = list.get(position).attributes.genres?.get(0)?.name
+        }
         holder.btnSelect.setOnClickListener {
             list[position].isChecked = !list[position].isChecked
             holder.btnSelect.isChecked = list[position].isChecked

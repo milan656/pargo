@@ -1,8 +1,12 @@
 package com.tntra.pargo2.activity
 
-import android.app.Activity
-import android.app.AlertDialog
+import android.app.*
+import android.content.Context
 import android.content.Intent
+import android.graphics.BitmapFactory
+import android.graphics.Color
+import android.media.RingtoneManager
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -13,6 +17,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.NotificationCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.gms.tasks.OnCompleteListener
@@ -35,6 +40,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.io.IOException
+import java.util.*
 
 class HomeActivity : AppCompatActivity(), View.OnClickListener, onClickAdapter {
 
@@ -50,6 +56,8 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener, onClickAdapter {
     private lateinit var contentViewModel: ContentViewModel
     private var prefManager: PrefManager? = null
     private lateinit var loginViewModel: LoginActivityViewModel
+
+    var channel: String? = "fcm_default_channel"
 
     private var ivNotification: ImageView? = null
     private var ivHomeTab: ImageView? = null
@@ -92,6 +100,8 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener, onClickAdapter {
                 }
             }
         }
+
+
     }
 
     private fun callApiToSaveToken() {
@@ -105,12 +115,11 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener, onClickAdapter {
                         // Get new Instance ID token
                         val token = task.result!!.token
                         Log.i("token", "+++" + token)
+                        prefManager?.setValue("token", token)
 
                         addFCMToken(token)
 
                     })
-
-
         } catch (e: Exception) {
             e.printStackTrace()
 
@@ -351,12 +360,31 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener, onClickAdapter {
         val serviceApi = RetrofitCommonClass.createService(LoginApi::class.java)
 
         var call: Call<ResponseBody>? = null
-        call = serviceApi.logout(prefManager?.getAccessToken()!!
-        )
+//        var call_fcm: Call<ResponseBody>? = null
+        call = serviceApi.logout(prefManager?.getAccessToken()!!)
+
+        val json = JsonObject()
+        /*if (prefManager?.getValue("token") != null) {
+            json.addProperty("registration_token", prefManager?.getValue("token")!!)
+        }
+        call_fcm = serviceApi.deletetoken(prefManager?.getAccessToken()!!, json)
+        call_fcm.enqueue(object : Callback<ResponseBody> {
+            override fun onResponse(call: Call<ResponseBody>?, response: Response<ResponseBody>?) {
+                if (response?.isSuccessful!!) {
+                    Log.e("TAG", "onResponse: Token Deleted")
+                }
+            }
+
+            override fun onFailure(call: Call<ResponseBody>?, t: Throwable?) {
+
+            }
+
+        })*/
         call.enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 Common.hideLoader()
                 if (response.isSuccessful) {
+
                     try {
                         val prefManager = PrefManager(context)
                         prefManager.clearAll()

@@ -43,11 +43,21 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         try {
             val data = remoteMessage.data
 
-            Log.e("data", "+++++++++" + data)
+            try {
+                val notification = remoteMessage.notification
+                Log.e("data", "+++++++++" + data + " " + notification?.title + " " + notification?.body)
+
+                title = notification?.title
+                body = notification?.body
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+
+            Log.e("data", "+++++++++" + data + " ")
 
             if (data.containsKey("type")) {
-                title = data["title"]
-                body = data["body"]
+//                title = data["title"]
+//                body = data["body"]
                 action = data["action"]
                 imageURL = data["imageURL"]
                 type = data["type"]
@@ -67,10 +77,10 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     }
 
     private fun sendNotification(
-        title: String?,
-        messageBody: String?,
-        type: String?,
-        notification_data: String?
+            title: String?,
+            messageBody: String?,
+            type: String?,
+            notification_data: String?
     ) {
         var type = type
         if (type == null) {
@@ -84,75 +94,75 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         val pendingIntent = PendingIntent.getActivity(
-            this, m, intent,
-            PendingIntent.FLAG_ONE_SHOT
+                this, m, intent,
+                PendingIntent.FLAG_ONE_SHOT
         )
         val defaultSoundUri =
-            RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
+                RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
         val notificationManager =
-            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val options = BitmapFactory.Options()
         options.inScaled = false
 
         val notificationBuilder =
-            NotificationCompat.Builder(this, channel!!)
+                NotificationCompat.Builder(this, channel!!)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             notificationBuilder.setSmallIcon(R.drawable.ic_launcher)
             notificationBuilder.setLargeIcon(
-                BitmapFactory.decodeResource(
-                    this.resources, R.drawable
-                        .ic_launcher
-                )
+                    BitmapFactory.decodeResource(
+                            this.resources, R.drawable
+                            .ic_launcher
+                    )
             )
         } else {
             notificationBuilder.setSmallIcon(R.drawable.ic_launcher)
             notificationBuilder.setLargeIcon(
-                BitmapFactory.decodeResource(
-                    this.resources, R.drawable
-                        .ic_launcher
-                )
+                    BitmapFactory.decodeResource(
+                            this.resources, R.drawable
+                            .ic_launcher
+                    )
             )
         }
 
         Log.e("Noti", "" + body)
         if (imageURL == null || imageURL == "") {
             val bigText =
-                NotificationCompat.BigTextStyle()
+                    NotificationCompat.BigTextStyle()
             bigText.bigText(body)
 
             notificationBuilder
-                .setContentTitle(title)
-                .setContentText(body)
-                .setAutoCancel(true)
-                .setSound(defaultSoundUri)
-                .setChannelId(channel!!)
-                .setContentIntent(pendingIntent)
-                .setStyle(bigText)
+                    .setContentTitle(title)
+                    .setContentText(body)
+                    .setAutoCancel(true)
+                    .setSound(defaultSoundUri)
+                    .setChannelId(channel!!)
+                    .setContentIntent(pendingIntent)
+                    .setStyle(bigText)
         } else {
             Log.e("Noti", ":::;" + body)
             val bigText =
-                NotificationCompat.BigTextStyle()
+                    NotificationCompat.BigTextStyle()
             bigText.bigText(body)
 
             notificationBuilder
-                .setContentTitle(title)
-                .setContentText(body)
-                .setLargeIcon(null)
-                .setStyle(
-                    NotificationCompat.BigPictureStyle()
-                        .bigPicture(null).bigLargeIcon(null).setSummaryText(messageBody)
-                ).setStyle(bigText)
-                .setAutoCancel(true)
-                .setSound(defaultSoundUri)
-                .setChannelId(channel!!)
-                .setContentIntent(pendingIntent)
+                    .setContentTitle(title)
+                    .setContentText(body)
+                    .setLargeIcon(null)
+                    .setStyle(
+                            NotificationCompat.BigPictureStyle()
+                                    .bigPicture(null).bigLargeIcon(null).setSummaryText(messageBody)
+                    ).setStyle(bigText)
+                    .setAutoCancel(true)
+                    .setSound(defaultSoundUri)
+                    .setChannelId(channel!!)
+                    .setContentIntent(pendingIntent)
         }
         val mChannel: NotificationChannel?
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             mChannel = NotificationChannel(
-                channel!!,
-                channel,
-                NotificationManager.IMPORTANCE_HIGH
+                    channel!!,
+                    channel,
+                    NotificationManager.IMPORTANCE_HIGH
             )
             // Configure the notification channel.
             mChannel.enableLights(true)
@@ -170,7 +180,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         return try {
             val url = URL(src)
             val connection =
-                url.openConnection() as HttpURLConnection
+                    url.openConnection() as HttpURLConnection
             connection.doInput = true
             connection.connect()
             val input = connection.inputStream

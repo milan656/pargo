@@ -32,6 +32,10 @@ interface LoginApi {
     @DELETE("api/v1/users/sign_out")
     fun logout(@Header("Authorization") Authorization: String): Call<ResponseBody>
 
+    @DELETE("api/v1/remove_token")
+    fun deletetoken(@Header("Authorization") Authorization: String,
+                    @Body jsonObject: JsonObject): Call<ResponseBody>
+
     @POST("api/v1/users/sign_in")
     fun loginUserTwo(
             @Body jsonObject: JsonObject,

@@ -178,7 +178,7 @@ dependencies {
     implementation('io.socket:socket.io-client:2.0.1') {
         exclude group: 'org.json', module: 'json'
     }
-
+//    implementation 'agency.tango.android:avatar-view:2.0.0'
 }
 
 

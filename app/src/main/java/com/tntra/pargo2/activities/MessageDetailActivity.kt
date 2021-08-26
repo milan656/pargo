@@ -2,6 +2,7 @@ package com.tntra.pargo2.activities
 
 import android.animation.LayoutTransition
 import android.content.Intent
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
@@ -10,7 +11,6 @@ import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.widget.NestedScrollView
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -134,9 +134,6 @@ class MessageDetailActivity : AppCompatActivity(), View.OnClickListener {
         mSocket?.on(Socket.EVENT_CONNECT_ERROR, onConnectError)
         mSocket?.on("private message", onNewMessage);
         mSocket?.on("user disconnected", onDisconnect)
-        mSocket?.on("user joined", onUserJoined);
-        mSocket?.on("sessions", onUserJoined);
-        mSocket?.on("user left", onUserLeft);
         mSocket?.on("typing", onTyping);
         mSocket?.on("stop typing", onStopTyping);
 
@@ -158,7 +155,6 @@ class MessageDetailActivity : AppCompatActivity(), View.OnClickListener {
 //            chat.viewType = MessageType.CHAT_PARTNER.index
 //            addItemToRecyclerView(chat)
         }
-
 
     }
 
@@ -182,7 +178,7 @@ class MessageDetailActivity : AppCompatActivity(), View.OnClickListener {
                                     it.messages.get(i).attributes.user_name,
                                     it.messages.get(i).attributes.body, it.messages.get(i).attributes.collab_room_id.toString(),
                                     MessageType.CHAT_MINE.index,
-                                    Common.url + it.messages.get(i).attributes.user_profile_img_path)
+                                    prefManager?.getImageUrl()!!)
                         } else {
                             message = Message(
                                     it.messages.get(i).attributes.user_name,
@@ -194,6 +190,7 @@ class MessageDetailActivity : AppCompatActivity(), View.OnClickListener {
                     }
 
                     chatRoomAdapter?.notifyDataSetChanged()
+                    chatRecyclerView?.scrollToPosition(chatList.size - 1) //move focus on last message
                 }
             }
         })
@@ -302,8 +299,6 @@ class MessageDetailActivity : AppCompatActivity(), View.OnClickListener {
         ivEmoji?.setOnClickListener(this)
         ivBack?.setOnClickListener(this)
 
-
-
         tvname?.text = name
         tvInvitation?.text = "" + invitation + " invitation has sent"
 
@@ -374,7 +369,7 @@ class MessageDetailActivity : AppCompatActivity(), View.OnClickListener {
                     mSocket?.emit("private message", obj)
 
                     callApiSendMessage()
-                    val message = Message(prefManager?.getuserName()!!, etMessage?.text?.toString()!!, "roomName", MessageType.CHAT_MINE.index, "")
+                    val message = Message(prefManager?.getuserName()!!, etMessage?.text?.toString()!!, "roomName", MessageType.CHAT_MINE.index, prefManager?.getImageUrl()!!)
                     addItemToRecyclerView(message)
                     Log.e("connectsocket", "send message" + " " + roomId)
                 } catch (e: java.lang.Exception) {
@@ -592,6 +587,7 @@ class MessageDetailActivity : AppCompatActivity(), View.OnClickListener {
             try {
                 val msg = data.getString("content")
                 val username = data.getString("from")
+
                 val message = Message(username, msg, "roomName", MessageType.CHAT_PARTNER.index, "")
                 addItemToRecyclerView(message)
             } catch (e: Exception) {

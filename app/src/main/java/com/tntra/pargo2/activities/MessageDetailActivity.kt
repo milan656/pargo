@@ -10,9 +10,11 @@ import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.NestedScrollView
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.tntra.pargo2.R
@@ -72,6 +74,7 @@ class MessageDetailActivity : AppCompatActivity(), View.OnClickListener {
 
     private var roomId: String = ""
     private var collabSessionviewModel: CollabSessionviewModel? = null
+    private var message_swipe_refresh: SwipeRefreshLayout? = null
 
     //    token=xDWL5egSBhFHU3Hx6w7HvrB8DfjhEUwGx8XNGbebPz3q3yBjyjcVv42V6rf5HKXkdt47hvkr4pZ5gyPW&userId=1
     val gson: Gson = Gson()
@@ -82,6 +85,7 @@ class MessageDetailActivity : AppCompatActivity(), View.OnClickListener {
 
         collabSessionviewModel = ViewModelProviders.of(this).get(CollabSessionviewModel::class.java)
         prefManager = PrefManager(this)
+
         if (intent != null) {
             if (intent.hasExtra("name")) {
                 name = intent?.getStringExtra("name")!!
@@ -97,14 +101,19 @@ class MessageDetailActivity : AppCompatActivity(), View.OnClickListener {
                 }
             }
         }
+
+        initView()
+
         try {
             val option = IO.Options()
             val map = HashMap<String, String>()
 
-            if (prefManager?.getValue("sessionID") != null && !prefManager?.getValue("sessionID").equals("")) {
-                map.put("sessionID", "" + prefManager?.getValue("sessionID")!!)
-            }
-            map.put("username", "milan")
+//            if (prefManager?.getValue("sessionID") != null && !prefManager?.getValue("sessionID").equals("")) {
+//                map.put("sessionID", "" + prefManager?.getValue("sessionID")!!)
+//            }
+            map.put("sessionID", id)
+            map.put("username", name)
+            map.put("userID", prefManager?.getuserName()!!)
             option.auth = map
 
             Log.e("TAG", "onCreate: " + map)
@@ -150,16 +159,17 @@ class MessageDetailActivity : AppCompatActivity(), View.OnClickListener {
 //            addItemToRecyclerView(chat)
         }
 
-        initView()
 
-        callApiSendMessage()
-
-        getAllMessage()
     }
 
-    private fun getAllMessage() {
+    private fun getAllMessage(isRefresh: Boolean) {
+        Common.showLoader(this)
         collabSessionviewModel?.callApigetAllMessage(prefManager?.getAccessToken()!!, id.toInt())
         collabSessionviewModel?.getCollabAllMessage()?.observe(this, androidx.lifecycle.Observer {
+            Common.hideLoader()
+            if (isRefresh) {
+                message_swipe_refresh?.post { message_swipe_refresh?.isRefreshing = false }
+            }
             if (it != null) {
                 if (it.success) {
 
@@ -171,12 +181,14 @@ class MessageDetailActivity : AppCompatActivity(), View.OnClickListener {
                             message = Message(
                                     it.messages.get(i).attributes.user_name,
                                     it.messages.get(i).attributes.body, it.messages.get(i).attributes.collab_room_id.toString(),
-                                    MessageType.CHAT_MINE.index)
+                                    MessageType.CHAT_MINE.index,
+                                    Common.url + it.messages.get(i).attributes.user_profile_img_path)
                         } else {
                             message = Message(
                                     it.messages.get(i).attributes.user_name,
                                     it.messages.get(i).attributes.body, it.messages.get(i).attributes.collab_room_id.toString(),
-                                    MessageType.CHAT_PARTNER.index)
+                                    MessageType.CHAT_PARTNER.index,
+                                    Common.url + it.messages.get(i).attributes.user_profile_img_path)
                         }
                         chatList.add(message)
                     }
@@ -271,6 +283,7 @@ class MessageDetailActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun initView() {
+        message_swipe_refresh = findViewById(R.id.message_swipe_refresh)
         rootView = findViewById(R.id.rootView)
         tvInvitation = findViewById(R.id.tvInvitation)
         ivBack = findViewById(R.id.ivBack)
@@ -315,11 +328,22 @@ class MessageDetailActivity : AppCompatActivity(), View.OnClickListener {
 
         tvdesc?.performClick()
         applyLayoutTransition()
-        tvdesc?.text = "We are excited for your collab!\nHere some inportant information to help you set up your collab\nLorem ipsum dolor sir miit Lorem ipsum dolor sir miit Lorem ipsum dolor sir miit..."
+        tvdesc?.text = "We are excited for your collab!\nHere some inportant information to help you set up your collab......"
         updateWithNewText(tvdesc?.text?.toString()!!)
 
         setChatAdapter()
+        getAllMessage(false)
 
+        message_swipe_refresh?.setOnRefreshListener(object : SwipeRefreshLayout.OnRefreshListener {
+            override fun onRefresh() {
+                this@MessageDetailActivity.onRefresh()
+            }
+        })
+    }
+
+    private fun onRefresh() {
+        message_swipe_refresh?.post { message_swipe_refresh?.isRefreshing = true }
+        getAllMessage(true)
     }
 
     private fun setChatAdapter() {
@@ -336,15 +360,21 @@ class MessageDetailActivity : AppCompatActivity(), View.OnClickListener {
                 startActivity(intent)
             }
             R.id.btnSend -> {
+
+                if (etMessage?.text?.toString()?.isEmpty()!!) {
+                    Toast.makeText(this, "Please enter message", Toast.LENGTH_SHORT).show()
+                    return
+                }
                 try {
-                    val model = SendChatData(mSocket?.id()!!, roomId, etMessage?.text?.toString()!!)
+                    val model = SendChatData(etMessage?.text?.toString()!!)
                     val obj = JSONObject(gson.toJson(model))
                     val arr = JSONArray()
                     arr.put(obj)
                     Log.e("connect", "onClick: " + obj)
                     mSocket?.emit("private message", obj)
 
-                    val message = Message(prefManager?.getuserName()!!, etMessage?.text?.toString()!!, "roomName", MessageType.CHAT_MINE.index)
+                    callApiSendMessage()
+                    val message = Message(prefManager?.getuserName()!!, etMessage?.text?.toString()!!, "roomName", MessageType.CHAT_MINE.index, "")
                     addItemToRecyclerView(message)
                     Log.e("connectsocket", "send message" + " " + roomId)
                 } catch (e: java.lang.Exception) {
@@ -454,6 +484,7 @@ class MessageDetailActivity : AppCompatActivity(), View.OnClickListener {
             chatRoomAdapter?.notifyDataSetChanged()
             etMessage?.setText("")
             chatRecyclerView?.scrollToPosition(chatList.size - 1) //move focus on last message
+
         }
     }
 
@@ -480,18 +511,18 @@ class MessageDetailActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private val connections = Emitter.Listener {
-        runOnUiThread {
+        /*runOnUiThread {
             var count = 0
 
             for (i in it.indices) {
                 Log.e("connectionsocket", ": " + it?.get(i)?.toString())
 
                 val json = JSONObject(it?.get(i)?.toString())
-                val userID = json.getString("userID")
-                roomId = userID
+//                val userID = json.getString("userID")
+//                roomId = userID
                 count = count + 1
                 name = json.getString("username")
-                userlist?.add(ChatUserListModel(json.getBoolean("connected"), json.getString("userID"), json.getString("username")))
+                userlist?.add(ChatUserListModel(json.getBoolean("connected"), "", json.getString("username")))
 //                userlist?.add(json.getString("username"))
             }
 
@@ -503,7 +534,7 @@ class MessageDetailActivity : AppCompatActivity(), View.OnClickListener {
             tvInvitation?.text = "$nameList joined"
 
             Log.e("connect", ": " + roomId)
-        }
+        }*/
     }
 
     private val connectedUsers = Emitter.Listener {
@@ -534,7 +565,7 @@ class MessageDetailActivity : AppCompatActivity(), View.OnClickListener {
         runOnUiThread {
 
             Log.e("connectionsocket00", ": " + it.iterator().toString())
-            for (i in it.indices) {
+            /*for (i in it.indices) {
 
                 try {
                     for (j in userlist?.indices!!) {
@@ -549,7 +580,8 @@ class MessageDetailActivity : AppCompatActivity(), View.OnClickListener {
                 }
 
                 tvInvitation?.text = "$userlist Joined"
-            }
+
+            }*/
         }
     }
 
@@ -559,7 +591,8 @@ class MessageDetailActivity : AppCompatActivity(), View.OnClickListener {
             Log.e("getmessage", ": " + data.toString())
             try {
                 val msg = data.getString("content")
-                val message = Message("Jigar", msg, "roomName", MessageType.CHAT_PARTNER.index)
+                val username = data.getString("from")
+                val message = Message(username, msg, "roomName", MessageType.CHAT_PARTNER.index, "")
                 addItemToRecyclerView(message)
             } catch (e: Exception) {
                 e.printStackTrace()

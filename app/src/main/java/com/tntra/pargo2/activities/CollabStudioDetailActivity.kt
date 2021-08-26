@@ -135,7 +135,7 @@ class CollabStudioDetailActivity : AppCompatActivity(), onClickAdapter, View.OnC
                     isdataFinish = it.follows.size == 0
                     followersList?.addAll(it.follows)
 
-                    if (listType.equals("followings")) {
+                    /*if (listType.equals("followings")) {
                         if (followingsCkeckedList?.size!! > 0) {
 
                             for (i in it.follows.indices) {
@@ -171,7 +171,7 @@ class CollabStudioDetailActivity : AppCompatActivity(), onClickAdapter, View.OnC
                                 }
                             }
                         }
-                    }
+                    }*/
 
                     if (followersList?.size == 0) {
                         tvNoData?.visibility = View.VISIBLE
@@ -250,7 +250,7 @@ class CollabStudioDetailActivity : AppCompatActivity(), onClickAdapter, View.OnC
                 val arr = JsonArray();
                 var json: JsonObject? = null
 
-                if (followingsCkeckedList?.size!! > 0) {
+               /* if (followingsCkeckedList?.size!! > 0) {
 
 //                    val distinct = followingsCkeckedList?.toSet()?.toList();
                     for (i in followingsCkeckedList?.indices!!) {
@@ -291,19 +291,16 @@ class CollabStudioDetailActivity : AppCompatActivity(), onClickAdapter, View.OnC
                 val intent = Intent(this, SendRequestActivity::class.java)
                 intent.putExtra("followers", mainJson.toString())
                 intent.putExtra("collabType", collabType)
-                startActivity(intent)
+                startActivity(intent)*/
 
-                /* Log.e("TAG", "onClick: " + followersCkeckedList)
+                 Log.e("TAG", "onClick: " + followersCkeckedList)
                 Log.e("TAG", "onClick: " + followersCkeckedList?.distinctBy { it.id })
 
                 if (followersListAdapter?.getSelected()?.size!! > 0) {
-                    val stringBuilder = StringBuilder()
                     for (i in 0 until followersListAdapter?.getSelected()?.size!!) {
-                        stringBuilder.append(followersListAdapter?.getSelected()?.get(i)?.attributes?.name)
                         json = JsonObject()
                         json.addProperty("name", followersListAdapter?.getSelected()?.get(i)?.attributes?.name)
                         json.addProperty("id", followersListAdapter?.getSelected()?.get(i)?.id)
-
                         arr.add(json)
                     }
 
@@ -318,12 +315,10 @@ class CollabStudioDetailActivity : AppCompatActivity(), onClickAdapter, View.OnC
                     intent.putExtra("followers", mainJson.toString())
                     intent.putExtra("collabType", collabType)
                     startActivity(intent)
-                    //                    showToast(stringBuilder.toString().trim { it <= ' ' })
                 } else {
                     Log.e("TAGG", "onClick: No selection")
-                    //                    showToast("No Selection")
-                }*/
-
+                    Toast.makeText(this, "Please select followers / followings ", Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }

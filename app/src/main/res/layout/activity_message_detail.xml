@@ -11,113 +11,126 @@
         android:id="@+id/header"
         layout="@layout/common_toolbar_main" />
 
-    <LinearLayout
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/message_swipe_refresh"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_above="@id/llmessage"
-        android:layout_below="@+id/header"
-        android:orientation="vertical"
-        tools:context=".activities.CollabStudioActivity">
+        android:layout_below="@+id/header">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            >
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/eighteen_dp"
-                android:layout_marginTop="@dimen/eighteen_dp"
-                android:layout_marginEnd="@dimen/eighteen_dp"
-                android:orientation="horizontal">
+                android:layout_height="match_parent"
 
-                <TextView
-                    android:id="@+id/tvname"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="start|center"
-                    android:text="Collab name"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/sixteen_sp"
-                    android:textStyle="bold" />
-
-                <com.tntra.pargo2.custom.BoldTextView
-                    android:id="@+id/tvcount"
-                    android:layout_width="200dp"
-                    android:layout_height="40dp"
-                    android:layout_gravity="end"
-                    android:layout_weight="1"
-                    android:background="@drawable/layout_bg_corner"
-                    android:gravity="center"
-                    android:text="Start Collab"
-                    android:textColor="@color/text_color"
-                    android:textSize="@dimen/fourteen_sp" />
-
-            </LinearLayout>
-
-            <com.tntra.pargo2.custom.NormalTextView
-                android:id="@+id/tvInvitation"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/fourteen_sp"
-                android:textColor="@color/gray"
-                android:layout_marginStart="@dimen/eighteen_dp"
-                android:layout_marginEnd="@dimen/eighteen_dp"
-                android:layout_marginTop="@dimen/ten_dp"
-                />
-
-            <androidx.core.widget.NestedScrollView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:orientation="vertical"
+                tools:context=".activities.CollabStudioActivity">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <androidx.cardview.widget.CardView
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/sixteen_dp"
-                        android:layout_marginTop="@dimen/fourteen_dp"
-                        android:layout_marginEnd="@dimen/sixteen_dp"
-                        app:cardCornerRadius="@dimen/five_dp"
-                        app:cardElevation="@dimen/two_dp"
-                        app:cardUseCompatPadding="true">
+                        android:layout_marginStart="@dimen/eighteen_dp"
+                        android:layout_marginTop="@dimen/eighteen_dp"
+                        android:layout_marginEnd="@dimen/eighteen_dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/tvname"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="start|center"
+                            android:text="Collab name"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/sixteen_sp"
+                            android:textStyle="bold" />
+
+                        <com.tntra.pargo2.custom.BoldTextView
+                            android:id="@+id/tvcount"
+                            android:layout_width="200dp"
+                            android:layout_height="40dp"
+                            android:layout_gravity="end"
+                            android:layout_weight="1"
+                            android:background="@drawable/layout_bg_corner"
+                            android:gravity="center"
+                            android:text="Start Collab"
+                            android:textColor="@color/text_color"
+                            android:textSize="@dimen/fourteen_sp" />
+
+                    </LinearLayout>
+
+                    <com.tntra.pargo2.custom.NormalTextView
+                        android:id="@+id/tvInvitation"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/eighteen_dp"
+                        android:layout_marginTop="@dimen/ten_dp"
+                        android:layout_marginEnd="@dimen/eighteen_dp"
+                        android:textColor="@color/gray"
+                        android:textSize="@dimen/fourteen_sp" />
+
 
 
                         <LinearLayout
-                            android:id="@+id/llparent"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_margin="@dimen/sixteen_dp"
                             android:orientation="vertical">
 
-                            <com.tntra.pargo2.custom.NormalTextView
-                                android:id="@+id/tvdesc"
+                            <androidx.cardview.widget.CardView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:inputType="textMultiLine|textCapSentences" />
-                        </LinearLayout>
-                    </androidx.cardview.widget.CardView>
+                                android:layout_marginStart="@dimen/sixteen_dp"
+                                android:layout_marginTop="@dimen/fourteen_dp"
+                                android:layout_marginEnd="@dimen/sixteen_dp"
+                                app:cardCornerRadius="@dimen/five_dp"
+                                app:cardElevation="@dimen/two_dp"
+                                app:cardUseCompatPadding="true">
 
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/chatRecyclerView"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/sixteen_dp"
-                        android:layout_marginTop="@dimen/ten_dp"
-                        android:layout_marginEnd="@dimen/sixteen_dp"
-                        android:layout_marginBottom="@dimen/ten_dp" />
+
+                                <LinearLayout
+                                    android:id="@+id/llparent"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_margin="@dimen/sixteen_dp"
+                                    android:orientation="vertical">
+
+                                    <com.tntra.pargo2.custom.NormalTextView
+                                        android:id="@+id/tvdesc"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:inputType="textMultiLine|textCapSentences" />
+                                </LinearLayout>
+                            </androidx.cardview.widget.CardView>
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/chatRecyclerView"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/sixteen_dp"
+                                android:layout_marginTop="@dimen/ten_dp"
+                                android:layout_marginEnd="@dimen/sixteen_dp"
+                                android:layout_marginBottom="@dimen/ten_dp" />
+
+                        </LinearLayout>
 
                 </LinearLayout>
 
-            </androidx.core.widget.NestedScrollView>
-        </LinearLayout>
+            </LinearLayout>
 
-    </LinearLayout>
+
+        </LinearLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <LinearLayout
         android:id="@+id/llmessage"
@@ -170,5 +183,4 @@
             android:src="@android:drawable/ic_menu_send" />
 
     </LinearLayout>
-
 </RelativeLayout>

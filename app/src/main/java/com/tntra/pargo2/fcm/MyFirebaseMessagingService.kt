@@ -26,13 +26,14 @@ import java.util.*
 class MyFirebaseMessagingService : FirebaseMessagingService() {
     var title: String? = ""
     var content = ""
-    var type: String? = ""
+    var typeMain: String? = ""
     var action: String? = null
     var imageURL: String? = null
     var body: String? = null
     var notification_data: String? = null
-    var prefManager: PrefManager? = null
     var channel: String? = "fcm_default_channel"
+
+    var prefManager: PrefManager? = null
 
     override fun onNewToken(refreshedToken: String) {
         super.onNewToken(refreshedToken)
@@ -40,7 +41,14 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         super.onMessageReceived(remoteMessage)
+
         try {
+            prefManager = PrefManager(applicationContext)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        try {
+
             val data = remoteMessage.data
 
             try {
@@ -60,7 +68,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 //                body = data["body"]
                 action = data["action"]
                 imageURL = data["imageURL"]
-                type = data["type"]
+                typeMain = data["type"]
                 notification_data = data["notification_data"]
             }
         } catch (e: NullPointerException) {
@@ -73,7 +81,16 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
              "Notification body Description text message.Notification body Description text Notification body Description text message.Notification body Description text message.Notification body Description text message.Notification body Description text message.Notification body Description text message.Notification body Description text message.Notification body Description text message.Notification body Description text message.Notification body Description text message.Notification body Description text message."
          notification_data = "data"
          action = "action"*/
-        sendNotification(title, body, action, notification_data)
+
+        Log.e(TAG, "onMessageReceived: " + prefManager?.getValue("Socket_chat_open"))
+        if (!typeMain.equals("") && typeMain.equals("new_message")) {
+            if (prefManager?.getValue("Socket_chat_open") != null && prefManager?.getValue("Socket_chat_open").equals("false")) {
+                sendNotification(title, body, action, notification_data)
+            }
+        } else {
+            sendNotification(title, body, action, notification_data)
+        }
+
     }
 
     private fun sendNotification(
@@ -90,7 +107,15 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         val m = (Date().time / 1000L % Int.MAX_VALUE).toInt()
         var intent: Intent? = null
         intent = Intent(this, HomeActivity::class.java)
-        intent.putExtra("isFromNotification", "notification")
+
+        if (!typeMain.equals("")) {
+            if (typeMain.equals("collab_request_accepted") || typeMain.equals("new_message")) {
+                intent.putExtra("isFromNotification", "message")
+            } else {
+                intent.putExtra("isFromNotification", "notification")
+            }
+        }
+
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         val pendingIntent = PendingIntent.getActivity(
@@ -107,19 +132,19 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         val notificationBuilder =
                 NotificationCompat.Builder(this, channel!!)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            notificationBuilder.setSmallIcon(R.drawable.ic_launcher)
+            notificationBuilder.setSmallIcon(R.drawable.ic_logo_transparent)
             notificationBuilder.setLargeIcon(
                     BitmapFactory.decodeResource(
                             this.resources, R.drawable
-                            .ic_launcher
+                            .ic_logo_transparent
                     )
             )
         } else {
-            notificationBuilder.setSmallIcon(R.drawable.ic_launcher)
+            notificationBuilder.setSmallIcon(R.drawable.ic_logo_transparent)
             notificationBuilder.setLargeIcon(
                     BitmapFactory.decodeResource(
                             this.resources, R.drawable
-                            .ic_launcher
+                            .ic_logo_transparent
                     )
             )
         }

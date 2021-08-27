@@ -150,6 +150,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
                     } else {
                         prefManager.isCreator(false)
                     }
+                    prefManager.setValue("Socket_chat_open","false")
                     userLoginModel = it
                     val intent = Intent(this, HomeActivity::class.java)
                     intent.putExtra("name", userLoginModel?.user?.attributes?.roles!![0].name)

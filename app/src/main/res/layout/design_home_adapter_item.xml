@@ -25,12 +25,30 @@
             android:layout_weight="1"
             android:orientation="horizontal">
 
-            <de.hdodenhof.circleimageview.CircleImageView
+            <FrameLayout
                 android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:src="@drawable/nature"
-                app:civ_border_color="@color/light_gray"
-                app:civ_border_width="1dp" />
+                android:layout_height="80dp">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/ivSenderImg"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:src="@color/gray"
+                    app:civ_border_color="@color/dark_gray_text_color"
+                    app:civ_border_width="1dp" />
+
+                <com.tntra.pargo2.custom.BoldTextView
+                    android:id="@+id/tvGroupName"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_centerInParent="true"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/thirty_six_sp"
+                     />
+            </FrameLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -45,19 +63,19 @@
                     android:id="@+id/tvgroupName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:inputType="textCapSentences|textMultiLine"
                     android:text="first and last name"
                     android:textColor="@color/black"
                     android:textSize="@dimen/fourteen_sp"
-                    android:inputType="textCapSentences|textMultiLine"
                     android:textStyle="bold" />
 
                 <com.tntra.pargo2.custom.NormalTextView
                     android:id="@+id/tvMessage"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:inputType="textCapSentences|textMultiLine"
                     android:text="Send you a request to collab"
                     android:textColor="@color/black"
-                    android:inputType="textCapSentences|textMultiLine"
                     android:textSize="@dimen/twelve_sp" />
             </LinearLayout>
         </LinearLayout>

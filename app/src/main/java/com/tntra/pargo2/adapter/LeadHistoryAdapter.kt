@@ -2,6 +2,8 @@ package com.tntra.pargo2.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -11,11 +13,14 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import ca.barrenechea.widget.recyclerview.decoration.StickyHeaderAdapter
+import com.bumptech.glide.Glide
 import com.tntra.pargo2.R
+import com.tntra.pargo2.common.Common
 import com.tntra.pargo2.common.OnBottomReachedListener
 import com.tntra.pargo2.common.onClickAdapter
 import com.tntra.pargo2.model.DashboardModel
 import com.tntra.pargo2.model.notification.Notification
+import de.hdodenhof.circleimageview.CircleImageView
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -63,6 +68,24 @@ class LeadHistoryAdapter(
         holder.tvAcceptReq?.setOnClickListener {
             onclick?.onPositionClick(position, 0)
         }
+
+        try {
+//            val width = 80
+//            val height = 80
+            val first: String = item.attributes.title[0].toString().capitalize()
+//            val bitmap = Common.writeOnDrawable(mContext, first, width, height)
+//            val d: Drawable = BitmapDrawable(mContext.getResources(), bitmap)
+//
+//            holder.ivSenderImg.setImageDrawable(d)
+//            holder.tvGroupName?.text = first
+
+            Glide.with(mContext).load("")
+                    .placeholder(R.drawable.ic_userprofile)
+                    .error(R.drawable.ic_userprofile)
+                    .into(holder.ivSenderImg)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     override fun getItemCount(): Int {
@@ -97,6 +120,8 @@ class LeadHistoryAdapter(
         var tvAcceptReq = mRoot.findViewById<TextView>(R.id.tvAcceptReq)
         var tvRejectReq = mRoot.findViewById<TextView>(R.id.tvRejectReq)
         var llfooter = mRoot.findViewById<LinearLayout>(R.id.llfooter)
+        var ivSenderImg = mRoot.findViewById<CircleImageView>(R.id.ivSenderImg)
+        var tvGroupName = mRoot.findViewById<TextView>(R.id.tvGroupName)
 
     }
 

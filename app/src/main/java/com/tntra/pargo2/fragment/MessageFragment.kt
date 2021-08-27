@@ -122,7 +122,9 @@ class MessageFragment : Fragment(), onClickAdapter, View.OnClickListener, OnBott
             intent.putExtra("name", roomList?.get(variable)?.attributes?.name)
             if (roomList?.get(variable)?.attributes?.members != null &&
                     roomList?.get(variable)?.attributes?.members?.size!! > 0) {
-                intent.putExtra("invitation", "" + roomList?.get(variable)?.attributes?.members?.size)
+
+                val member = roomList?.get(variable)?.attributes?.members?.size!! - 1
+                intent.putExtra("invitation", "" + member)
             }
             intent.putExtra("id", roomList?.get(variable)?.id)
 
@@ -142,5 +144,12 @@ class MessageFragment : Fragment(), onClickAdapter, View.OnClickListener, OnBott
                 getCollabRoomList(false)
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.e("TAGG", "onResume: " + prefManager?.getValue("Socket_chat_open"))
+        prefManager?.setValue("Socket_chat_open", "false")
+        Log.e("TAGG", "onResume: " + prefManager?.getValue("Socket_chat_open"))
     }
 }

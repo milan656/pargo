@@ -3,6 +3,8 @@ package com.tntra.pargo2.activities
 import android.animation.LayoutTransition
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
@@ -15,18 +17,21 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.bumptech.glide.Glide
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.tntra.pargo2.R
 import com.tntra.pargo2.adapter.ChatRoomAdapter
 import com.tntra.pargo2.common.Common
 import com.tntra.pargo2.common.PrefManager
+import com.tntra.pargo2.custom.CircularImageView
 import com.tntra.pargo2.custom.MessageType
 import com.tntra.pargo2.model.chat_users.ChatUserListModel
 import com.tntra.pargo2.model.chat_users.SendChatData
 import com.tntra.pargo2.model.chatmessage.Message
 import com.tntra.pargo2.viewmodel.collab.CollabSessionviewModel
 import com.vanniktech.emoji.EmojiPopup
+import de.hdodenhof.circleimageview.CircleImageView
 import io.socket.client.IO
 import io.socket.client.Socket
 import io.socket.emitter.Emitter
@@ -36,7 +41,6 @@ import org.json.JSONObject
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
-
 
 class MessageDetailActivity : AppCompatActivity(), View.OnClickListener {
 
@@ -69,12 +73,14 @@ class MessageDetailActivity : AppCompatActivity(), View.OnClickListener {
     private var btnSend: ImageView? = null
     private var ivEmoji: ImageView? = null
     private var ivBack: ImageView? = null
+    private var ivWelcomeImg: CircleImageView? = null
     private var rootView: RelativeLayout? = null
     var emojiPopup: EmojiPopup? = null
 
     private var roomId: String = ""
     private var collabSessionviewModel: CollabSessionviewModel? = null
     private var message_swipe_refresh: SwipeRefreshLayout? = null
+    private var tvGroupName: TextView? = null
 
     //    token=xDWL5egSBhFHU3Hx6w7HvrB8DfjhEUwGx8XNGbebPz3q3yBjyjcVv42V6rf5HKXkdt47hvkr4pZ5gyPW&userId=1
     val gson: Gson = Gson()
@@ -85,6 +91,8 @@ class MessageDetailActivity : AppCompatActivity(), View.OnClickListener {
 
         collabSessionviewModel = ViewModelProviders.of(this).get(CollabSessionviewModel::class.java)
         prefManager = PrefManager(this)
+
+        prefManager?.setValue("Socket_chat_open", "true")
 
         if (intent != null) {
             if (intent.hasExtra("name")) {
@@ -118,7 +126,7 @@ class MessageDetailActivity : AppCompatActivity(), View.OnClickListener {
 
             Log.e("TAG", "onCreate: " + map)
             option.path = "/socket.io"
-            mSocket = IO.socket("http://c785-144-48-250-250.ngrok.io", option)
+            mSocket = IO.socket("http://64c8-49-34-217-53.ngrok.io", option)
             mSocket?.connect()
         } catch (e: Exception) {
             e.printStackTrace()
@@ -173,18 +181,22 @@ class MessageDetailActivity : AppCompatActivity(), View.OnClickListener {
 
                     for (i in it.messages.indices) {
                         var message: Message? = null
+
                         if (prefManager?.getUserId() == it.messages.get(i).attributes.user_id) {
+
                             message = Message(
                                     it.messages.get(i).attributes.user_name,
-                                    it.messages.get(i).attributes.body, it.messages.get(i).attributes.collab_room_id.toString(),
+                                    if (it.messages.get(i).attributes.body != null) it.messages.get(i).attributes.body else "", it.messages.get(i).attributes.collab_room_id.toString(),
                                     MessageType.CHAT_MINE.index,
-                                    prefManager?.getImageUrl()!!)
+                                    prefManager?.getImageUrl()!!,
+                                    it.messages.get(i).attributes.formatted_created_at)
                         } else {
                             message = Message(
                                     it.messages.get(i).attributes.user_name,
-                                    it.messages.get(i).attributes.body, it.messages.get(i).attributes.collab_room_id.toString(),
+                                    if (it.messages.get(i).attributes.body != null) it.messages.get(i).attributes.body else "", it.messages.get(i).attributes.collab_room_id.toString(),
                                     MessageType.CHAT_PARTNER.index,
-                                    Common.url + it.messages.get(i).attributes.user_profile_img_path)
+                                    Common.url + it.messages.get(i).attributes.user_profile_img_path,
+                                    it.messages.get(i).attributes.formatted_created_at)
                         }
                         chatList.add(message)
                     }
@@ -280,6 +292,8 @@ class MessageDetailActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun initView() {
+        tvGroupName = findViewById(R.id.tvGroupName)
+        ivWelcomeImg = findViewById(R.id.ivWelcomeImg)
         message_swipe_refresh = findViewById(R.id.message_swipe_refresh)
         rootView = findViewById(R.id.rootView)
         tvInvitation = findViewById(R.id.tvInvitation)
@@ -301,6 +315,19 @@ class MessageDetailActivity : AppCompatActivity(), View.OnClickListener {
 
         tvname?.text = name
         tvInvitation?.text = "" + invitation + " invitation has sent"
+
+        try {
+//            val width = 50
+//            val height = 50
+            val first: String = name[0].toString().capitalize()
+//            val bitmap = Common.writeOnDrawable(this, first, width, height)
+//            val d: Drawable = BitmapDrawable(this.getResources(), bitmap)
+//            ivWelcomeImg?.setImageDrawable(d)
+
+            tvGroupName?.text = first
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
 
         /*tvdesc?.setOnClickListener {
             if (if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
@@ -369,7 +396,8 @@ class MessageDetailActivity : AppCompatActivity(), View.OnClickListener {
                     mSocket?.emit("private message", obj)
 
                     callApiSendMessage()
-                    val message = Message(prefManager?.getuserName()!!, etMessage?.text?.toString()!!, "roomName", MessageType.CHAT_MINE.index, prefManager?.getImageUrl()!!)
+                    val time = Common.getCurrentDateTime_()
+                    val message = Message(prefManager?.getuserName()!!, etMessage?.text?.toString()!!, "roomName", MessageType.CHAT_MINE.index, prefManager?.getImageUrl()!!, time)
                     addItemToRecyclerView(message)
                     Log.e("connectsocket", "send message" + " " + roomId)
                 } catch (e: java.lang.Exception) {
@@ -490,19 +518,7 @@ class MessageDetailActivity : AppCompatActivity(), View.OnClickListener {
                 ": connected::" + mSocket?.connected() + "| Socket Id::" + mSocket?.id() + " "
         )
 
-        mSocket?.on("onlineUsers") {
 
-            for (i in it?.indices!!) {
-                Log.e("connectionAll", ": " + it.get(i)?.toString())
-            }
-        }
-
-        if (prefManager?.getValue("sessionID") != null &&
-                !prefManager?.getValue("sessionID").equals("")) {
-
-        } else {
-            prefManager?.setValue("sessionID", mSocket?.id())
-        }
     }
 
     private val connections = Emitter.Listener {
@@ -588,7 +604,10 @@ class MessageDetailActivity : AppCompatActivity(), View.OnClickListener {
                 val msg = data.getString("content")
                 val username = data.getString("from")
 
-                val message = Message(username, msg, "roomName", MessageType.CHAT_PARTNER.index, "")
+                val time = Common.getCurrentDateTime_()
+
+                val message = Message(username, msg, "roomName", MessageType.CHAT_PARTNER.index, "",
+                        time)
                 addItemToRecyclerView(message)
             } catch (e: Exception) {
                 e.printStackTrace()

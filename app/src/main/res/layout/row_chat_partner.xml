@@ -14,8 +14,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="start"
         android:layout_marginTop="@dimen/twelve_dp"
+        android:gravity="start"
         android:orientation="vertical">
 
         <TextView
@@ -25,31 +25,54 @@
             android:layout_marginStart="7dp"
             android:layout_marginLeft="7dp"
             android:layout_marginBottom="2dp"
-            android:paddingStart="2dp"
-            android:paddingLeft="2dp"
             android:paddingEnd="10dp"
             android:paddingRight="10dp"
             android:text="Joyce"
             android:textColor="@color/light_gray_text_color"
             android:textSize="@dimen/fourteen_sp" />
 
-        <TextView
-            android:id="@+id/message"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="7dp"
-            android:layout_marginLeft="7dp"
-            android:layout_marginBottom="5dp"
             android:background="@drawable/chat_partner_bg"
-            android:maxWidth="190dp"
-            android:paddingStart="10dp"
-            android:paddingTop="5dp"
-            android:paddingEnd="10dp"
-            android:paddingBottom="5dp"
-            android:text="My Name is Joyce"
-            android:textColor="@color/black"
-            android:textSize="14sp" />
+            android:orientation="vertical"
+            android:layout_marginStart="@dimen/five_dp"
+            android:layout_marginEnd="@dimen/five_dp">
 
+            <TextView
+                android:id="@+id/message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="7dp"
+                android:layout_marginLeft="7dp"
+                android:maxWidth="190dp"
+                android:paddingTop="5dp"
+                android:paddingStart="@dimen/five_dp"
+                android:paddingEnd="10dp"
+                android:text="My Name is Joyce"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                android:paddingRight="10dp"
+                android:paddingLeft="@dimen/five_dp" />
+
+            <com.tntra.pargo2.custom.NormalTextView
+                android:id="@+id/tvTimeMessage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginTop="@dimen/two_dp"
+                android:layout_marginEnd="7dp"
+                android:layout_marginRight="7dp"
+                android:layout_marginBottom="@dimen/five_dp"
+                android:paddingEnd="10dp"
+                android:paddingStart="@dimen/twelve_dp"
+                android:paddingRight="10dp"
+                android:text="12:54:00 PM"
+                android:textColor="@color/dark_gray_text_color"
+                android:textSize="@dimen/twelve_sp"
+                android:paddingLeft="@dimen/seven_dp" />
+
+        </LinearLayout>
     </LinearLayout>
 
 </LinearLayout>

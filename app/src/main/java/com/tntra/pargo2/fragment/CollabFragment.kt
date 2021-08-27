@@ -282,9 +282,8 @@ class CollabFragment : Fragment(), onClickAdapter, View.OnClickListener {
                     }
                 }
             }
-
-
         }
     }
+
 
 }

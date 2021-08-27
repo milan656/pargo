@@ -70,6 +70,7 @@
                         android:hint="Collab Name"
                         android:inputType="text|textCapSentences|textNoSuggestions"
                         android:padding="@dimen/twelve_dp"
+                        android:text="Why do we use it?"
                         android:textColorHint="@color/light_gray_text_color" />
 
                     <com.tntra.pargo2.custom.NormalEditText
@@ -80,6 +81,7 @@
                         android:background="@drawable/layout_bg_corner"
                         android:gravity="start"
                         android:hint="Start a message"
+                        android:text="It is a long established fact that a reader will be distracted by the readable content."
                         android:inputType="text|textCapSentences|textMultiLine"
                         android:minLines="8"
                         android:padding="@dimen/twelve_dp"

@@ -25,6 +25,7 @@ import com.tntra.pargo2.common.PrefManager
 import com.tntra.pargo2.common.onClickAdapter
 import com.tntra.pargo2.model.notification.Notification
 import com.tntra.pargo2.viewmodel.collab.CollabSessionviewModel
+import java.lang.Exception
 import java.text.SimpleDateFormat
 
 class NotificationActivity : AppCompatActivity(), onClickAdapter {
@@ -117,12 +118,18 @@ class NotificationActivity : AppCompatActivity(), onClickAdapter {
                     historyDataList.clear()
 
                     for (i in it.notifications.indices) {
-
-                        val dateString = Common.dateFormatT(it.notifications.get(i).attributes.created_at)
-                        val sdf = SimpleDateFormat("yyyy-MM-dd")
-                        val date = sdf.parse(dateString)
-                        val startDate = date.time
-
+                        var dateString: String = ""
+                        try {
+                            dateString = Common.dateFormatT(it.notifications.get(i).attributes.created_at)
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
+                        var startDate: Long = 0L
+                        if (!dateString.equals("")) {
+                            val sdf = SimpleDateFormat("yyyy-MM-dd")
+                            val date = sdf.parse(dateString)
+                            startDate = date.time
+                        }
                         val dashboardModel = Notification(
                                 it.notifications.get(i).attributes, it.notifications.get(i).id, it.notifications.get(i).attributes.data.type, "Neha karkae", "Sent you a request to collab", dateString!!, "uuid", "it.data.get(i).date_formated",
                                 startDate,

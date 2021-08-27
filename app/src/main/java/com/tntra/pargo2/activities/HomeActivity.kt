@@ -77,6 +77,7 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener, onClickAdapter {
         contentViewModel = ViewModelProviders.of(this).get(ContentViewModel::class.java)
         prefManager = context.let { PrefManager(it) }
 
+        prefManager?.setValue("Socket_chat_open", "false")
         initView()
 
         replaceFragmenty(
@@ -95,8 +96,15 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener, onClickAdapter {
                 }
             }
             if (intent.hasExtra("isFromNotification")) {
+                Log.e("TAG", "onCreate: " + intent.getStringExtra("isFromNotification"))
                 if (intent.getStringExtra("isFromNotification")?.equals("notification")!!) {
                     ivNotification?.performClick()
+                } else if (intent.getStringExtra("isFromNotification")?.equals("message")!!) {
+                    replaceFragmenty(
+                            fragment = MessageFragment(),
+                            allowStateLoss = true,
+                            containerViewId = R.id.mainContent
+                    )
                 }
             }
         }
@@ -363,11 +371,11 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener, onClickAdapter {
 //        var call_fcm: Call<ResponseBody>? = null
         call = serviceApi.logout(prefManager?.getAccessToken()!!)
 
-        val json = JsonObject()
-        /*if (prefManager?.getValue("token") != null) {
-            json.addProperty("registration_token", prefManager?.getValue("token")!!)
-        }
-        call_fcm = serviceApi.deletetoken(prefManager?.getAccessToken()!!, json)
+//        val json = JsonObject()
+//        if (prefManager?.getValue("token") != null) {
+//            json.addProperty("registration_token", prefManager?.getValue("token")!!)
+//        }
+        /*call_fcm = serviceApi.deletetoken(prefManager?.getAccessToken()!!, json)
         call_fcm.enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>?, response: Response<ResponseBody>?) {
                 if (response?.isSuccessful!!) {

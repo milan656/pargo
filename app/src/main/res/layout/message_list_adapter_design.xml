@@ -18,13 +18,31 @@
             android:layout_weight="1"
             android:orientation="horizontal">
 
-            <de.hdodenhof.circleimageview.CircleImageView
+            <FrameLayout
                 android:layout_width="80dp"
-                android:layout_height="80dp"
+                android:layout_height="80dp">
 
-                android:src="@drawable/nature"
-                app:civ_border_color="@color/light_gray"
-                app:civ_border_width="1dp" />
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/ivCollabImg"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@color/gray"
+                    app:civ_border_color="@color/dark_gray_text_color"
+                    app:civ_border_width="1dp"
+                    />
+
+                <com.tntra.pargo2.custom.BoldTextView
+                    android:id="@+id/tvGroupName"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_centerInParent="true"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="T"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/thirty_six_sp"
+                    />
+            </FrameLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -50,8 +68,7 @@
                     android:layout_height="wrap_content"
                     android:text="Lorrem ipsum Lorrem ipsum"
                     android:textColor="@color/text_color"
-                    android:textSize="@dimen/fourteen_sp"
-                     />
+                    android:textSize="@dimen/fourteen_sp" />
             </LinearLayout>
         </LinearLayout>
 
@@ -64,7 +81,8 @@
             android:gravity="center"
             android:text="yesterday"
             android:textColor="@color/black"
-            android:textSize="@dimen/fourteen_sp" />
+            android:textSize="@dimen/fourteen_sp"
+            android:visibility="gone" />
 
 
     </LinearLayout>

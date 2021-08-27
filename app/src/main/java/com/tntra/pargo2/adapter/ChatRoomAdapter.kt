@@ -7,7 +7,6 @@
 
 package com.tntra.pargo2.adapter
 
-import android.R.attr
 import android.content.Context
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
@@ -75,32 +74,43 @@ class ChatRoomAdapter(val context: Context, val chatList: ArrayList<Message>) : 
         when (viewType) {
 
             CHAT_MINE -> {
-                holder.userName.setText(userName)
-                holder.message.setText(content)
+                holder.userName.setText(userName.capitalize())
+                holder.message.setText(content.capitalize())
+                holder.tvTimeMessage?.text = messageData.time
 
 //                val b = Bitmap.createBitmap(holder.ivUserimage.getWidth(), holder.ivUserimage.getHeight(), Bitmap.Config.ARGB_8888)
 //                val c = Canvas(b)
 //                c.drawText(c)
 //                holder.ivUserimage.setImageBitmap(b)
 
-                val bitmap = Common.writeOnDrawable(context, userName, holder.ivUserimage?.width!!, holder.ivUserimage.height)
-                val d: Drawable = BitmapDrawable(context.getResources(), bitmap)
+//                val width = 50
+//                val height = 50
+//                val first: String = userName[0].toString().capitalize()
+//                val bitmap = Common.writeOnDrawable(context, first, width, height)
+//                val d: Drawable = BitmapDrawable(context.getResources(), bitmap)
                 try {
                     Glide.with(context).load(messageData.profileImage)
-                            .placeholder(d)
+                            .placeholder(R.drawable.ic_userprofile)
+                            .error(R.drawable.ic_userprofile)
                             .into(holder.ivUserimage)
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
             }
             CHAT_PARTNER -> {
-                holder.userName.setText(userName)
-                holder.message.setText(content)
-                val bitmap = Common.writeOnDrawable(context, userName, holder.ivUserimage?.width!!, holder.ivUserimage.height)
-                val d: Drawable = BitmapDrawable(context.getResources(), bitmap)
+                holder.userName.setText(userName.capitalize())
+                holder.message.setText(content.capitalize())
+                holder.tvTimeMessage?.text = messageData.time
+
+//                val width = 50
+//                val height = 50
+//                val first: String = userName[0].toString().capitalize()
+//                val bitmap = Common.writeOnDrawable(context, first, width, height)
+//                val d: Drawable = BitmapDrawable(context.getResources(), bitmap)
                 try {
-                    Glide.with(context).load(messageData.profileImage+"l")
-                            .placeholder(d)
+                    Glide.with(context).load(messageData.profileImage)
+                            .placeholder(R.drawable.ic_userprofile)
+                            .error(R.drawable.ic_userprofile)
                             .into(holder.ivUserimage)
 
                 } catch (e: Exception) {
@@ -124,6 +134,7 @@ class ChatRoomAdapter(val context: Context, val chatList: ArrayList<Message>) : 
         val ivUserimage = itemView.findViewById<ImageView>(R.id.ivUserimage)
         val message = itemView.findViewById<TextView>(R.id.message)
         val text = itemView.findViewById<TextView>(R.id.text)
+        val tvTimeMessage = itemView.findViewById<TextView>(R.id.tvTimeMessage)
     }
 
 }

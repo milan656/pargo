@@ -17,7 +17,6 @@ import android.content.res.ColorStateList
 import android.content.res.Resources
 import android.database.Cursor
 import android.graphics.*
-import android.graphics.drawable.BitmapDrawable
 import android.media.MediaMetadataRetriever
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
@@ -26,6 +25,7 @@ import android.os.Build
 import android.os.Environment
 import android.provider.DocumentsContract
 import android.provider.MediaStore
+import android.text.TextPaint
 import android.text.TextUtils
 import android.util.Log
 import android.view.*
@@ -155,7 +155,7 @@ class Common {
         fun dateFormatT(date: String): String {
             val input = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
             val output = SimpleDateFormat("yyyy-MM-dd")
-
+//            "formatted_created_at": "26 August, 2021"
             var d: Date? = null
             try {
                 d = input.parse(date)
@@ -746,8 +746,26 @@ class Common {
         fun datefrom(date: String): String {
             var displayDate = ""
             try {
+//                27 August, 2021 11:54:38 AM
                 val formatter = SimpleDateFormat("yyyy-MM-dd'T'00:00:00.000'Z'")
                 val formatterDisplay = SimpleDateFormat("dd-MM-yyyy")
+                val dateInString = formatterDisplay.parse(date)
+                displayDate = formatter.format(dateInString)
+
+            } catch (e: ParseException) {
+                e.printStackTrace()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+            return displayDate
+        }
+
+        fun datefromWebservice(date: String): String {
+            var displayDate = ""
+            try {
+//                27 August, 2021 11:54:38 AM
+                val formatter = SimpleDateFormat("dd MMMM yyyy hh:mm:ss a")
+                val formatterDisplay = SimpleDateFormat("yyyy-MM-dd hh:mm a")
                 val dateInString = formatterDisplay.parse(date)
                 displayDate = formatter.format(dateInString)
 
@@ -784,6 +802,40 @@ class Common {
             } else {
                 var date = Date()
                 val formatter = SimpleDateFormat("hh:mm a, dd MMMM yyyy")
+                answer = formatter.format(date)
+                Log.d("answer", answer)
+            }
+            return answer
+
+        }
+
+        fun getCurrentDateTime_(): String {
+            var answer: String = ""
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                val current = LocalDateTime.now()
+                val formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy hh:mm:ss a")
+                answer = current.format(formatter)
+                Log.d("answer", answer)
+            } else {
+                var date = Date()
+                val formatter = SimpleDateFormat("dd MMMM yyyy hh:mm:ss a")
+                answer = formatter.format(date)
+                Log.d("answer", answer)
+            }
+            return answer
+
+        }
+
+        fun getCurrentTime(): String {
+            var answer: String = ""
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                val current = LocalDateTime.now()
+                val formatter = DateTimeFormatter.ofPattern("hh:mm a")
+                answer = current.format(formatter)
+                Log.d("answer", answer)
+            } else {
+                var date = Date()
+                val formatter = SimpleDateFormat("hh:mm a")
                 answer = formatter.format(date)
                 Log.d("answer", answer)
             }
@@ -867,21 +919,59 @@ class Common {
 
         fun writeOnDrawable(context: Context, text: String?,
                             width: Int, height: Int): Bitmap? {
+
             val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
             val canvas = Canvas(bitmap)
 
+            val textpaint = TextPaint()
+//            textpaint.getTextBounds()
             val paint = Paint()
-            paint.color = Color.BLACK
+            paint.color = Color.LTGRAY
             paint.style = Paint.Style.FILL
             canvas.drawPaint(paint)
 
             paint.color = Color.WHITE
-            paint.isAntiAlias = true
-            paint.textSize = 14f
+//            paint.isAntiAlias = true
+
+            if (width > 50) {
+                paint.textSize = 40f
+            } else {
+                paint.textSize = 25f
+            }
+
             paint.textAlign = Paint.Align.CENTER
-            canvas.drawText(text!!, width / 2f, height / 2f, paint)
+
+            textpaint.textAlign = Paint.Align.CENTER
+//            textpaint.getTextBounds(text, 0, text?.length!!, textpaint.getTextBounds())
+
+//            canvas.drawText(
+//                    "$i",
+//                    translate + circleRadius,
+//                    (height / 2 + textBound.height() / 2).toFloat(),
+//                    textPaint
+//            )
+            canvas.drawText(text!!, width / 1.9f, height / 1.9f, paint)
 
             return bitmap
+
+
+        }
+
+        private fun drawNumber(i: Int, canvas: Canvas, translate: Float) {
+
+        }
+
+        fun getTextRect(textSize: Float, textPaint: TextPaint, string: String): PointF {
+            val rect = RectF(0f, 0f, 0f, 0f)
+            val rectHeight = Rect()
+            val cx = rect.centerX()
+            val cy = rect.centerY()
+
+            textPaint.getTextBounds(string, 0, string.length, rectHeight)
+            val y = cy + rectHeight.height() / 2
+            val x = cx - textPaint.measureText(string) / 2
+
+            return PointF(x, y)
         }
 
         fun coverpicture(path: String?): Bitmap? {
